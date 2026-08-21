@@ -1,0 +1,44 @@
+# ---------------------------------------------------------------- pipeline
+# Everything under work/ is re-derivable: the downloaded scan, the ~1,000
+# Terrarium tiles, the boundary shapefile and the fitted polynomial.
+work/
+
+# Built output: dist/ is written by src/assemble.py, vendor/ holds the
+# three.js copy it fetches. The committed one-file build lives at
+# montana/montana-in-relief.html and is intentionally tracked.
+dist/
+vendor/
+
+# ------------------------------------------------------------------ python
+__pycache__/
+*.py[cod]
+*.egg-info/
+.venv/
+venv/
+env/
+.python-version
+.pytest_cache/
+.ipynb_checkpoints/
+
+# ----------------------------------------------------------------- secrets
+.env
+.env.*
+!.env.example
+
+# -------------------------------------------------------- os / editor junk
+.DS_Store
+._*
+.Spotlight-V100
+.Trashes
+Thumbs.db
+desktop.ini
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+
+# ------------------------------------------------------------------- misc
+*.log
+node_modules/
+.vercel
