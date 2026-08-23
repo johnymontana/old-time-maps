@@ -8,13 +8,15 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are six draped sheets
-spanning a century and a quarter of Montana cartography — the sixth reaching
-over the state line into the Yellowstone country — plus a wing of flat art:
+WebGL build you can open straight from disk. There are seven draped sheets
+spanning a century and a quarter of Montana cartography — the newest pair
+reaching down the Yellowstone corridor and over the park line — plus a wing
+of flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
 | [`gold/`](gold/) | *The Gold Regions* — W.W. de Lacy's map of Montana Territory | 1865 | border-tick combs; the degree labelling is chosen by laying the surveyed state boundary along his red territory line (it agrees to 98 %) |
+| [`paradise/`](paradise/) | *The Livingston Sheet* — Folio 1 of the Geologic Atlas: Paradise Valley, Tom Miner Basin, the Boulder and the Crazies | 1894 | the folio plate is correlated against the already-georeferenced 1891 degree sheet on the shared-ink high-pass mask — 1.9 px RMS |
 | [`yellowstone/`](yellowstone/) | *Yellowstone in Folio* — Hague's geologic folio of the first national park, four sheets joined | 1896 | each folio plate is correlated against the already-georeferenced 1911 edition of its own quadrangle on a shared-ink high-pass mask — 1.5–2.2 px RMS |
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
@@ -22,12 +24,12 @@ over the state line into the Yellowstone country — plus a wing of flat art:
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
 | [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
 
-Four of the sheets carry a **second historical layer** on the crossfade
+Five of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
 Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
-pen-on-linen manuscript, and Yellowstone through the 1911 engraved editions
-of its four quadrangles — each registered by the same correlation machinery
-(`lib/reg.py`).
+pen-on-linen manuscript, Yellowstone through the 1911 engraved editions of
+its four quadrangles, and the Livingston sheet through its 1891 topographic
+edition — each registered by the same correlation machinery (`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -37,6 +39,7 @@ open old-time-maps/flathead/the-flathead.html
 open old-time-maps/gold/gold-regions-1865.html
 open old-time-maps/libby/libby-quadrangle.html
 open old-time-maps/yellowstone/yellowstone-in-folio.html
+open old-time-maps/paradise/livingston-sheet.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -119,6 +122,26 @@ per sheet). Seventy named geysers and hot springs from GNIS ride the terrain
 as data (♨), famous names first; thirteen summits are placed from GNIS
 coordinates and verified against the elevation model.
 
+## paradise — *The Livingston Sheet*
+
+![The Livingston Sheet — Folio 1 of the Geologic Atlas draped over Paradise Valley, the Crazies' dike swarm at the top](docs/livingston-sheet.webp)
+
+**Folio No. 1 of the Geologic Atlas of the United States** (Livingston,
+Montana, 1894; geology by Iddings & Weed, topography by Frank Tweedy,
+1883–86) — the full degree of country between the Northern Pacific main
+line and the park boundary: Paradise Valley with the Park Branch drawn down
+it, Tom Miner Basin and the Gallatin Petrified Forest, Yankee Jim Canyon,
+Emigrant Gulch, McLeod and the Boulder to the Independence camp, and the
+Crazy Mountains' radial dike swarm bursting off the north edge. The east
+margin still carries the Crow Reservation boundary as it stood in 1891 —
+the About panel says what that line meant.
+
+The folio plate is registered to the **1891 degree-sheet edition** (HTMC,
+already georeferenced, 200-ft contours — also the middle crossfade stop) by
+correlation on the shared-ink high-pass mask: **1.9 px RMS ≈ 40 m** on 119
+control points. Forty-four recorded gold, silver, lead and copper producers
+from MRDS ride the terrain; ten summits are GNIS-placed and DEM-verified.
+
 ## flathead — *The Flathead Country*
 
 ![The Flathead Country — the Army's 1920 and 1943 sheets joined at the 48th parallel, draped over the valley](docs/flathead-country.webp)
@@ -194,8 +217,12 @@ holding archive: Renshawe's 1914 painted panorama of Glacier (AGSL), the
 Great Northern's *Aeroplane View* (1914), the NPS Peace Park guide maps
 (1937/1948), Ayres' 1899 forest-reserve classification plate, the USFS
 Flathead National Forest map, the 1904 GLO sectionized map of the Flathead
-Reservation — hung with its provenance said plainly — and Sanborn
-fire-insurance sheets for Kalispell (1910) and Bigfork (1916).
+Reservation — hung with its provenance said plainly — Sanborn
+fire-insurance sheets for Kalispell (1910) and Bigfork (1916), and, from
+the Yellowstone shelf: Raynolds' 1859–60 reconnaissance of the upper
+Yellowstone (compiled by Hayden, the plateau still blank), the Hayden
+Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, and
+the 1883 bird's-eye of brand-new Livingston.
 
 ## Controls
 
@@ -226,8 +253,8 @@ work/dem/                      Terrarium tile cache shared by all sheets
 art/                           the Flat Wing — a static typeset page
                                (pipeline downsizes the scans, assemble
                                writes dist/)
-<sheet>/                       montana, yellowstone, glacier, flathead,
-                               gold, libby — each:
+<sheet>/                       montana, paradise, yellowstone, glacier,
+                               flathead, gold, libby — each:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
                                — plus alt.webp where a sheet carries a second
@@ -273,8 +300,9 @@ so you can see the georeference laid over the scan.
 
 `vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
-root with each sheet at `/montana/`, `/yellowstone/`, `/glacier/`,
-`/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at `/art/`:
+root with each sheet at `/montana/`, `/paradise/`, `/yellowstone/`,
+`/glacier/`, `/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at
+`/art/`:
 
 ```bash
 vercel        # preview
@@ -297,9 +325,9 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
 - *The Flathead Country* and *The Libby Quadrangle*: USGS Historical
   Topographic Map Collection and USGS Bulletin 956 — U.S. government works,
   public domain.
-- *Yellowstone in Folio*: USGS Geologic Atlas Folio 30 and the 1911 HTMC
-  quadrangles — U.S. government works, public domain; geyser and summit
-  names from GNIS.
+- *Yellowstone in Folio* and *The Livingston Sheet*: USGS Geologic Atlas
+  Folios 30 and 1, with the 1911 quadrangles and the 1891 degree sheet from
+  the HTMC — U.S. government works, public domain; names from GNIS.
 - Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
   and the de Lacy manuscript — Montana History Portal (Montana Historical
   Society), items marked "copyright not evaluated" but public domain by age.

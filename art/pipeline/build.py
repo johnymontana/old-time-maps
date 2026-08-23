@@ -101,6 +101,48 @@ PIECES = [
          link='https://www.loc.gov/item/sanborn04936_001/',
          cap='Bigfork in 1916 fit on a single Sanborn sheet — mill, dam, '
              'hotel and the few dozen buildings above the Swan’s mouth.'),
+    dict(id='raynolds1860', src='raynolds1860.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd412/g4127/g4127y/ct000847.jp2',
+         title='Map of the Yellowstone and Missouri Rivers and Their Tributaries',
+         line='Raynolds Expedition · compiled by F.V. Hayden · 1859–60',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/96682479/',
+         cap='The army’s reconnaissance of the upper Yellowstone, Jim '
+             'Bridger guiding — and the plateau itself left nearly blank, '
+             'the last unmapped corner of the territory. Hayden, the '
+             'expedition’s naturalist, drew this sheet; a decade later he '
+             'came back and filled in the blank. The “before” of every '
+             'draped sheet in this gallery.'),
+    dict(id='uppergeyser1871', src='uppergeyser1871.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd426/g4262/g4262y/ye000014.jp2',
+         title='Upper Geyser Basin, Fire Hole River, Wyoming Territory',
+         line='Hayden Survey · 1871',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/97683584/',
+         cap='The first map of the Old Faithful basin, sketched the summer '
+             'before the park act passed — each geyser a numbered point, '
+             'the intervals timed by pocket watch. Congress voted with '
+             'this survey’s maps and photographs on its desks.'),
+    dict(id='hayden1878', src='hayden1878.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd426/g4262/g4262y/ye000002.jp2',
+         title='Preliminary Geological Map of the Yellowstone National Park',
+         line='Hayden Survey · 1878',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/97683605/',
+         cap='The territorial survey’s colour geology of the young park — '
+             'the reading Hague’s folio would redo with better instruments '
+             'twenty years on. Hang it beside the draped Folio 30 sheet '
+             'and you can watch the science grow up.'),
+    dict(id='livingston_bev', src='livingston_bev.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd425/g4254/g4254l/pm004580.jp2',
+         title='Bird’s Eye View of Livingston, Montana',
+         line='Lithograph · 1883',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/75694671/',
+         cap='Livingston in its first year: the Northern Pacific’s shops and '
+             'roundhouse, the grid staked into the sagebrush, and the Park '
+             'Branch curving south toward Paradise Valley — drawn while the '
+             'paint was still wet on the depot.'),
 ]
 
 def p(*a): print(*a, flush=True)
@@ -112,10 +154,17 @@ def main():
         if not os.path.exists(src):
             if 'url' not in piece:
                 raise SystemExit('missing %s and no url to fetch it' % piece['src'])
-            p('· fetching %s…' % piece['id'])
-            req = urllib.request.Request(piece['url'], headers=UA)
-            with urllib.request.urlopen(req, timeout=600) as r, open(src, 'wb') as f:
-                f.write(r.read())
+            for attempt in range(4):
+                p('· fetching %s…' % piece['id'])
+                try:
+                    req = urllib.request.Request(piece['url'], headers=UA)
+                    with urllib.request.urlopen(req, timeout=600) as r, open(src, 'wb') as f:
+                        f.write(r.read())
+                    break
+                except Exception as e:
+                    if os.path.exists(src): os.remove(src)
+                    if attempt == 3: raise
+                    p('  retry (%s)' % e)
         out = os.path.join(BUILD, piece['id'] + '.webp')
         if not os.path.exists(out):
             p('· encoding %s…' % piece['id'])

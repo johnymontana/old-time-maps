@@ -121,6 +121,15 @@ crosses the east edge — to be stated plainly, as on the flathead sheet.
   (state, not federal-PD — check terms) and the folio's own economic plate,
   which may honestly be the best period mining map of the corridor anyway.
 
+## Built (August 2026)
+
+`paradise/` shipped as **The Livingston Sheet** (GF-1 areal plate over the
+1891 base, 1.9 px RMS ≈ 40 m, 44 MRDS mines, five flights), and the Flat
+Wing gained the Raynolds 1859–60, the 1871 Upper Geyser Basin, the 1878
+Hayden geology and the 1883 Livingston bird's-eye. Still on the shelf:
+`bigtimber/`, `absaroka/` (GF-52), GF-24 Three Forks, the 1955 15′ pair,
+the Sanborn runs, and the unverified NPRR / forest-reserve leads.
+
 ## Recommendation
 
 Build **`paradise/` from GF-1** — it answers Tom Miner, Paradise Valley,

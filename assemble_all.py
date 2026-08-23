@@ -18,6 +18,12 @@ SHEETS = [  # gallery order: oldest sheet first
                'Legislature — every worked placer gulch hatched in red — '
                'with every gold and silver producer recorded since.',
          credit='Library of Congress'),
+    dict(d='paradise', title='The Livingston Sheet', era='U.S. Geological Survey · Folio 1 · 1894',
+         blurb='The first folio of the Geologic Atlas of the United States — '
+               'Paradise Valley, Tom Miner Basin, the Boulder and the '
+               'Crazies in fever colours, with its 1891 topography one '
+               'layer behind and the corridor’s mines riding the terrain.',
+         credit='U.S. Geological Survey'),
     dict(d='yellowstone', title='Yellowstone in Folio', era='U.S. Geological Survey · Hague, 1896',
          blurb='The four quadrangle sheets of the first national park — '
                'Hague’s geologic folio in full colour, joined over the '
