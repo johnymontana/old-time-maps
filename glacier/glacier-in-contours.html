@@ -1003,9 +1003,10 @@ function damp(dt){
   cam.dist+= (cam.Tdist-cam.dist)*k;
   cam.tx  += (cam.Tx-cam.tx)*k;
   cam.tz  += (cam.Tz-cam.tz)*k;
-  const gy = X.terrainY(cam.Tx, cam.Tz);
-  cam.Ty = gy;
-  cam.ty += (cam.Ty-cam.ty)*k;
+  // the height follows terrain through a much slower spring than the plan
+  // motion — a crane, not a wheel — so ridges don't pump the horizon
+  cam.Ty = X.terrainY(cam.Tx, cam.Tz);
+  cam.ty += (cam.Ty-cam.ty)*(1-Math.exp(-4.5*dt));
 }
 function clampTarget(){
   cam.Tx = clamp(cam.Tx, -W*0.56, W*0.56);
@@ -1163,13 +1164,13 @@ function updateLabels(){
     }
     if(on && L.kind==='feature') on = d<MAXD*0.577 && d>MAXD*0.01;
     if(on && L.kind==='mine') on = d<MAXD*(UI.mineDist||0.30);
-    if(!on){ if(L.vis){L.el.style.opacity='0'; L.vis=false;} continue; }
+    if(!on){ if(L.vis){L.el.style.opacity='0'; L.vis=false; L.op=0;} continue; }
     const y = X.terrainY(L.x,L.z)+lift;
     _p3.set(L.x, y, L.z).project(camera);
     if(_p3.z>1 || _p3.x<-1.2||_p3.x>1.2||_p3.y<-1.2||_p3.y>1.2){
-      if(L.vis){L.el.style.opacity='0'; L.vis=false;} continue;
+      if(L.vis){L.el.style.opacity='0'; L.vis=false; L.op=0;} continue;
     }
-    if(full && occluded(L.x,y,L.z)){ if(L.vis){L.el.style.opacity='0'; L.vis=false;} continue; }
+    if(full && occluded(L.x,y,L.z)){ if(L.vis){L.el.style.opacity='0'; L.vis=false; L.op=0;} continue; }
     const sx=(_p3.x*0.5+0.5)*innerWidth, sy=(-_p3.y*0.5+0.5)*innerHeight;
     cand.push({L,sx,sy,depth:_p3.z});
   }
@@ -1180,11 +1181,12 @@ function updateLabels(){
     const x0=c.sx + L.anchor[0]*w, y0=c.sy + L.anchor[1]*h;
     let hit=false;
     for(const b of boxes){ if(x0<b[2]&&x0+w>b[0]&&y0<b[3]&&y0+h>b[1]){hit=true;break;} }
-    if(hit){ if(L.vis){L.el.style.opacity='0'; L.vis=false;} continue; }
+    if(hit){ if(L.vis){L.el.style.opacity='0'; L.vis=false; L.op=0;} continue; }
     boxes.push([x0-3,y0-2,x0+w+3,y0+h+2]);
-    L.el.style.transform = `translate3d(${x0.toFixed(1)}px,${y0.toFixed(1)}px,0)`;
-    if(!L.vis){ L.vis=true; }
-    L.el.style.opacity = String(labelFade);
+    const tr = `translate3d(${x0.toFixed(1)}px,${y0.toFixed(1)}px,0)`;
+    if(tr!==L.tr){ L.tr=tr; L.el.style.transform=tr; }
+    L.vis=true;
+    if(labelFade!==L.op){ L.op=labelFade; L.el.style.opacity=String(labelFade); }
   }
 }
 
@@ -1511,14 +1513,23 @@ $('#pClose').addEventListener('click',clearProfile);
 addEventListener('resize',()=>{ if(measure.samples) drawProfile(-1); },{passive:true});
 
 /* ================= tours ================= */
-const tour={active:false, t:0, keys:null, i:0, id:null};
+const tour={active:false, t:0, keys:null, i:0, id:null, seg:-1, from:null};
 const SEG=5.6, HOLD=1.5;
 const TEX = UI.tourEx || [1.7, 0.021, 2.1, 5.6];
 function exFor(d){ return clamp(TEX[0]+d*TEX[1], TEX[2], TEX[3]); }
+function cr(p0,p1,p2,p3,t){                    // Catmull-Rom, centripetal-ish
+  const t2=t*t, t3=t2*t;
+  return 0.5*(2*p1 + (p2-p0)*t + (2*p0-5*p1+4*p2-p3)*t2 + (3*p1-p0-3*p2+p3)*t3);
+}
+let _exagUI=null;
 function setExagUI(v){
   X.setExag(v);
-  const el=$('#exag'); el.value=Math.round(v*10);
-  $('#exagv').textContent='×'+v.toFixed(1);
+  const iv=Math.round(v*10);
+  if(iv!==_exagUI){                            // touch the DOM only on change
+    _exagUI=iv;
+    $('#exag').value=iv;
+    $('#exagv').textContent='×'+(iv/10).toFixed(1);
+  }
 }
 function keyToCam(k){
   const [u,v]=X.lonLatToUV(k.lon,k.lat);
@@ -1527,6 +1538,7 @@ function keyToCam(k){
 function startTour(t){
   clearProfile();
   tour.active=true; tour.t=0; tour.i=0; tour.id=t.id;
+  tour.seg=-1; tour.from=null; tour._pw='';
   tour.keys=t.keys.map(keyToCam); tour.caps=t.keys.map(k=>k.cap); tour.name=t.name;
   document.body.classList.add('touring');
   $('#tourbar').classList.add('show');
@@ -1554,28 +1566,44 @@ function tickTour(dt){
   const K=tour.keys, n=K.length;
   tour.t += dt;
   const total=(n-1)*(SEG+HOLD)+HOLD;
-  $('#tourprog').style.width=clamp(tour.t/total,0,1)*100+'%';
+  const pw=(clamp(tour.t/total,0,1)*100).toFixed(1);
+  if(pw!==tour._pw){ tour._pw=pw; $('#tourprog').style.width=pw+'%'; }
   if(tour.t>=total){ stopTour(); return; }
-  let t=tour.t;
-  let seg=0;
-  if(t<HOLD){ seg=0; t=0; }
-  else{
+  let t=tour.t, seg=0, moving=false;
+  if(t>=HOLD){
     t-=HOLD;
     seg=Math.min(n-2, Math.floor(t/(SEG+HOLD)));
     t=t-seg*(SEG+HOLD);
+    moving = t<SEG;
   }
-  const A=K[seg], B=K[Math.min(seg+1,n-1)];
-  let f=clamp(t/SEG,0,1);
-  f=f*f*f*(f*(f*6-15)+10);
-  const ease=f;
-  cam.tx=lerp(A.x,B.x,ease); cam.tz=lerp(A.z,B.z,ease);
-  cam.dist=lerp(A.d,B.d,ease);
-  let da=((B.az-A.az+Math.PI*3)%(Math.PI*2))-Math.PI;
-  cam.az=A.az+da*ease;
-  cam.el=lerp(A.el,B.el,ease);
-  setExagUI(lerp(A.ex,B.ex,ease));
-  cam.ty=X.terrainY(cam.tx,cam.tz);
-  const idx = (t>SEG*0.55 && seg+1<n) ? seg+1 : seg;
+  if(moving && seg!==tour.seg){
+    // each leg departs from wherever the camera actually is, so holds,
+    // drifts and legs join with no velocity step
+    tour.seg=seg;
+    tour.from={x:cam.tx, z:cam.tz, d:cam.dist, az:cam.az, el:cam.el, ex:X.getExag()};
+  }
+  if(moving){
+    const A=tour.from, B=K[seg+1];
+    const P0=K[seg-1]||{x:2*A.x-B.x, z:2*A.z-B.z, d:2*A.d-B.d};
+    const P3=K[seg+2]||{x:2*B.x-A.x, z:2*B.z-A.z, d:2*B.d-A.d};
+    let f=clamp(t/SEG,0,1);
+    f=f*f*f*(f*(f*6-15)+10);
+    cam.tx=cr(P0.x,A.x,B.x,P3.x,f);               // flown as an arc, not a dash
+    cam.tz=cr(P0.z,A.z,B.z,P3.z,f);
+    cam.dist=clamp(cr(P0.d,A.d,B.d,P3.d,f), MAXD*0.0035, MAXD);
+    let da=((B.az-A.az+Math.PI*3)%(Math.PI*2))-Math.PI;
+    cam.az=A.az+da*f;
+    cam.el=lerp(A.el,B.el,f);
+    setExagUI(lerp(A.ex,B.ex,f));
+  } else {
+    cam.az += 0.0055*dt;                           // never quite frozen
+  }
+  // terrain-following through the slow spring — the crane again
+  cam.ty += (X.terrainY(cam.tx,cam.tz)-cam.ty)*(1-Math.exp(-1.8*dt));
+  let idx;
+  if(tour.t<HOLD) idx=0;
+  else if(!moving) idx=seg+1;
+  else idx=(t>SEG*0.55 && seg+1<n)?seg+1:seg;
   if(idx!==tour.i){ tour.i=idx; showCaption(tour.name, tour.caps[idx]); }
 }
 function buildTours(){
