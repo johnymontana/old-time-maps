@@ -26,13 +26,23 @@ SHEETS = [  # gallery order: oldest sheet first
     dict(d='flathead', title='The Flathead Country', era='Corps of Engineers, U.S. Army · 1920 & 1943',
          blurb='Flathead Lake and its valley — Somers, Bigfork, Kalispell, '
                'Whitefish — on two Progressive Military Map sheets joined at '
-               'the 48th parallel.',
+               'the 48th parallel, with the 1908 county map one layer behind.',
          credit='USGS Historical Topographic Map Collection'),
+    dict(d='libby', title='The Libby Quadrangle', era='U.S. Geological Survey · Gibson, 1948',
+         blurb='The Cabinet Mountains’ silver-lead district in colour — '
+               'Gibson’s geologic sheet over its 1932 base, with fifty '
+               'recorded mines riding the terrain as data.',
+         credit='U.S. Geological Survey'),
     dict(d='montana', title='Montana in Relief', era='Allan Cartography · 1991',
          blurb='The shaded-relief sheet that taught a generation of Montanans '
                'what their state looks like, draped over the elevation model '
                'it was drawn to describe.',
          credit='American Geographical Society Library, UWM'),
+    dict(d='art', title='The Flat Wing', era='Views & panoramas · 1899–1948',
+         blurb='Bird’s-eye views, brochure maps and town plans that cannot '
+               'honestly be draped — Renshawe’s painted panorama, the Great '
+               'Northern’s aeroplane view, Sanborn sheets and more.',
+         credit='Various collections — all public domain'),
 ]
 
 def main():

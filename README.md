@@ -8,15 +8,24 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are four, spanning a
-century and a quarter of Montana cartography:
+WebGL build you can open straight from disk. There are five draped sheets
+spanning a century and a quarter of Montana cartography, plus a wing of
+flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
 | [`gold/`](gold/) | *The Gold Regions* — W.W. de Lacy's map of Montana Territory | 1865 | border-tick combs; the degree labelling is chosen by laying the surveyed state boundary along his red territory line (it agrees to 98 %) |
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
+| [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
+| [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
+
+Three of the sheets carry a **second historical layer** on the crossfade
+slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
+Jaqueth & Walters' 1908 county map, and the Gold Regions through de Lacy's
+own pen-on-linen manuscript — each registered by the same correlation
+machinery (`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -24,6 +33,7 @@ open old-time-maps/montana/montana-in-relief.html    # or any of:
 open old-time-maps/glacier/glacier-in-contours.html
 open old-time-maps/flathead/the-flathead.html
 open old-time-maps/gold/gold-regions-1865.html
+open old-time-maps/libby/libby-quadrangle.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -78,7 +88,10 @@ Residual: **2.2 px median, 2.7 px RMS** — about 30 m on the ground.
 
 Special to this sheet: the park's named glaciers ride the terrain as vector
 overlays — their Little-Ice-Age maxima and their 2015 outlines, from USGS
-ScienceBase — beside the ice the surveyors drew.
+ScienceBase — beside the ice the surveyors drew. The layer slider also passes
+through **Ross's 1959 reconnaissance geologic map** (Professional Paper 296,
+plate 1): the Lewis Overthrust in colour, registered to the sheet by
+correlation.
 
 ## flathead — *The Flathead Country*
 
@@ -99,7 +112,9 @@ the 1943 printing to the 1920 paper, and draws their join at 48°00′ as a
 visible hairline — checked against a dozen townsites to within about one scan
 pixel. The steamboat route from Somers to Polson rides the lake as an
 overlay, and the About panel says plainly what the township grid on the
-reservation half of the lake meant in 1910.
+reservation half of the lake meant in 1910. The middle crossfade stop is
+**Jaqueth & Walters' 1908 county map** (Montana Historical Society) — the
+whole lake on one sheet, registered to the Army quads at about 4 px ≈ 200 m.
 
 ## gold — *The Gold Regions, 1865*
 
@@ -124,7 +139,37 @@ verbatim — same state, same conic.
 
 Special to this sheet: a *Mines & lodes* layer — four hundred gold and silver
 producers from the USGS [MRDS](https://mrdata.usgs.gov/mrds/) database,
-fetched over WFS at build time — over the map that started the rush.
+fetched over WFS at build time — over the map that started the rush. And the
+middle crossfade stop is **de Lacy's original manuscript**, pen and pencil on
+linen (Montana Historical Society), registered to the print by correlation —
+where the two disagree by miles, you are watching him revise Montana between
+draft and stone.
+
+## libby — *The Libby Quadrangle*
+
+![The Libby Quadrangle — Gibson's 1948 geology over the Cabinet Mountains, mines riding the terrain](docs/libby-quadrangle.webp)
+
+Russell Gibson's geologic map of the Libby 30-minute quadrangle (USGS
+Bulletin 956, plate 1, 1948) — the Cabinet Mountains' Belt rocks, granite
+stocks and the silver-lead veins south of Libby, keyed to a printed *List of
+Mines* — rasterised from the bulletin PDF and registered by correlation
+against the **1932 topographic base it was printed on** (USGS Historical
+Topographic Map Collection, already georeferenced), which also rides the
+slider as the middle layer. Fifty recorded gold, silver, lead, copper and
+zinc producers from MRDS plot over the geology that explains them; the
+*Rainy Creek* flight says plainly what the 1948 sheet could not yet know
+about vermiculite and asbestos.
+
+## art — *The Flat Wing*
+
+Bird's-eye views, panoramas, brochure maps and town plans that cannot
+honestly be draped — presented as the pictures they are, each linked to its
+holding archive: Renshawe's 1914 painted panorama of Glacier (AGSL), the
+Great Northern's *Aeroplane View* (1914), the NPS Peace Park guide maps
+(1937/1948), Ayres' 1899 forest-reserve classification plate, the USFS
+Flathead National Forest map, the 1904 GLO sectionized map of the Flathead
+Reservation — hung with its provenance said plainly — and Sanborn
+fire-insurance sheets for Kalispell (1910) and Bigfork (1916).
 
 ## Controls
 
@@ -152,10 +197,15 @@ lib/                           shared pipeline modules (projections, datums,
                                Terrarium DEM, georeferencing fits, encoders)
 work/dem/                      Terrarium tile cache shared by all sheets
                                (gitignored)
-<sheet>/                       montana, glacier, flathead, gold — each:
+art/                           the Flat Wing — a static typeset page
+                               (pipeline downsizes the scans, assemble
+                               writes dist/)
+<sheet>/                       montana, glacier, flathead, gold, libby — each:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
-                               (committed; regenerating pulls big downloads)
+                               — plus alt.webp where a sheet carries a second
+                               historical layer (committed; regenerating
+                               pulls big downloads)
   src/                         body.html, style.css, app1.js, app2.js,
                                assemble.py
   pipeline/                    build.py, places.py
@@ -196,7 +246,8 @@ so you can see the georeference laid over the scan.
 
 `vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
-root with each sheet at `/montana/`, `/glacier/`, `/flathead/`, `/gold/`:
+root with each sheet at `/montana/`, `/glacier/`, `/flathead/`, `/gold/`,
+`/libby/`, and the Flat Wing at `/art/`:
 
 ```bash
 vercel        # preview
@@ -216,8 +267,16 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
   before reusing the scan or anything derived from it.
 - *Glacier in Contours* and *The Gold Regions*: Library of Congress,
   Geography and Map Division — "free to use and reuse."
-- *The Flathead Country*: USGS Historical Topographic Map Collection — U.S.
-  government work, public domain.
+- *The Flathead Country* and *The Libby Quadrangle*: USGS Historical
+  Topographic Map Collection and USGS Bulletin 956 — U.S. government works,
+  public domain.
+- Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
+  and the de Lacy manuscript — Montana History Portal (Montana Historical
+  Society), items marked "copyright not evaluated" but public domain by age.
+- The Flat Wing: all pieces are public-domain works held by AGSL, LOC, NPS,
+  USGS and the Montana History Portal; the 1914 *Aeroplane View* scan comes
+  via the David Rumsey Map Collection's Internet Archive uploads and carries
+  their credit request.
 - Glacier margins: USGS NOROCK via ScienceBase; mines: USGS MRDS; elevation
   tiles: [Terrarium, open data](https://registry.opendata.aws/terrain-tiles/);
   boundaries: US Census. All public domain.
