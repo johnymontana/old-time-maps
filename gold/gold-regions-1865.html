@@ -1146,7 +1146,7 @@ function buildLabels(){
     mk(cls, f.n, 'feature', f.u, f.v, f.k==='park'?7:5, [-0.5,-0.5]);
   });
   (M.mines||[]).forEach(m=>mk('mine',
-    `<span class="pick">⚒</span>${m.n}`, 'mine', m.u, m.v, 4, [0,-0.5]));
+    `<span class="pick">${UI.mineGlyph||'⚒'}</span>${m.n}`, 'mine', m.u, m.v, 4, [0,-0.5]));
   for(const L of labels){ const r=L.el.getBoundingClientRect(); L.w=r.width; L.h=r.height; }
 }
 const show = {peak:true, city:true, feature:true, mine:true};

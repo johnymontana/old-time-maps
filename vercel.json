@@ -6,7 +6,7 @@
   "outputDirectory": "dist",
   "headers": [
     {
-      "source": "/(montana|flathead|glacier|gold|libby|art)/assets/(.*)",
+      "source": "/(montana|flathead|glacier|gold|libby|yellowstone|art)/assets/(.*)",
       "headers": [
         {
           "key": "Cache-Control",
@@ -15,7 +15,7 @@
       ]
     },
     {
-      "source": "/(montana|flathead|glacier|gold|libby|art)/card.webp",
+      "source": "/(montana|flathead|glacier|gold|libby|yellowstone|art)/card.webp",
       "headers": [
         {
           "key": "Cache-Control",

@@ -8,24 +8,26 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are five draped sheets
-spanning a century and a quarter of Montana cartography, plus a wing of
-flat art:
+WebGL build you can open straight from disk. There are six draped sheets
+spanning a century and a quarter of Montana cartography — the sixth reaching
+over the state line into the Yellowstone country — plus a wing of flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
 | [`gold/`](gold/) | *The Gold Regions* — W.W. de Lacy's map of Montana Territory | 1865 | border-tick combs; the degree labelling is chosen by laying the surveyed state boundary along his red territory line (it agrees to 98 %) |
+| [`yellowstone/`](yellowstone/) | *Yellowstone in Folio* — Hague's geologic folio of the first national park, four sheets joined | 1896 | each folio plate is correlated against the already-georeferenced 1911 edition of its own quadrangle on a shared-ink high-pass mask — 1.5–2.2 px RMS |
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
 | [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
 | [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
 
-Three of the sheets carry a **second historical layer** on the crossfade
+Four of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
-Jaqueth & Walters' 1908 county map, and the Gold Regions through de Lacy's
-own pen-on-linen manuscript — each registered by the same correlation
-machinery (`lib/reg.py`).
+Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
+pen-on-linen manuscript, and Yellowstone through the 1911 engraved editions
+of its four quadrangles — each registered by the same correlation machinery
+(`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -34,6 +36,7 @@ open old-time-maps/glacier/glacier-in-contours.html
 open old-time-maps/flathead/the-flathead.html
 open old-time-maps/gold/gold-regions-1865.html
 open old-time-maps/libby/libby-quadrangle.html
+open old-time-maps/yellowstone/yellowstone-in-folio.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -92,6 +95,29 @@ ScienceBase — beside the ice the surveyors drew. The layer slider also passes
 through **Ross's 1959 reconnaissance geologic map** (Professional Paper 296,
 plate 1): the Lewis Overthrust in colour, registered to the sheet by
 correlation.
+
+## yellowstone — *Yellowstone in Folio*
+
+![Yellowstone in Folio — Hague's four geologic sheets joined over the caldera country, geysers riding the plateau](docs/yellowstone-in-folio.webp)
+
+Arnold Hague's geologic folio of Yellowstone National Park (Geologic Atlas
+of the United States, Folio 30, 1896) — the four 30-minute quadrangles,
+*Gallatin*, *Canyon*, *Shoshone* and *Lake*, mosaicked into one 1° × 1°
+drape: orange rhyolite edge to edge, Absaroka breccias, white geyser sinter,
+and no idea yet of the caldera all of it fills. The middle crossfade stop is
+the **1911 engraved topography** of the same four quadrangles (USGS
+Historical Topographic Map Collection, each carrying its own polyconic
+georeference).
+
+Each folio plate is rasterised from the pubs.usgs.gov PDF and registered to
+its own 1911 base by correlation — but on a **local high-pass ink mask**
+rather than the black+blue mask the other sheets use: the linework these
+editions share is the brown contour plate, invisible to a colour test under
+the folio's washes. On shared ink the four fits land at **1.5–2.2 px RMS ≈
+16–23 m**, the tightest georeference in the gallery (78–90 control points
+per sheet). Seventy named geysers and hot springs from GNIS ride the terrain
+as data (♨), famous names first; thirteen summits are placed from GNIS
+coordinates and verified against the elevation model.
 
 ## flathead — *The Flathead Country*
 
@@ -200,7 +226,8 @@ work/dem/                      Terrarium tile cache shared by all sheets
 art/                           the Flat Wing — a static typeset page
                                (pipeline downsizes the scans, assemble
                                writes dist/)
-<sheet>/                       montana, glacier, flathead, gold, libby — each:
+<sheet>/                       montana, yellowstone, glacier, flathead,
+                               gold, libby — each:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
                                — plus alt.webp where a sheet carries a second
@@ -213,7 +240,7 @@ art/                           the Flat Wing — a static typeset page
 vercel.json                    build assemble_all.py, serve dist/
 ```
 
-The three newer sheets share one viewer chassis (`app1.js`/`app2.js` are
+The newer sheets share one viewer chassis (`app1.js`/`app2.js` are
 copies with all scale-dependent constants derived from the plate size, and
 overlays, mines and UI defaults data-driven from `meta.json`); `montana/`
 keeps its original code untouched. Height is decoded on the CPU into a
@@ -246,8 +273,8 @@ so you can see the georeference laid over the scan.
 
 `vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
-root with each sheet at `/montana/`, `/glacier/`, `/flathead/`, `/gold/`,
-`/libby/`, and the Flat Wing at `/art/`:
+root with each sheet at `/montana/`, `/yellowstone/`, `/glacier/`,
+`/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at `/art/`:
 
 ```bash
 vercel        # preview
@@ -270,6 +297,9 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
 - *The Flathead Country* and *The Libby Quadrangle*: USGS Historical
   Topographic Map Collection and USGS Bulletin 956 — U.S. government works,
   public domain.
+- *Yellowstone in Folio*: USGS Geologic Atlas Folio 30 and the 1911 HTMC
+  quadrangles — U.S. government works, public domain; geyser and summit
+  names from GNIS.
 - Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
   and the de Lacy manuscript — Montana History Portal (Montana Historical
   Society), items marked "copyright not evaluated" but public domain by age.

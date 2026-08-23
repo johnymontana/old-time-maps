@@ -18,6 +18,12 @@ SHEETS = [  # gallery order: oldest sheet first
                'Legislature — every worked placer gulch hatched in red — '
                'with every gold and silver producer recorded since.',
          credit='Library of Congress'),
+    dict(d='yellowstone', title='Yellowstone in Folio', era='U.S. Geological Survey · Hague, 1896',
+         blurb='The four quadrangle sheets of the first national park — '
+               'Hague’s geologic folio in full colour, joined over the '
+               'terrain, with its 1911 engraved topography one layer behind '
+               'and seventy named geysers riding the plateau.',
+         credit='U.S. Geological Survey'),
     dict(d='glacier', title='Glacier in Contours', era='U.S. Geological Survey · surveyed 1900–1912',
          blurb='The engraved sheet of Glacier National Park, registered '
                'against its own survey’s quadrangles, with the glaciers '
