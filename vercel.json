@@ -1,12 +1,21 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "echo 'no dependencies — assemble.py is pure stdlib'",
-  "buildCommand": "python3 montana/src/assemble.py",
-  "outputDirectory": "montana/dist",
+  "installCommand": "echo 'no dependencies — assemble_all.py is pure stdlib'",
+  "buildCommand": "python3 assemble_all.py",
+  "outputDirectory": "dist",
   "headers": [
     {
-      "source": "/assets/(.*)",
+      "source": "/(montana|flathead|glacier|gold)/assets/(.*)",
+      "headers": [
+        {
+          "key": "Cache-Control",
+          "value": "public, max-age=604800, stale-while-revalidate=86400"
+        }
+      ]
+    },
+    {
+      "source": "/(montana|flathead|glacier|gold)/card.webp",
       "headers": [
         {
           "key": "Cache-Control",

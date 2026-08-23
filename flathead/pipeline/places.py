@@ -1,0 +1,98 @@
+"""Named places, overlay lines and the four guided flights for the Flathead
+sheets.  Peak coordinates from Wikipedia infoboxes; the pipeline snaps each to
+the nearest summit in the model and warns when they disagree by over 250 m.
+Tour keys are (lat, lon, distance km, camera bearing, camera elevation angle).
+"""
+PEAKS = [  # name, lat, lon, feet, range
+    ("Mount Aeneas", 48.1364, -113.9409, 7528, "Swan Range"),
+    ("Big Mountain", 48.4820, -114.3506, 6817, "Whitefish Range"),
+    ("Blacktail Mountain", 47.9866, -114.3690, 6757, "Salish Mountains"),
+    ("Columbia Mountain", 48.3130, -114.0700, 7234, "Swan Range"),
+]
+CITIES = [  # name, lat, lon, tier (0 = major)
+    ("Kalispell", 48.196, -114.313, 0),
+    ("Whitefish", 48.411, -114.337, 1),
+    ("Columbia Falls", 48.372, -114.182, 1),
+    ("Polson", 47.693, -114.163, 1),
+    ("Bigfork", 48.063, -114.073, 1),
+    ("Somers", 48.080, -114.221, 1),
+    ("Lakeside", 48.019, -114.226, 2),
+    ("Ronan", 47.529, -114.101, 2),
+    ("Pablo", 47.600, -114.119, 2),
+    ("Dayton", 47.867, -114.286, 2),
+    ("Elmo", 47.826, -114.346, 2),
+    ("Big Arm", 47.792, -114.308, 2),
+    ("Rollins", 47.929, -114.245, 2),
+    ("Proctor", 47.943, -114.372, 2),
+    ("Creston", 48.187, -114.130, 2),
+    ("Kila", 48.078, -114.463, 2),
+    ("Coram", 48.428, -114.045, 2),
+    ("Woods Bay", 48.005, -113.975, 2),
+    ("Demersville", 48.158, -114.283, 2),
+]
+FEATURES = [  # name, lat, lon, kind
+    ("Flathead Lake", 47.90, -114.13, "water"),
+    ("Whitefish Lake", 48.443, -114.372, "water"),
+    ("Flathead River", 48.30, -114.19, "water"),
+    ("Stillwater River", 48.29, -114.35, "water"),
+    ("Swan River", 48.058, -114.020, "water"),
+    ("Little Bitterroot River", 47.83, -114.44, "water"),
+    ("Wild Horse Island", 47.848, -114.212, "region"),
+    ("Mission Range", 47.75, -113.93, "region"),
+    ("Swan Range", 48.22, -113.92, "region"),
+    ("Whitefish Range", 48.52, -114.28, "region"),
+    ("Salish Mountains", 48.02, -114.50, "region"),
+    ("Jewel Basin", 48.16, -113.95, "region"),
+    ("Flathead Indian Reservation", 47.585, -114.235, "region"),
+]
+
+# overlay polylines, drawn draped on the terrain; pts are (lat, lon)
+LINES = [
+    dict(id="steamboat", name="Steamboat route", color="#d08a4a", dash=1,
+         pts=[(48.077, -114.220), (48.018, -114.226), (47.950, -114.205),
+              (47.870, -114.160), (47.780, -114.120), (47.710, -114.150),
+              (47.695, -114.157)]),
+]
+
+TOURS = [
+    dict(id="steamboat", name="Down the Lake by Steamboat",
+         blurb="Somers to Polson the way freight and honeymooners went before the highway: twenty-eight miles of open water.",
+         keys=[dict(lat=48.080, lon=-114.221, d=34, az=195, el=22,
+                    cap="Somers, 1901 — the Great Northern's mill town and steamboat landing at the head of the lake."),
+               dict(lat=47.930, lon=-114.190, d=26, az=185, el=16,
+                    cap="The west-shore run: Lakeside, Angel Point, and the Salish hills dropping straight to the water."),
+               dict(lat=47.850, lon=-114.170, d=20, az=160, el=14,
+                    cap="Wild Horse Island, the lake's largest — winter range the Séliš swam their horses out to."),
+               dict(lat=47.700, lon=-114.160, d=22, az=170, el=15,
+                    cap="Polson, at the foot of the lake. The City of Polson and the Klondike tied up here until the road around the shore won.")]),
+    dict(id="rails", name="Rails, and the Town That Lost",
+         blurb="The Great Northern made Kalispell in 1891, unmade Demersville the same year, then jilted Kalispell for Whitefish in 1904.",
+         keys=[dict(lat=48.372, lon=-114.182, d=30, az=250, el=18,
+                    cap="Columbia Falls, where the Great Northern came down out of the canyon in 1891."),
+               dict(lat=48.196, lon=-114.313, d=22, az=200, el=16,
+                    cap="Kalispell, laid out at the railroad's chosen townsite — the county seat by 1894."),
+               dict(lat=48.158, lon=-114.283, d=14, az=170, el=13,
+                    cap="Demersville, head of steamboat navigation and briefly the valley's metropolis. The rails passed four miles north; its buildings moved to Kalispell on rollers. The Army's compilers still drew it."),
+               dict(lat=48.411, lon=-114.337, d=26, az=300, el=17,
+                    cap="Whitefish, 1904: the railway shifted its division point over the hill, and Kalispell in turn lost the main line.")]),
+    dict(id="bigfork", name="Bigfork & the Swan Front",
+         blurb="A mill village at a river mouth under a five-thousand-foot wall.",
+         keys=[dict(lat=48.063, lon=-114.073, d=18, az=120, el=15,
+                    cap="Bigfork, at the Swan River's mouth — its little dam and powerhouse lit the valley from 1902."),
+               dict(lat=48.115, lon=-113.960, d=24, az=100, el=18,
+                    cap="The Swan Range rises a vertical mile off the valley floor: Mount Aeneas above the lake basins of Jewel Basin."),
+               dict(lat=48.150, lon=-114.110, d=30, az=60, el=20,
+                    cap="Flathead cherries ripen along this shore in the lake's stored warmth — the orchards came in the 1890s."),
+               dict(lat=47.990, lon=-113.985, d=26, az=150, el=16,
+                    cap="Woods Bay, past the sheet's eastern edge — where the Army's map runs out, the modern model carries on, dimmed.")]),
+    dict(id="reservation", name="The Reservation Shore",
+         blurb="The south half of the lake lies within the Flathead Reservation — and this sheet's township grid is the 1910 opening, drawn in ink.",
+         keys=[dict(lat=47.690, lon=-114.160, d=24, az=180, el=16,
+                    cap="The lake's southern shore is Séliš, Ql̓ispé and Ksanka country — the Flathead Reservation, established 1855 at Hellgate."),
+               dict(lat=47.585, lon=-114.115, d=26, az=160, el=18,
+                    cap="Pablo and Ronan stand on lands allotted and opened to homesteaders in 1910. The section grid on this sheet is that opening, drawn in ink."),
+               dict(lat=47.660, lon=-114.240, d=18, az=225, el=14,
+                    cap="Below the foot of the lake the Flathead River enters its canyon. Kerr Dam raised the lake ten feet in 1938 — this sheet still shows the natural shore."),
+               dict(lat=47.870, lon=-114.110, d=60, az=185, el=26,
+                    cap="North up the whole sweep of it — twenty-eight miles of water the sheets label simply FLATHEAD LAKE.")]),
+]

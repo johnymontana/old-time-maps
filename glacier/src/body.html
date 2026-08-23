@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>GLACIER</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · surveyed 1900–1912 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1915 sheet</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1915 sheet and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfA" class="on">1915 sheet</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.4</span></label>
+        <input type="range" id="exag" min="6" max="40" value="14">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The engravers lit their relief from the <b>northwest</b> — put the sun there and the two shadings agree.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Places</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="400" height="354"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    Library of Congress, Geography &amp; Map Division ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The park, as first surveyed</h2>
+    <p class="lede">The USGS-engraved sheet of Glacier National Park — 100-foot contours and hand-laid relief over the Lewis and Livingston ranges, drawn from the surveys of 1900–1912 — draped on the terrain it describes, with the park's vanishing glaciers carried along as data.</p>
+
+    <h3>The sheet</h3>
+    <p>Surveyed under R.B. Marshall in 1900–1904 and 1907–1912, engraved and printed by the U.S. Geological Survey; this is the Interior Department's administrative printing of 1915, scanned by the Library of Congress at 9,788 × 8,492 pixels. Going-to-the-Sun Road does not exist on it — the road opened in 1933; in 1915 you crossed Logan Pass on a saddle horse behind a guide.</p>
+
+    <h3>Putting it back on the earth</h3>
+    <p>The scan carries no coordinates, so it was registered against the survey's own 30-minute quadrangles — Chief Mountain (1904), Kintla Lakes (1906), Nyack (1914) and Marias Pass (1913), which the USGS distributes already georeferenced. The 49th-parallel boundary line seeds the alignment; shared linework (black culture, blue drainage) is then matched by image correlation, giving 38 control points across the sheet. Residual: <b>2.2 px median, 2.7 px RMS</b> — about 30 metres on the ground, tighter than the 1912 triangulation itself.</p>
+
+    <h3>The ice, then and now</h3>
+    <p>Two vector layers ride the terrain beside the engraving: the named glaciers at their <span style="color:#a9dcec">Little-Ice-Age maxima</span> (~1850, mapped by the USGS from moraines) and the same glaciers in <span style="color:#e0655a">2015</span>. The surveyors drew the ice a lifetime past its peak; the century since has taken most of what they saw. Data: USGS Northern Rocky Mountain Science Center, ScienceBase.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles (SRTM/NED lineage) at zoom 12 on the same conic grid — about 31 m per drape texel over a 112 × 99 km plate. The <i>modern relief</i> layer's tints are drawn from the sheet's own inks: cream lowland, woodland green, engraved brown, and the blue-white of ice.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>112 × 99 km · 41 m per height sample</dd>
+      <dt>Relief</dt><dd>881 m (Flathead River) to 3,179 m (Mt Cleveland)</dd>
+      <dt>Georeference</dt><dd>38 correlation points vs sibling quads · 2.7 px RMS</dd>
+      <dt>Contours</dt><dd>the sheet's own interval, 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://www.loc.gov/item/2016586564/" target="_blank" rel="noopener">Administrative map of Glacier National Park, 1915</a> — Library of Congress, Geography and Map Division, free to use and reuse. Registration quads from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a>. Glacier margins: <a href="https://www.sciencebase.gov/catalog/item/58af7022e4b01ccd54f9f542" target="_blank" rel="noopener">USGS glacier margin time series</a> and Little-Ice-Age maxima. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The park's east front lies within the Blackfeet Nation's treaty lands, sold under duress in 1895 — Nínaiistáko, Chief Mountain, remains sacred ground.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>GLACIER</h1>
+  <div class="s">Surveyed 1900–1912 · 1:125,000</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheet…</div>
+</div></div>

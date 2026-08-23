@@ -9,3 +9,6 @@ montana/montana-in-relief.html linguist-generated=true
 *.webp binary
 *.png  binary
 *.jpg  binary
+flathead/the-flathead.html          linguist-generated=true
+glacier/glacier-in-contours.html    linguist-generated=true
+gold/gold-regions-1865.html         linguist-generated=true
