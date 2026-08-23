@@ -44,7 +44,7 @@ NEAT = (-111.0, -110.0, 45.0, 46.0)          # the degree sheet's graticule box
 
 LCC = Lcc(45.2, 45.8, -110.5)
 MARGIN = 0.0012
-TEX_W, HGT_W, ALT_W = 2560, 1707, 1920
+TEX_W, HGT_W, ALT_W = 3328, 1707, 1920
 DEM_ZOOM, DEM_BOX = 12, (-111.16, -109.84, 44.88, 46.12)
 CLAMP = (1000, 3600)
 PAPER = (233, 224, 200)

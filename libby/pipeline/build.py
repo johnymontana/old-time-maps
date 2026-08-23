@@ -45,7 +45,7 @@ WFS = ('https://mrdata.usgs.gov/wfs/mrds?service=WFS&version=2.0.0&request=GetFe
 
 LCC = Lcc(48.05, 48.45, -115.75)
 MARGIN = 0.0012
-TEX_W, HGT_W, ALT_W = 2048, 1365, 1536
+TEX_W, HGT_W, ALT_W = 2560, 1365, 1536
 DEM_ZOOM, DEM_BOX = 12, (-116.17, -115.33, 47.88, 48.62)
 CLAMP = (450, 2900)
 

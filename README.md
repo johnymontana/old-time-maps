@@ -58,7 +58,12 @@ Every explorer shares the same instruments: a crossfade between the sheet and
 a modern relief render toned in the sheet's own inks, per-pixel ray-marched
 cast shadows under a draggable sun, click-two-points cross-sections, guided
 flights, typographic labels placed by projection and de-collided every frame,
-plan view, and a live lat/lon/elevation readout. Sources, methods and fit
+plan view, and a live lat/lon/elevation readout. Up close, the renderer
+**re-inks the engraving**: a magnification-adaptive unsharp restores the
+line-and-paper separation bilinear sampling smears away, and the ink's own
+gradient embosses the lighting normal, so contours, stipple and lettering
+read as plate texture rather than blur — both effects fade out entirely at
+survey distances, leaving the far view untouched. Sources, methods and fit
 residuals live in each sheet's **About** panel.
 
 ## montana — *Montana in Relief*
