@@ -18,6 +18,12 @@ SHEETS = [  # gallery order: oldest sheet first
                'Legislature — every worked placer gulch hatched in red — '
                'with every gold and silver producer recorded since.',
          credit='Library of Congress'),
+    dict(d='missouri', title='The Head of Navigation', era='U.S. Geological Survey · 1886 & 1890',
+         blurb='The Great Falls and Fort Benton degree sheets joined — the '
+               'five falls, the portage, the Marias junction and the '
+               'steamboat levee — with the 1890 Cascade County map one '
+               'layer behind and the river’s landmarks as data.',
+         credit='USGS · Library of Congress'),
     dict(d='paradise', title='The Livingston Sheet', era='U.S. Geological Survey · Folio 1 · 1894',
          blurb='The first folio of the Geologic Atlas of the United States — '
                'Paradise Valley, Tom Miner Basin, the Boulder and the '
@@ -47,6 +53,12 @@ SHEETS = [  # gallery order: oldest sheet first
                'Blackfeet Nation — with Ayres’ 1899 reserve survey riding '
                'one layer behind.',
          credit='U.S. Geological Survey'),
+    dict(d='rails', title='Montana by Rail', era='Rand McNally · Cram · 1884 & 1912',
+         blurb='Two railroad maps of the whole state on one slider — the '
+               'lone Northern Pacific of 1884 against the four-route web of '
+               '1912 — on the montana sheet’s terrain, with the passes, '
+               'tunnels and the Gold Creek last spike as data.',
+         credit='Internet Archive · Library of Congress'),
     dict(d='flathead', title='The Flathead Country', era='Corps of Engineers, U.S. Army · 1920 & 1943',
          blurb='Flathead Lake and its valley — Somers, Bigfork, Kalispell, '
                'Whitefish — on two Progressive Military Map sheets joined at '

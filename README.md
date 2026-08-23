@@ -8,14 +8,14 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are nine draped sheets
-spanning a century and a quarter of Montana cartography — from the
-Yellowstone corridor to the Bitterroot and the Rocky Mountain Front — plus
-a wing of flat art:
+WebGL build you can open straight from disk. There are eleven draped sheets
+spanning a century and a quarter of Montana cartography — parks, valleys,
+the railroad web and the steamboat river — plus a wing of flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
 | [`gold/`](gold/) | *The Gold Regions* — W.W. de Lacy's map of Montana Territory | 1865 | border-tick combs; the degree labelling is chosen by laying the surveyed state boundary along his red territory line (it agrees to 98 %) |
+| [`missouri/`](missouri/) | *The Head of Navigation* — the Great Falls and Fort Benton degree sheets, the steamboat river | 1886 & 1890 | the degree sheets carry their own georeference; the 1890 Cascade County plat is anchor-seeded and correlated at ~1 km |
 | [`paradise/`](paradise/) | *The Livingston Sheet* — Folio 1 of the Geologic Atlas: Paradise Valley, Tom Miner Basin, the Boulder and the Crazies | 1894 | the folio plate is correlated against the already-georeferenced 1891 degree sheet on the shared-ink high-pass mask — 1.9 px RMS |
 | [`yellowstone/`](yellowstone/) | *Yellowstone in Folio* — Hague's geologic folio of the first national park, four sheets joined | 1896 | each folio plate is correlated against the already-georeferenced 1911 edition of its own quadrangle on a shared-ink high-pass mask — 1.5–2.2 px RMS |
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
@@ -23,17 +23,19 @@ a wing of flat art:
 | [`front/`](front/) | *The Rocky Mountain Front* — four quads of the overthrust wall, half of it the Blackfeet Nation | 1903–20 | the quads carry their own georeference; Ayres' 1899 reconnaissance sits ~a mile off them, and the About panel says so |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
 | [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
+| [`rails/`](rails/) | *Montana by Rail* — Rand McNally 1912 over Cram 1884, the whole railroad story on one slider | 1884 & 1912 | town-anchor seeds + correlation against the 1991 sheet's own drape; the 1912 atlas spread is fitted page by page and rejoined at its binding fold |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
 | [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
 
-Seven of the sheets carry a **second historical layer** on the crossfade
+Nine of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
 Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
 pen-on-linen manuscript, Yellowstone through the 1911 engraved editions of
 its four quadrangles, the Livingston sheet through its 1891 topographic
 edition, and the Bitterroot and Front sheets through Leiberg's and Ayres'
-1898–99 forest-reserve surveys — each registered by the same correlation
-machinery (`lib/reg.py`).
+1898–99 forest-reserve surveys; the rail sheet crossfades 1912 against
+1884, and the Missouri sheet carries the 1890 Cascade County plat — each
+registered by the same correlation machinery (`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -46,6 +48,8 @@ open old-time-maps/yellowstone/yellowstone-in-folio.html
 open old-time-maps/paradise/livingston-sheet.html
 open old-time-maps/bitterroot/the-bitterroot.html
 open old-time-maps/front/rocky-mountain-front.html
+open old-time-maps/rails/montana-by-rail.html
+open old-time-maps/missouri/head-of-navigation.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -186,6 +190,38 @@ says out loud. The modern terrain carries Gibson Reservoir (1929) where the
 1903 sheet drew only the river; the mismatch is left in plain sight. Four
 flights: the reefs, the Old North Trail, Sun River, and the Teton.
 
+## missouri — *The Head of Navigation*
+
+![The Head of Navigation — the Great Falls and Fort Benton degree sheets joined over the steamboat river](docs/head-of-navigation.webp)
+
+The Missouri where it earned its keep: the **Great Falls (1886) and Fort
+Benton (1890) degree sheets** joined at 111°W — the five falls by name, the
+portage plain, Decision Point at the Marias mouth, and the levee at the
+head of steamboat navigation — with **Mortson's 1890 Official Map of
+Cascade County** (the Belt Mountains' coal and silver workings coloured in)
+one slider-stop behind, anchor-seeded from Great Falls and Neihart and
+correlated at ~1 km. The river's own landmarks ride the terrain under an
+anchor glyph (⚓): falls, springs, landings, and the levee itself. Four
+flights run from the five falls to the edge of the White Cliffs, and the
+*Head of Navigation* flight says plainly what the levee's ledger carried.
+
+## rails — *Montana by Rail*
+
+![Montana by Rail — the 1912 Rand McNally railroad web on the state's terrain](docs/montana-by-rail.webp)
+
+Two railroad maps of the whole state on one slider, on the montana sheet's
+own grid and terrain: **Rand McNally's 1912 New Commercial Atlas map**
+(four transcontinental routes, the branch web, electric lines in the
+legend) over **Cram's 1884 Railroad and County Map of Montana Ty.** (the
+Northern Pacific one year old and nearly alone). Neither map trusts its own
+projection: each is seeded from two printed townsites and correlated
+against the 1991 relief sheet's drape on shared drainage ink — the 1912
+atlas spread fitted page by page and **rejoined at its binding fold**
+(≈1.8 km per page, honest atlas accuracy), the 1884 territorial compilation
+bent as far as a cubic will follow (~5 miles, period-honest, stated in the
+About). Passes, tunnels and the Gold Creek last spike ride as data (∩);
+five flights run from the last spike to the Milwaukee's electrics.
+
 ## flathead — *The Flathead Country*
 
 ![The Flathead Country — the Army's 1920 and 1943 sheets joined at the 48th parallel, draped over the valley](docs/flathead-country.webp)
@@ -265,8 +301,11 @@ Reservation — hung with its provenance said plainly — Sanborn
 fire-insurance sheets for Kalispell (1910) and Bigfork (1916), and, from
 the Yellowstone shelf: Raynolds' 1859–60 reconnaissance of the upper
 Yellowstone (compiled by Hayden, the plateau still blank), the Hayden
-Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, and
-the 1883 and 1884 bird's-eyes of brand-new Livingston and Missoula.
+Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, the
+1883 and 1884 bird's-eyes of brand-new Livingston and Missoula — and,
+from the rails-and-rivers shelf, Clark's 1814 master map of the
+expedition, the Northern Pacific's land-grant checkerboard, and the
+Jawbone Railroad's own 1899 promotion.
 
 ## Controls
 
@@ -297,8 +336,9 @@ work/dem/                      Terrarium tile cache shared by all sheets
 art/                           the Flat Wing — a static typeset page
                                (pipeline downsizes the scans, assemble
                                writes dist/)
-<sheet>/                       montana, paradise, yellowstone, glacier,
-                               bitterroot, front, flathead, gold, libby:
+<sheet>/                       montana, missouri, paradise, yellowstone,
+                               glacier, bitterroot, front, rails, flathead,
+                               gold, libby:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
                                — plus alt.webp where a sheet carries a second
@@ -344,9 +384,9 @@ so you can see the georeference laid over the scan.
 
 `vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
-root with each sheet at `/montana/`, `/paradise/`, `/yellowstone/`,
-`/glacier/`, `/bitterroot/`, `/front/`, `/flathead/`, `/gold/`, `/libby/`,
-and the Flat Wing at `/art/`:
+root with each sheet at `/montana/`, `/missouri/`, `/paradise/`,
+`/yellowstone/`, `/glacier/`, `/bitterroot/`, `/front/`, `/rails/`,
+`/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at `/art/`:
 
 ```bash
 vercel        # preview
@@ -375,6 +415,11 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
 - *The Bitterroot* and *The Rocky Mountain Front*: HTMC quadrangles with
   Leiberg's and Ayres' forest-reserve plates from the USGS 20th/21st Annual
   Reports — U.S. government works, public domain.
+- *Montana by Rail* and *The Head of Navigation*: Cram 1884, the 1890
+  Cascade County map and the Jawbone/land-grant/Clark wing pieces from the
+  Library of Congress; the 1912 Rand McNally from the Internet Archive,
+  scan via the David Rumsey Map Collection (the works are public domain by
+  age); degree sheets from the HTMC.
 - Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
   and the de Lacy manuscript — Montana History Portal (Montana Historical
   Society), items marked "copyright not evaluated" but public domain by age.

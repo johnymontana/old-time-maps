@@ -133,6 +133,36 @@ PIECES = [
              'the reading Hague’s folio would redo with better instruments '
              'twenty years on. Hang it beside the draped Folio 30 sheet '
              'and you can watch the science grow up.'),
+    dict(id='clark1814', src='clark1814.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd412/g4126/g4126s/ct000028.jp2',
+         title='A Map of Lewis and Clark’s Track Across the Western Portion of North America',
+         line='William Clark · engraved by Samuel Lewis · 1814',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/79692907/',
+         cap='The master map of the expedition, drawn by Clark from his own '
+             'field sheets — the Missouri traced bend by bend past the falls '
+             'and the Marias, the whole West hung on one river. Every sheet '
+             'in this gallery descends from it.'),
+    dict(id='nplandgrant', src='nplandgrant.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd424/g4241/g4241p/ct001237r.jp2',
+         title='Land Grant of the Northern Pacific Railroad in Montana and Idaho',
+         line='Northern Pacific Railroad Company · c. 1890',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/86695638/',
+         cap='The checkerboard itself: every odd-numbered section for forty '
+             'miles either side of the line, the price Congress paid to get '
+             'the road built — an area larger than some states, drawn as '
+             'calmly as a timetable.'),
+    dict(id='jawbone1899', src='jawbone1899.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd425/g4251/g4251p/rr004710.jp2',
+         title='Map of Central Montana — the Montana Railroad',
+         line='“The Jawbone” · September 1, 1899',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/98688722/',
+         cap='Richard Harlow’s Montana Railroad, promoted here at its '
+             'hopeful best — the line they said he financed with his jaw, '
+             'wandering up Sixteenmile Canyon toward Lewistown. The '
+             'Milwaukee later bought his bluff and made it a main line.'),
     dict(id='missoula_bev', src='missoula_bev.jp2',
          url='https://tile.loc.gov/storage-services/service/gmd/gmd425/g4254/g4254m/pm004600.jp2',
          title='Bird’s Eye View of Missoula, Montana',
