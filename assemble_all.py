@@ -35,6 +35,18 @@ SHEETS = [  # gallery order: oldest sheet first
                'against its own survey’s quadrangles, with the glaciers '
                'at their Little-Ice-Age peak and in 2015 riding the terrain.',
          credit='Library of Congress'),
+    dict(d='bitterroot', title='The Bitterroot', era='U.S. Geological Survey · 1901 & 1912',
+         blurb='The Hamilton and Missoula quadrangles joined — the valley '
+               'end to end, mission country to the Hellgate — with '
+               'Leiberg’s 1898 forest survey one layer behind and the '
+               'strandlines of Glacial Lake Missoula on the hills.',
+         credit='U.S. Geological Survey'),
+    dict(d='front', title='The Rocky Mountain Front', era='U.S. Geological Survey · 1903–1920',
+         blurb='Four quadrangles of the overthrust wall — Sun River to Birch '
+               'Creek, the reefs against the plains, half of it the '
+               'Blackfeet Nation — with Ayres’ 1899 reserve survey riding '
+               'one layer behind.',
+         credit='U.S. Geological Survey'),
     dict(d='flathead', title='The Flathead Country', era='Corps of Engineers, U.S. Army · 1920 & 1943',
          blurb='Flathead Lake and its valley — Somers, Bigfork, Kalispell, '
                'Whitefish — on two Progressive Military Map sheets joined at '

@@ -8,10 +8,10 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are seven draped sheets
-spanning a century and a quarter of Montana cartography — the newest pair
-reaching down the Yellowstone corridor and over the park line — plus a wing
-of flat art:
+WebGL build you can open straight from disk. There are nine draped sheets
+spanning a century and a quarter of Montana cartography — from the
+Yellowstone corridor to the Bitterroot and the Rocky Mountain Front — plus
+a wing of flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
@@ -19,17 +19,21 @@ of flat art:
 | [`paradise/`](paradise/) | *The Livingston Sheet* — Folio 1 of the Geologic Atlas: Paradise Valley, Tom Miner Basin, the Boulder and the Crazies | 1894 | the folio plate is correlated against the already-georeferenced 1891 degree sheet on the shared-ink high-pass mask — 1.9 px RMS |
 | [`yellowstone/`](yellowstone/) | *Yellowstone in Folio* — Hague's geologic folio of the first national park, four sheets joined | 1896 | each folio plate is correlated against the already-georeferenced 1911 edition of its own quadrangle on a shared-ink high-pass mask — 1.5–2.2 px RMS |
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
+| [`bitterroot/`](bitterroot/) | *The Bitterroot* — the Hamilton and Missoula quadrangles joined, the valley end to end | 1901 & 1912 | the quads carry their own georeference; Leiberg's 1898 reserve survey is anchor-seeded and correlated to them at ~150 m |
+| [`front/`](front/) | *The Rocky Mountain Front* — four quads of the overthrust wall, half of it the Blackfeet Nation | 1903–20 | the quads carry their own georeference; Ayres' 1899 reconnaissance sits ~a mile off them, and the About panel says so |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
 | [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
 | [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
 
-Five of the sheets carry a **second historical layer** on the crossfade
+Seven of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
 Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
 pen-on-linen manuscript, Yellowstone through the 1911 engraved editions of
-its four quadrangles, and the Livingston sheet through its 1891 topographic
-edition — each registered by the same correlation machinery (`lib/reg.py`).
+its four quadrangles, the Livingston sheet through its 1891 topographic
+edition, and the Bitterroot and Front sheets through Leiberg's and Ayres'
+1898–99 forest-reserve surveys — each registered by the same correlation
+machinery (`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -40,6 +44,8 @@ open old-time-maps/gold/gold-regions-1865.html
 open old-time-maps/libby/libby-quadrangle.html
 open old-time-maps/yellowstone/yellowstone-in-folio.html
 open old-time-maps/paradise/livingston-sheet.html
+open old-time-maps/bitterroot/the-bitterroot.html
+open old-time-maps/front/rocky-mountain-front.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -142,6 +148,39 @@ correlation on the shared-ink high-pass mask: **1.9 px RMS ≈ 40 m** on 119
 control points. Forty-four recorded gold, silver, lead and copper producers
 from MRDS ride the terrain; ten summits are GNIS-placed and DEM-verified.
 
+## bitterroot — *The Bitterroot*
+
+![The Bitterroot — the Hamilton and Missoula quadrangles joined, the valley running the full sheet](docs/the-bitterroot.webp)
+
+The **Hamilton (1901) and Missoula (1912) quadrangles** joined at 46°30′ —
+the Bitterroot Valley end to end, from the Como moraines to the Hellgate,
+with the 1912 sheet ending literally at Missoula's doorstep. The middle
+crossfade stop is **J.B. Leiberg's 1898 Bitterroot Forest Reserve
+land-classification map** (USGS 20th Annual Report): board-feet in greens,
+burns in hatching, the valley's farms in orange. Leiberg's plate is a
+sketch-contour compilation, so it is anchor-seeded from the printed symbols
+of Stevensville and Hamilton (the flathead sheet's move) and refined by
+correlation where the valley's grid and drainage hold — **7.4 px ≈ 150 m**.
+Five flights run from Travelers' Rest and Fort Fizzle to St. Mary's Mission
+— and the About panel states plainly what happened to the Bitterroot Salish
+in 1891. Look for Glacial Lake Missoula's strandlines on Sentinel and Jumbo.
+
+## front — *The Rocky Mountain Front*
+
+![The Rocky Mountain Front — four quadrangles of the overthrust wall against the plains](docs/rocky-mountain-front.webp)
+
+Four quadrangles tiled into one degree of the Front — **Saypo (1903),
+Choteau (1920), Heart Butte (1918), Dupuyer (1920)** — the overthrust wall
+the Blackfeet call **Miistákis, the Backbone of the World**: reef after
+reef of thrust limestone against the ruled township grid of the wheat
+bench, with the Blackfeet Nation across the sheet's north half. The middle
+stop is **H.B. Ayres' 1899 Lewis and Clark Forest Reserve map** ("GREAT
+PLAINS (TREELESS)" sweeping its east half) — a reconnaissance at sketch
+scale that sits about a mile from the surveyed quads, which the About panel
+says out loud. The modern terrain carries Gibson Reservoir (1929) where the
+1903 sheet drew only the river; the mismatch is left in plain sight. Four
+flights: the reefs, the Old North Trail, Sun River, and the Teton.
+
 ## flathead — *The Flathead Country*
 
 ![The Flathead Country — the Army's 1920 and 1943 sheets joined at the 48th parallel, draped over the valley](docs/flathead-country.webp)
@@ -222,7 +261,7 @@ fire-insurance sheets for Kalispell (1910) and Bigfork (1916), and, from
 the Yellowstone shelf: Raynolds' 1859–60 reconnaissance of the upper
 Yellowstone (compiled by Hayden, the plateau still blank), the Hayden
 Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, and
-the 1883 bird's-eye of brand-new Livingston.
+the 1883 and 1884 bird's-eyes of brand-new Livingston and Missoula.
 
 ## Controls
 
@@ -254,7 +293,7 @@ art/                           the Flat Wing — a static typeset page
                                (pipeline downsizes the scans, assemble
                                writes dist/)
 <sheet>/                       montana, paradise, yellowstone, glacier,
-                               flathead, gold, libby — each:
+                               bitterroot, front, flathead, gold, libby:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
                                — plus alt.webp where a sheet carries a second
@@ -301,8 +340,8 @@ so you can see the georeference laid over the scan.
 `vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
 root with each sheet at `/montana/`, `/paradise/`, `/yellowstone/`,
-`/glacier/`, `/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at
-`/art/`:
+`/glacier/`, `/bitterroot/`, `/front/`, `/flathead/`, `/gold/`, `/libby/`,
+and the Flat Wing at `/art/`:
 
 ```bash
 vercel        # preview
@@ -328,6 +367,9 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
 - *Yellowstone in Folio* and *The Livingston Sheet*: USGS Geologic Atlas
   Folios 30 and 1, with the 1911 quadrangles and the 1891 degree sheet from
   the HTMC — U.S. government works, public domain; names from GNIS.
+- *The Bitterroot* and *The Rocky Mountain Front*: HTMC quadrangles with
+  Leiberg's and Ayres' forest-reserve plates from the USGS 20th/21st Annual
+  Reports — U.S. government works, public domain.
 - Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
   and the de Lacy manuscript — Montana History Portal (Montana Historical
   Society), items marked "copyright not evaluated" but public domain by age.

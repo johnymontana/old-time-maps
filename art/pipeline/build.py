@@ -133,6 +133,16 @@ PIECES = [
              'the reading Hague’s folio would redo with better instruments '
              'twenty years on. Hang it beside the draped Folio 30 sheet '
              'and you can watch the science grow up.'),
+    dict(id='missoula_bev', src='missoula_bev.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd425/g4254/g4254m/pm004600.jp2',
+         title='Bird’s Eye View of Missoula, Montana',
+         line='Lithograph · 1884',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/75694673/',
+         cap='Missoula the year after the Northern Pacific arrived — mills '
+             'on the Clark Fork, the bridge, Hellgate Canyon behind — the '
+             'town the 1912 quadrangle would later leave just off its '
+             'eastern edge, drawn here in full.'),
     dict(id='livingston_bev', src='livingston_bev.jp2',
          url='https://tile.loc.gov/storage-services/service/gmd/gmd425/g4254/g4254l/pm004580.jp2',
          title='Bird’s Eye View of Livingston, Montana',
