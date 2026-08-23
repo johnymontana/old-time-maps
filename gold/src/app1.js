@@ -79,7 +79,7 @@ function loadImage(src){
   return new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.decoding='async'; i.src=src; });
 }
 
-let renderer, scene, camera, terrain, skirt, sky, ground, drapeTex, hTex, rampTex, drapeImg;
+let renderer, scene, camera, terrain, skirt, sky, ground, drapeTex, altTex, hTex, rampTex, drapeImg, altImg;
 const U = {};                                   // shared uniforms
 
 /* ================= shaders ================= */
@@ -108,9 +108,9 @@ void main(){
 }`;
 
 const TERRAIN_FS = COMMON + `
-uniform sampler2D uDrape, uRamp;
+uniform sampler2D uDrape, uAlt, uRamp;
 uniform vec3  uSun, uSunCol, uAmbCol, uFogCol, uBorderCol;
-uniform float uMix, uShade, uShadow, uContour, uContourInt, uBorder, uFog, uHmin, uHmax;
+uniform float uMix, uMix2, uShade, uShadow, uContour, uContourInt, uBorder, uFog, uHmin, uHmax;
 uniform float uOutside, uRampLo, uRampSpan;
 varying vec2 vUv;
 varying vec3 vPos;
@@ -149,7 +149,7 @@ void main(){
   float elev = uHmin + hC*(uHmax-uHmin);
   float ft = elev/0.3048;
   vec3 hyp = texture2D(uRamp, vec2(clamp((ft-uRampLo)/uRampSpan,0.003,0.997), 0.5)).rgb;
-  vec3 drp = texture2D(uDrape, vUv).rgb;
+  vec3 drp = mix(texture2D(uAlt, vUv).rgb, texture2D(uDrape, vUv).rgb, uMix2);
 
   float d = border(vUv);
   float ins = smoothstep(-0.6, 1.4, d);
@@ -359,17 +359,24 @@ function buildScene(){
   camera = new THREE.PerspectiveCamera(42, innerWidth/innerHeight,
     Math.max(0.05, MAXD*0.00023), MAXD*5.4);
 
-  drapeTex = new THREE.Texture(drapeImg);
-  drapeTex.colorSpace = THREE.SRGBColorSpace;
-  drapeTex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
-  drapeTex.minFilter = THREE.LinearMipmapLinearFilter;
-  drapeTex.magFilter = THREE.LinearFilter;
-  drapeTex.wrapS = drapeTex.wrapT = THREE.ClampToEdgeWrapping;
-  drapeTex.needsUpdate = true;
+  const sheetTex = img => {
+    const t = new THREE.Texture(img);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+    t.minFilter = THREE.LinearMipmapLinearFilter;
+    t.magFilter = THREE.LinearFilter;
+    t.wrapS = t.wrapT = THREE.ClampToEdgeWrapping;
+    t.needsUpdate = true;
+    return t;
+  };
+  drapeTex = sheetTex(drapeImg);
+  altTex = altImg ? sheetTex(altImg) : drapeTex;
   rampTex = makeRampTexture();
 
   U.uH        = {value:hTex};
   U.uDrape    = {value:drapeTex};
+  U.uAlt      = {value:altTex};
+  U.uMix2     = {value:1};
   U.uRamp     = {value:rampTex};
   U.uTexel    = {value:new THREE.Vector2(1/HMW, 1/HMH)};
   U.uExag     = {value:0.02};
@@ -454,7 +461,7 @@ function onResize(){
 /* ---------- expose to part 2 ---------- */
 window.MTX = {
   M, $, clamp, lerp, smoothstep, DEG, W, H, HMW, HMH, HMIN, HMAX, RELIEF,
-  DIAG, MAXD, LIFT0, EXAG0, UI,
+  DIAG, MAXD, LIFT0, EXAG0, UI, HASALT: !!window.MT_ALT,
   uvToLonLat, lonLatToUV, wx, wz, ux, vz,
   sampleH: (x,z)=>sampleH(x,z), insideMT:(x,z)=>insideMT(x,z),
   terrainY:(x,z)=>terrainY(x,z),
@@ -478,7 +485,11 @@ window.MTX = {
     hTex = decodeHeight(hi);
     prog(0.68,'unrolling the sheets…');
     drapeImg = await loadImage(window.MT_DRAPE);
-    prog(0.88,'building the model…');
+    if(window.MT_ALT){
+      prog(0.84,'unrolling the second sheet…');
+      altImg = await loadImage(window.MT_ALT);
+    }
+    prog(0.9,'building the model…');
     await new Promise(r=>setTimeout(r,16));
     buildScene();
     prog(1,'');

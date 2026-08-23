@@ -193,120 +193,43 @@ def feature_mask(rgb):
     blue = (b - 0.5*rgb[:, :, 0] - 0.5*rgb[:, :, 1]) > 16
     return black | blue
 
-def georef():
-    """Register the sheet against the survey's own 30′ quadrangles.
-
-    The 49th-parallel boundary line seeds a similarity (its endpoints are the
-    sheet's top corners, printed 114°30′ and 113°10′); correlation of shared
-    linework — black culture and blue drainage — against four georeferenced
-    sibling quads then yields interior control points for a degree-2 fit.
-    """
-    if os.path.exists(path('fit.json')):
-        p('· georeference cached'); return
-    fetch()
+def _quad_targets():
+    """The sibling quadrangles as registration targets (cropped to overlap)."""
     from georef import QuadGeoref
-    from scipy.signal import fftconvolve
-    p('· reading the scan…')
-    rgb = np.asarray(Image.open(path('scan.jpg')), dtype=np.uint8)
-    H, W = rgb.shape[:2]
-    mask = ink_mask(rgb)
-    p('· finding the 49th parallel…')
-    frame_t = _edge_line(mask, (150, 1250), 1)
-    top = _offset_line(mask, frame_t, (60, 430))
-    lineY = lambda x: top[0]*x + top[1]
-    x0, x1 = _line_endpoints(mask, top, 1, step=12, need=3)
-    p('  49° runs x %d → %d  (y = %.5f·x + %.1f)' % (x0, x1, *top))
-
-    p('· correlating against the sibling quadrangles…')
-    sheet_f = ndimage.gaussian_filter(feature_mask(rgb).astype(np.float32), 1.5)
-    D = 8
-    sheet_8 = sheet_f[::D, ::D].copy()
-    PW, SW = 120, 90                                # patch half, refine half
-    gx, gy, gl = [], [], []
-    scales = []
+    from reg import smooth_feature
+    targets = []
     for name, _url in REG_QUADS:
         qim = Image.open(path(name + '.tif'))
         qr = QuadGeoref(qim)
         qrgb = np.asarray(qim.convert('RGB'), dtype=np.uint8)
-        qf = ndimage.gaussian_filter(feature_mask(qrgb).astype(np.float32), 1.5)
+        qf = smooth_feature(qrgb)
         del qrgb
-        # crop the quad to its overlap with the sheet (its own cell ∩ sheet)
-        cell = []
-        for dlon in (0.02, 0.48):
-            for dlat in (0.02, 0.48):
-                cell.append(qr.to_px(qr.lon0-0.25+dlon+0.0, 48.27+dlat*1.5))
-        # conservative: rows above the 48.27 parallel only
-        _, y_lo_q = qr.to_px(qr.lon0, 48.265)
-        qf_c = qf[:int(min(y_lo_q, qf.shape[0])), :]
-        q8 = qf_c[::D, ::D].copy()
-        # stage A: global similarity per quad — scale sweep at 1/8 resolution
-        # (once two quads agree, later quads are held to the consensus scale)
-        bestA = None
-        z_range = np.arange(0.86, 1.081, 0.02)
-        if len(scales) >= 2:
-            zc = qr.scale[0]/float(np.median(scales))
-            z_range = np.arange(zc-0.021, zc+0.022, 0.01)
-        for z in z_range:
-            qz = ndimage.zoom(q8, z, order=1)
-            if qz.shape[0] >= sheet_8.shape[0] or qz.shape[1] >= sheet_8.shape[1]:
-                continue
-            corr = fftconvolve(sheet_8 - sheet_8.mean(),
-                               (qz - qz.mean())[::-1, ::-1], 'valid')
-            iy, ix = np.unravel_index(np.argmax(corr), corr.shape)
-            sc = corr[iy, ix]/math.sqrt(float((qz*qz).sum()))
-            if bestA is None or sc > bestA[0]:
-                bestA = (sc, float(z), ix, iy)
-        if bestA is None:
-            p('  %s: no global alignment' % name); continue
-        _, zA, oxA, oyA = bestA
-        # quad px → sheet px:  sheet = D*(o + quad/D*z) = D*o + quad*z
-        def q2s(qx, qy, zA=zA, oxA=oxA, oyA=oyA):
-            return D*oxA + qx*zA, D*oyA + qy*zA
-        scales.append(qr.scale[0]/zA)
-        p('  %s: aligned, z=%.2f (scan ≈ %.2f m/px)' % (name, zA, qr.scale[0]/zA))
-        # stage B: patch control points refined at full resolution
-        got = 0
-        for lon in np.arange(LON_W+0.05, LON_E-0.04, 0.115):
-            for lat in np.arange(48.30, 48.99, 0.095):
-                qx, qy = qr.to_px(lon, lat)
-                r = int(PW/zA) + 4
-                if not (r < qx < qf_c.shape[1]-r and r < qy < qf_c.shape[0]-r):
-                    continue
-                patch = qf_c[int(qy)-r:int(qy)+r, int(qx)-r:int(qx)+r]
-                if not (0.015 < patch.mean() < 0.30): continue
-                patch = ndimage.zoom(patch, zA, order=1)
-                ph, pw = patch.shape
-                sx, sy = q2s(qx, qy)
-                x_lo, y_lo = int(sx)-PW-SW, int(sy)-PW-SW
-                win = sheet_f[y_lo:y_lo+2*(PW+SW), x_lo:x_lo+2*(PW+SW)]
-                if win.shape != (2*(PW+SW), 2*(PW+SW)): continue
-                pz = patch - patch.mean()
-                corr = fftconvolve(win - win.mean(), pz[::-1, ::-1], 'valid')
-                cy_, cx_ = np.unravel_index(np.argmax(corr), corr.shape)
-                peak = corr[cy_, cx_]
-                if peak <= 0: continue
-                blot = corr.copy()
-                blot[max(0, cy_-14):cy_+15, max(0, cx_-14):cx_+15] = -1e9
-                if blot.max() > 0.86*peak: continue          # ambiguous match
-                gx.append(x_lo + cx_ + pw/2.0)
-                gy.append(y_lo + cy_ + ph/2.0)
-                gl.append((lon, lat)); got += 1
-        p('  %s: %d control points' % (name, got))
-    m_per_px = float(np.median(scales)) if scales else 10.5
-    p('  %d control points total, scan ≈ %.2f m/px' % (len(gx), m_per_px))
-    if len(gx) < 14: raise SystemExit('too few correlation GCPs')
+        _, y_lo_q = qr.to_px(qr.lon0, 48.265)      # rows above the sheet's foot
+        qf = qf[:int(min(y_lo_q, qf.shape[0])), :]
+        targets.append(dict(name=name, feat=qf, to_px=qr.to_px,
+                            m_per_px=qr.scale[0]))
+    return targets
 
-    X, Y = LCC.fwd([g[0] for g in gl], [g[1] for g in gl])
-    GX, GY = np.array(gx), np.array(gy)
-    keep = np.ones(len(GX), bool)
-    for _ in range(3):
-        fit = Fit(X[keep], Y[keep], GX[keep], GY[keep], 2)
-        px, py = fit.apply(X, Y)
-        dres = np.hypot(px-GX, py-GY)
-        keep = dres < max(6.0, float(np.median(dres[keep]))*2.8)
-    fit = Fit(X[keep], Y[keep], GX[keep], GY[keep], 2)
-    fit_report('quad-registration fit (%d/%d kept)' % (int(keep.sum()), len(GX)),
-               fit, m_per_px)
+REG_LONS = np.arange(LON_W+0.05, LON_E-0.04, 0.115)
+REG_LATS = np.arange(48.30, 48.99, 0.095)
+
+def georef():
+    """Register the sheet against the survey's own 30′ quadrangles."""
+    if os.path.exists(path('fit.json')):
+        p('· georeference cached'); return
+    fetch()
+    from reg import smooth_feature, register, fit_trimmed
+    p('· reading the scan…')
+    rgb = np.asarray(Image.open(path('scan.jpg')), dtype=np.uint8)
+    H, W = rgb.shape[:2]
+    mask = ink_mask(rgb)
+    p('· correlating against the sibling quadrangles…')
+    sheet_f = smooth_feature(rgb)
+    X, Y, gx, gy, m_per_px = register(sheet_f, _quad_targets(), LCC,
+                                      REG_LONS, REG_LATS, m_scan_hint=11.0, log=p)
+    if len(gx) < 14: raise SystemExit('too few correlation GCPs')
+    fit, keep = fit_trimmed(X, Y, gx, gy, 2, name='quad-registration fit',
+                            m_per_px=m_per_px, log=p)
 
     # content foot: where map ink stops, as a latitude through the fit
     anyink = np.asarray(Image.open(path('scan.jpg')).convert('L')) < 225
@@ -336,11 +259,99 @@ def georef():
                    n=int(keep.sum()), s_content=s_content),
               open(path('fit.json'), 'w'))
     im = Image.open(path('scan.jpg'))
-    overlay(im, {(255, 40, 40): list(zip(np.array(gx)[keep], np.array(gy)[keep])),
-                 (30, 120, 255): list(zip(np.array(gx)[~keep], np.array(gy)[~keep]))},
+    overlay(im, {(255, 40, 40): list(zip(gx[keep], gy[keep])),
+                 (30, 120, 255): list(zip(gx[~keep], gy[~keep]))},
             path('qa_georef.png'), 2000)
     p('  QA overlay in work/qa_georef.png')
 
+# ------------------------------------------------------- the 1959 geology
+GEO_PDF = 'https://pubs.usgs.gov/pp/0296/plate-1.pdf'
+ALT_W = TEX_W//2
+
+def geology():
+    """Ross's PP 296 plate 1 — the park's geology — as the middle layer."""
+    if os.path.exists(path('alt.npy')):
+        p('· geology cached'); return
+    resample()
+    from reg import smooth_feature, register, fit_trimmed
+    if not os.path.exists(path('pp296_p1.jpg')):
+        if not os.path.exists(path('pp296_p1.pdf')):
+            p('· downloading PP 296 plate 1…')
+            req = urllib.request.Request(GEO_PDF, headers={'User-Agent': 'Mozilla/5.0'})
+            with urllib.request.urlopen(req, timeout=600) as r:
+                open(path('pp296_p1.pdf'), 'wb').write(r.read())
+        p('· rasterising the plate…')
+        import pypdfium2 as pdfium
+        page = pdfium.PdfDocument(path('pp296_p1.pdf'))[0]
+        scale = min(9000/page.get_width(), 6.0)
+        page.render(scale=scale).to_pil().convert('RGB') \
+            .save(path('pp296_p1.jpg'), quality=95)
+    p('· reading the plate…')
+    rgb = np.asarray(Image.open(path('pp296_p1.jpg')), dtype=np.uint8)
+    p('· correlating the geology against the 1915 sheet…')
+    plate_f = smooth_feature(rgb)
+    ph, pw2 = plate_f.shape
+    plate_f = plate_f[:int(ph*0.79)]               # map body only — sections below
+    plate_f[int(ph*0.29):int(ph*0.78),
+            int(pw2*0.10):int(pw2*0.23)] = 0       # blank the legend inset
+    fitd0 = json.load(open(path('fit.json')))
+    sfit = SavedFit(fitd0)
+    sheet_rgb = np.asarray(Image.open(path('scan.jpg')), dtype=np.uint8)
+    sheet_feat = smooth_feature(sheet_rgb)
+    del sheet_rgb
+    def sheet_px(lon, lat):
+        x, y = sfit.apply(*LCC.fwd(lon, lat))
+        return float(x), float(y)
+    target = [dict(name='1915 sheet', feat=sheet_feat, to_px=sheet_px,
+                   m_per_px=11.5)]
+    X, Y, gx, gy, m_per_px = register(plate_f, target, LCC,
+                                      REG_LONS, REG_LATS, m_scan_hint=11.4, log=p)
+    if len(gx) < 10: raise SystemExit('too few geology GCPs')
+    fit1, _ = fit_trimmed(X, Y, gx, gy, 2, name='geology pass 1',
+                          m_per_px=m_per_px, log=p)
+    lons2 = np.arange(LON_W+0.04, LON_E-0.03, 0.065)
+    lats2 = np.arange(48.28, 49.0, 0.055)
+    X, Y, gx, gy, _ = register(plate_f, target, LCC, lons2, lats2,
+                               m_scan_hint=m_per_px, seed_fit=fit1,
+                               pw=200, sw=260, log=p)
+    if len(gx) < 14: raise SystemExit('too few geology GCPs')
+    fit2, _ = fit_trimmed(X, Y, gx, gy, 1, name='geology pass 2',
+                          m_per_px=m_per_px, log=p)
+    X, Y, gx, gy, _ = register(plate_f, target, LCC, lons2, lats2,
+                               m_scan_hint=m_per_px, seed_fit=fit2,
+                               pw=200, sw=90, log=p)
+    if len(gx) < 14: raise SystemExit('too few geology GCPs')
+    fit3, _ = fit_trimmed(X, Y, gx, gy, 2, name='geology pass 3',
+                          m_per_px=m_per_px, log=p)
+    X, Y, gx, gy, _ = register(plate_f, target, LCC, lons2, lats2,
+                               m_scan_hint=m_per_px, seed_fit=fit3,
+                               pw=160, sw=45, log=p)
+    if len(gx) < 14: raise SystemExit('too few geology GCPs')
+    fit, keep = fit_trimmed(X, Y, gx, gy, 2, name='geology fit',
+                            m_per_px=m_per_px, log=p)
+    fitd = json.load(open(path('fit.json')))
+    g = make_grid()
+    g2 = Grid(LCC, g.X0, g.X1, g.Y0, g.Y1, ALT_W)
+    _, _, LON, LAT = g2.lonlat()
+    lon27, lat27 = wgs84_to_nad27(LON, LAT)
+    SX, SY = fit.apply(*LCC.fwd(lon27, lat27))
+    inside = ((lon27 >= LON_W) & (lon27 <= LON_E) &
+              (lat27 <= LAT_N) & (lat27 >= fitd['s_content']) &
+              (SX > 1) & (SX < rgb.shape[1]-2) & (SY > 1) & (SY < rgb.shape[0]-2))
+    src = rgb.astype(np.float32)
+    np.clip(SX, 0, src.shape[1]-1, out=SX); np.clip(SY, 0, src.shape[0]-1, out=SY)
+    tex = np.zeros((g2.TH, g2.TW, 3), np.float32)
+    tex[:] = (234, 226, 205)
+    for c in range(3):
+        tex[:, :, c][inside] = ndimage.map_coordinates(
+            src[:, :, c], [SY[inside], SX[inside]], order=1, mode='nearest')
+    del src
+    np.save(path('alt.npy'), tex.astype(np.uint8))
+    json.dump(dict(rms=round(fit.rms, 2), median=round(fit.median, 2),
+                   n=int(keep.sum())), open(path('alt_fit.json'), 'w'))
+    Image.fromarray(np.clip(tex, 0, 255).astype(np.uint8)) \
+         .resize((g2.TW//2, g2.TH//2)).save(path('qa_alt.png'))
+    p('  QA in work/qa_alt.png')
 
 class SavedFit:
     def __init__(self, d):
@@ -448,7 +459,7 @@ def glacier_lines(g):
     return out
 
 def encode():
-    resample()
+    geology()
     g = make_grid()
     hgt = np.load(path('hgt.npy'))
     mask = np.load(path('mask.npy'))
@@ -458,6 +469,11 @@ def encode():
     card = Image.open(os.path.join(BUILD, 'drape.webp'))
     card = card.resize((640, int(card.height*640/card.width)), Image.LANCZOS)
     card.save(os.path.join(BUILD, 'card.webp'), quality=82, method=6)
+    if os.path.exists(path('alt.npy')):
+        p('· encoding the geology layer…')
+        Image.fromarray(np.load(path('alt.npy'))).save(
+            os.path.join(BUILD, 'alt.webp'), quality=80, method=6)
+        p('  alt.webp      %6.2f MB' % (os.path.getsize(os.path.join(BUILD, 'alt.webp'))/1e6))
     peaks, cities, feats = snap_places(g, hgt, PEAKS, CITIES, FEATURES, log=p)
 
     # companion relief in the sheet's inks: cream, woodland green, engraved
@@ -477,12 +493,12 @@ def encode():
                peaks, cities, feats, TOURS, log=p,
                lines=lines,
                ui=dict(exagDef=1.4, exagMax=4.0, contourM=30.48, rampLo=3100,
-                       rampHi=10600, sheetA='1915 sheet',
+                       rampHi=10600, sheetA='1915 sheet', altName='1959 geology',
                        tourEx=[1.0, 0.006, 1.05, 1.9]),
                fit=dict(rms=round(fitd['rms'], 2), median=round(fitd['median'], 2),
                         n=fitd['n']))
 
-STAGES = [('fetch', fetch), ('georef', georef), ('resample', resample), ('encode', encode)]
+STAGES = [('fetch', fetch), ('georef', georef), ('resample', resample), ('geology', geology), ('encode', encode)]
 if __name__ == '__main__':
     start = sys.argv[1] if len(sys.argv) > 1 else STAGES[0][0]
     names = [n for n, _ in STAGES]

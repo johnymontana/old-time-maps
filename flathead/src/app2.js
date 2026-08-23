@@ -676,10 +676,25 @@ let planMode=false;
 let togShadow, togContour, togBorder;
 const SHEET_NAME = (UI.sheetA || 'sheet');
 function wireUI(){
+  const MID_NAME = UI.altName || 'Second sheet';
   bindSlider('mix', v=>{
-    U.uMix.value=v/100;
-    $('#cfA').classList.toggle('on', v>=50); $('#cfB').classList.toggle('on', v<50);
-  }, v=> v>=97?SHEET_NAME:(v<=3?'Modern relief':v+'% sheet'));
+    if(X.HASALT){
+      U.uMix.value = clamp(v/50, 0, 1);
+      U.uMix2.value = clamp((v-50)/50, 0, 1);
+      $('#cfA').classList.toggle('on', v>=75);
+      const m=$('#cfM'); if(m) m.classList.toggle('on', v>25 && v<75);
+      $('#cfB').classList.toggle('on', v<=25);
+    } else {
+      U.uMix.value=v/100;
+      $('#cfA').classList.toggle('on', v>=50); $('#cfB').classList.toggle('on', v<50);
+    }
+  }, v=>{
+    if(!X.HASALT) return v>=97?SHEET_NAME:(v<=3?'Modern relief':v+'% sheet');
+    if(v>=97) return SHEET_NAME;
+    if(v<=3) return 'Modern relief';
+    if(v>=44 && v<=56) return MID_NAME;
+    return v+'%';
+  });
   bindSlider('exag', v=>{ X.setExag(v/10); rebuildProfileGeom(); refreshOverlays(); }, v=>'×'+(v/10).toFixed(1));
   bindSlider('shade', v=>{U.uShade.value=v/100;}, v=>v+'%');
   bindSlider('sunalt', v=>{sun.alt=v; updateSun();}, v=>v+'°');

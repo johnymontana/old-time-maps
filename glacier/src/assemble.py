@@ -73,20 +73,25 @@ for name, blob in (('three.js', three), ('app1', app1), ('app2', app2)):
 
 # self-contained build
 durl = lambda p, m: 'data:%s;base64,%s' % (m, base64.b64encode(read(p, 'rb')).decode())
+ALT = os.path.join(BUILD, 'alt.webp')
 inline = ('window.MT_META=%s;\nwindow.MT_DRAPE="%s";\nwindow.MT_HEIGHT="%s";'
           % (meta, durl(os.path.join(BUILD, 'drape.webp'), 'image/webp'),
                    durl(os.path.join(BUILD, 'height.webp'), 'image/webp')))
+if os.path.exists(ALT):
+    inline += '\nwindow.MT_ALT="%s";' % durl(ALT, 'image/webp')
 one = os.path.join(ROOT, ONE)
 open(one, 'w').write(page(inline, standalone=False))
 print('artifact  %-30s %6.2f MB' % (ONE, os.path.getsize(one)/1e6))
 
 # served build
 os.makedirs(os.path.join(DIST, 'assets'), exist_ok=True)
-for f in ('drape.webp', 'height.webp'):
+for f in ('drape.webp', 'height.webp') + (('alt.webp',) if os.path.exists(ALT) else ()):
     shutil.copy(os.path.join(BUILD, f), os.path.join(DIST, 'assets', f))
 open(os.path.join(DIST, 'assets', 'meta.json'), 'w').write(meta)
 ext = ('window.MT_META=%s;\nwindow.MT_DRAPE="assets/drape.webp";'
        '\nwindow.MT_HEIGHT="assets/height.webp";' % meta)
+if os.path.exists(ALT):
+    ext += '\nwindow.MT_ALT="assets/alt.webp";' 
 open(os.path.join(DIST, 'index.html'), 'w').write(page(ext, standalone=True))
 tot = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(DIST) for f in fs)
 print('dist      %-30s %6.2f MB' % ('dist/', tot/1e6))

@@ -333,6 +333,81 @@ class SavedFit:
                        (np.asarray(Y, float)-self.Ym)/self.sX, self.deg)
         return A@self.cx, A@self.cy
 
+# --------------------------------------------- the manuscript, registered
+MS_URL = 'https://www.mtmemory.org/assets/downloadwiz/741286'
+
+def manuscript():
+    """De Lacy's pen-on-linen original (MHS), registered against the print."""
+    if os.path.exists(path('alt.npy')):
+        p('· manuscript cached'); return
+    georef()
+    from reg import smooth_feature, register, fit_trimmed
+    if not os.path.exists(path('manuscript.jpg')):
+        p('· downloading the manuscript from the Montana History Portal…')
+        req = urllib.request.Request(MS_URL, headers={'User-Agent': 'Mozilla/5.0'})
+        with urllib.request.urlopen(req, timeout=600) as r:
+            open(path('manuscript.jpg'), 'wb').write(r.read())
+    p('· reading the manuscript…')
+    ms = np.asarray(Image.open(path('manuscript.jpg')).convert('RGB'), dtype=np.uint8)
+    msf = smooth_feature(ms, blue=False)
+    mh, mw = int(msf.shape[0]*0.03), int(msf.shape[1]*0.03)
+    msf[:mh, :] = 0; msf[-mh:, :] = 0; msf[:, :mw] = 0; msf[:, -mw:] = 0
+
+    fitd = json.load(open(path('fit.json')))
+    pfit = SavedFit(fitd)
+    prg = np.asarray(Image.open(path('scan.jpg')).convert('RGB'), dtype=np.uint8)
+    pf = smooth_feature(prg, blue=False)
+    del prg
+    def print_px(lon, lat):
+        x, y = pfit.apply(*LCC.fwd(lon, lat))
+        return float(x), float(y)
+    xa, _ = print_px(-110.0, 46.5); xb, _ = print_px(-109.0, 46.5)
+    m_print = 76500.0/abs(xb-xa)
+    p('  print ≈ %.0f m/px' % m_print)
+    target = [dict(name='1865 print', feat=pf, to_px=print_px, m_per_px=m_print)]
+
+    lons = np.arange(-115.6, -104.1, 0.75)
+    lats = np.arange(44.75, 48.95, 0.65)
+    p('· correlating the manuscript against the print…')
+    X, Y, gx, gy, m_ms = register(msf, target, LCC, lons, lats,
+                                  m_scan_hint=m_print*1.25, z_lo=0.55, z_hi=1.1,
+                                  pw=130, sw=130, log=p)
+    if len(gx) < 8: raise SystemExit('too few manuscript GCPs')
+    fit1, _ = fit_trimmed(X, Y, gx, gy, 1, name='manuscript pass 1',
+                          m_per_px=m_ms, log=p)
+    X, Y, gx, gy, _ = register(msf, target, LCC, lons, lats,
+                               m_scan_hint=m_ms, seed_fit=fit1,
+                               pw=130, sw=200, log=p)
+    fit2, _ = fit_trimmed(X, Y, gx, gy, 2, name='manuscript pass 2',
+                          m_per_px=m_ms, log=p)
+    X, Y, gx, gy, _ = register(msf, target, LCC, lons, lats,
+                               m_scan_hint=m_ms, seed_fit=fit2,
+                               pw=130, sw=60, log=p)
+    if len(gx) < 10: raise SystemExit('too few manuscript GCPs')
+    fit, keep = fit_trimmed(X, Y, gx, gy, 2, name='manuscript fit',
+                            floor=10.0, k=2.0, m_per_px=m_ms, log=p)
+
+    g = make_grid()
+    from encode import Grid as _Grid
+    g2 = _Grid(LCC, g.X0, g.X1, g.Y0, g.Y1, g.TW//2)
+    _, _, LON, LAT = g2.lonlat()
+    SX, SY = fit.apply(*LCC.fwd(LON, LAT))
+    inside = (SX > 1) & (SX < ms.shape[1]-2) & (SY > 1) & (SY < ms.shape[0]-2)
+    src = ms.astype(np.float32)
+    np.clip(SX, 0, src.shape[1]-1, out=SX); np.clip(SY, 0, src.shape[0]-1, out=SY)
+    tex = np.zeros((g2.TH, g2.TW, 3), np.float32)
+    tex[:] = (205, 193, 168)
+    for c in range(3):
+        tex[:, :, c][inside] = ndimage.map_coordinates(
+            src[:, :, c], [SY[inside], SX[inside]], order=1, mode='nearest')
+    del src
+    np.save(path('alt.npy'), tex.astype(np.uint8))
+    json.dump(dict(rms=round(fit.rms, 2), median=round(fit.median, 2),
+                   n=int(keep.sum())), open(path('alt_fit.json'), 'w'))
+    Image.fromarray(np.clip(tex, 0, 255).astype(np.uint8)) \
+         .resize((g2.TW//2, g2.TH//2)).save(path('qa_alt.png'))
+    p('  QA in work/qa_alt.png')
+
 # ------------------------------------------------------------------ stage 3
 def resample():
     if os.path.exists(path('drape.npy')):
@@ -391,6 +466,7 @@ def mines(g):
 
 def encode():
     resample()
+    manuscript()
     g = make_grid()
     p('· re-encoding the montana height field (same grid, lighter raster)…')
     hgt = decode_height()
@@ -402,6 +478,11 @@ def encode():
     card = Image.open(os.path.join(BUILD, 'drape.webp'))
     card = card.resize((640, int(card.height*640/card.width)), Image.LANCZOS)
     card.save(os.path.join(BUILD, 'card.webp'), quality=82, method=6)
+    if os.path.exists(path('alt.npy')):
+        p('· encoding the manuscript layer…')
+        Image.fromarray(np.load(path('alt.npy'))).save(
+            os.path.join(BUILD, 'alt.webp'), quality=80, method=6)
+        p('  alt.webp      %6.2f MB' % (os.path.getsize(os.path.join(BUILD, 'alt.webp'))/1e6))
     peaks, cities, feats = snap_places(g, hgt, PEAKS, CITIES, FEATURES, log=p)
 
     # sepia relief in the lithograph's own greys
@@ -420,12 +501,12 @@ def encode():
     write_meta(BUILD, g, (HW, HH), hmin, hmax, ramp, ramp_ft,
                peaks, cities, feats, TOURS, log=p,
                mines=M,
-               ui=dict(exagDef=5.0, exagMax=20.0, contourM=250, mineDist=0.62, rampLo=1400,
+               ui=dict(exagDef=5.0, exagMax=20.0, contourM=250, mineDist=0.62, altName='The manuscript', rampLo=1400,
                        rampHi=10200, sheetA='1865 map',
                        tourEx=[1.7, 0.021, 2.1, 5.6]),
                fit=dict(rms=fitd['rms'], median=fitd['median'], n=fitd['n']))
 
-STAGES = [('fetch', fetch), ('georef', georef), ('resample', resample), ('encode', encode)]
+STAGES = [('fetch', fetch), ('georef', georef), ('resample', resample), ('manuscript', manuscript), ('encode', encode)]
 if __name__ == '__main__':
     start = sys.argv[1] if len(sys.argv) > 1 else STAGES[0][0]
     names = [n for n, _ in STAGES]
