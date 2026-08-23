@@ -1,0 +1,159 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>THE MISSOURI</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1886 &amp; 1890 · 1:250,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1886 & 1890 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1890 county map and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1890 county map</span><span id="cfA" class="on">1886 & 1890 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×2.2</span></label>
+        <input type="range" id="exag" min="6" max="80" value="22">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The river runs in a trench — light it <b>across the current</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Buttes &amp; landings</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · Library of Congress ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The river that ran the territory</h2>
+    <p class="lede">The Missouri where it earned its keep: the GREAT FALLS (surveyed 1884&ndash;85, edition of 1886) and FORT BENTON (1890) degree sheets joined at 111&deg;W &mdash; the five falls, the portage plain, the Marias junction, and the levee at the head of steamboat navigation &mdash; with Mortson&rsquo;s 1890 <i>Official Map of Cascade County</i> one slider-stop behind and the river&rsquo;s own landmarks riding the terrain under an anchor.</p>
+
+    <h3>The sheets</h3>
+    <p>Two of the earliest degree sheets the Survey drew in Montana, engraved with 200-ft contours while the steamboats still ran: Fort Benton&rsquo;s ferry and adobes, the falls that stopped every boat, the stage roads to Fort Shaw, and the Shonkin Sag&rsquo;s dry glacial channel through the Highwoods. The county map behind them colours the Belt Mountains&rsquo; coal and silver workings and the township grid that was about to swallow the open range.</p>
+
+    <h3>Registration, honestly</h3>
+    <p>The degree sheets carry their own polyconic georeference. The county map is a township-plat compilation seeded from the printed symbols of Great Falls and Neihart and correlated against the degree sheets on shared river-and-grid ink &mdash; the residual is printed below; where its townships stretch, they stretch in plain sight.</p>
+
+    <h3>The river as data</h3>
+    <p>The anchor layer (&#9875;) marks the five falls by name, Giant Springs, the Fort Benton levee, Decision Point at the Marias mouth &mdash; where the expedition bet the journey on the clear fork and won &mdash; and Coal Banks Landing where the White Cliffs begin. Four flights run the river from the falls to the edge of the Breaks; the <i>Head of Navigation</i> flight says plainly what the levee&rsquo;s ledger carried, whiskey trade and all.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>166 &times; 126 km &middot; 74 m per height sample</dd>
+      <dt>Relief</dt><dd>the river trench to Highwood Baldy at 7,625 ft</dd>
+      <dt>Georeference</dt><dd>sheets self-georeferenced &middot; county map &asymp; 1 km by correlation</dd>
+      <dt>Contours</dt><dd>the sheets&rsquo; 200 ft &mdash; key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Degree sheets from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> (scans 268740, 268718); county map from the <a href="https://www.loc.gov/item/2002626670/" target="_blank" rel="noopener">Library of Congress</a>; names from GNIS. Public domain throughout. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This reach of the river is the treaty country of the Blackfeet, A&rsquo;aninin and River Crow peoples; the trade the levee lived on ran through their lands, and the sheets&rsquo; empty-looking bench country was never empty.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>THE MISSOURI</h1>
+  <div class="s">Great Falls 1886 · Fort Benton 1890</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>
