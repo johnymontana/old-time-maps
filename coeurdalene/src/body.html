@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>COEUR D'ALENE</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · Ransome &amp; Calkins, 1908 · 1:62,500</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1908 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1908 geology, the 1906 base and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1906 base</span><span id="cfA" class="on">1908 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.7</span></label>
+        <input type="range" id="exag" min="6" max="60" value="17">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The gulches are deep and narrow — try the light <b>low and raking</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Professional Paper 62 · Historical Topographic Map Collection ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The lodes of the Coeur d'Alene</h2>
+    <p class="lede">Ransome and Calkins' geologic map of the Coeur d'Alene mining district (USGS Professional Paper 62, Plate II, 1908) — the great silver-lead lodes of the South Fork and Canyon Creek drawn across the Belt rocks that carry them — draped over the district's terrain with the 1906 special base it was engraved on one slider-stop behind.</p>
+
+    <h3>The sheet</h3>
+    <p>Gold placers on Prichard Creek brought the rush of 1883–84; the galena of Canyon Creek and the Bunker Hill discovery of 1885 made the district, and the dynamitings of 1892 and 1899 made it notorious. The Survey answered with its full apparatus: R.&thinsp;U. Goode's topographers (C.&thinsp;F. Urquhart on triangulation, Van&thinsp;H. Manning on topography) drew this 30′&thinsp;×&thinsp;15′ special sheet in 1900–01 at 1:62,500 with 50-foot contours, and F.&thinsp;L. Ransome and F.&thinsp;C. Calkins worked the geology over it in 1903–04. Professional Paper 62 (1908) is the district's founding document — the Prichard, Burke, Revett, St.&thinsp;Regis, Wallace and Striped Peak formations it named are the working language of the Belt Supergroup still, and its reading of the lodes along the Osburn fault system guided a century of mining that made this the largest silver district in the United States.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the <i>1906 edition of the special base</i> (USGS Historical Topographic Map Collection, already georeferenced) to the 1908 geology printed on that very engraving. The plate is seeded from its printed neat corners and registered to the base by correlation on shared linework — 3.1&thinsp;px RMS at the plate's 3.5&thinsp;m/px, about <b>11&thinsp;m</b> on the ground: one engraving family in near-perfect agreement.</p>
+
+    <h3>The mines as data</h3>
+    <p>The <i>Summits &amp; mines</i> layer plots some fifty named workings from the U.S. Board on Geographic Names — famous lodes first: Bunker Hill, Sunshine, Morning, Hecla, Tiger-Poorman, Hercules, Standard Mammoth, Granite — over the geology that explains their alignment along the Osburn fault. (GNIS retired its Mine records in 2021; these come from the archived file, coordinates unchanged.)</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 21&thinsp;m per drape texel over the 53&thinsp;×&thinsp;43&thinsp;km block, from the South Fork below Kellogg near 2,160&thinsp;ft to Stevens Peak at 6,827. The relief is all dissection: no summit flat, no valley wide, which is why the towns, the mills and the railroads all stand in the same few feet of creek bottom.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>53 × 43 km · 31 m per height sample</dd>
+      <dt>Relief</dt><dd>657 m (South Fork Coeur d'Alene River) to 2,076 m (Stevens Peak)</dd>
+      <dt>Georeference</dt><dd>plate vs 1906 base · correlation · 3.1 px ≈ 11 m</dd>
+      <dt>Contours</dt><dd>the sheet's 50 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/publication/pp62" target="_blank" rel="noopener">USGS Professional Paper 62</a>, Plate II (Ransome &amp; Calkins, 1908); base sheet from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scan 238988, edition of 1906); names and mines from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This district is the homeland of the Schitsu'umsh — the Coeur d'Alene people — whose reservation was cut away to the southwest by the agreements of 1887–89, five years before the first location notice on Canyon Creek was a decade old; the <i>Labor Wars</i> and <i>1910</i> flights tell the district's other hard histories plainly.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>COEUR D'ALENE</h1>
+  <div class="s">Professional Paper 62 · 1908 · 1:62,500</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheet…</div>
+</div></div>
