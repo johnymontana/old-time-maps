@@ -22,9 +22,9 @@ wing of flat art:
 | [`glacier/`](glacier/) | *Glacier in Contours* — the USGS-engraved park sheet | 1900–15 | image correlation against four already-georeferenced sibling quadrangles of the same survey — 2.7 px RMS |
 | [`bitterroot/`](bitterroot/) | *The Bitterroot* — the Hamilton and Missoula quadrangles joined, the valley end to end | 1901 & 1912 | the quads carry their own georeference; Leiberg's 1898 reserve survey is anchor-seeded and correlated to them at ~150 m |
 | [`front/`](front/) | *The Rocky Mountain Front* — four quads of the overthrust wall, half of it the Blackfeet Nation | 1903–20 | the quads carry their own georeference; Ayres' 1899 reconnaissance sits ~a mile off them, and the About panel says so |
+| [`rails/`](rails/) | *Montana by Rail* — Rand McNally 1912 over Cram 1884, the whole railroad story on one slider | 1884 & 1912 | town-anchor seeds + correlation against the 1991 sheet's own drape; the 1912 atlas spread is fitted page by page and rejoined at its binding fold |
 | [`flathead/`](flathead/) | *The Flathead Country* — two Army Progressive Military Map sheets | 1920 & 1943 | the scans carry their own polyconic/NAD27 georeference; the pipeline datum-shifts, crops to the neatlines and tone-matches the join |
 | [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
-| [`rails/`](rails/) | *Montana by Rail* — Rand McNally 1912 over Cram 1884, the whole railroad story on one slider | 1884 & 1912 | town-anchor seeds + correlation against the 1991 sheet's own drape; the 1912 atlas spread is fitted page by page and rejoined at its binding fold |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
 | [`tacoma/`](tacoma/) | **WA** · *Tacoma: Ice and Iron* — Willis's ice-age folio of the NP terminus country | 1897–1900 | folio + timber plate correlated against the georeferenced 1897 Tacoma quad — 1.0 / 2.6 px |
 | [`coeurdalene/`](coeurdalene/) | **ID** · *The Coeur d'Alene* — PP 62's geology of the silver-lead district | 1901–08 | plate over the district's own special survey (HTMC) — 3.1 px |
@@ -44,21 +44,12 @@ registered by the same correlation machinery (`lib/reg.py`).
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
-open old-time-maps/montana/montana-in-relief.html    # or any of:
-open old-time-maps/glacier/glacier-in-contours.html
-open old-time-maps/flathead/the-flathead.html
-open old-time-maps/gold/gold-regions-1865.html
-open old-time-maps/libby/libby-quadrangle.html
+open old-time-maps/montana/montana-in-relief.html      # the founding sheet
 open old-time-maps/yellowstone/yellowstone-in-folio.html
-open old-time-maps/paradise/livingston-sheet.html
-open old-time-maps/bitterroot/the-bitterroot.html
-open old-time-maps/front/rocky-mountain-front.html
-open old-time-maps/rails/montana-by-rail.html
-open old-time-maps/missouri/head-of-navigation.html
-open old-time-maps/tacoma/tacoma-ice-and-iron.html
-open old-time-maps/coeurdalene/coeur-dalene.html
-open old-time-maps/silverton/the-silverton-folio.html
-open old-time-maps/nome/nome-golden-beach.html
+open old-time-maps/nome/nome-golden-beach.html         # ...or any sheet in
+                                                       # the table above —
+                                                       # each directory holds
+                                                       # its own one-file build
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -99,29 +90,69 @@ flights tour the state's ranges.
 
 ![The same view with the layer slider pulled to the modern relief render](docs/montana-modern-relief.webp)
 
-## glacier — *Glacier in Contours*
+## gold — *The Gold Regions, 1865*
 
-![Glacier in Contours — the 1915 USGS-engraved park sheet draped over its terrain, glacier margins riding the crest](docs/glacier-in-contours.webp)
+![The Gold Regions — de Lacy's 1865 territory map as a state-shaped inlay, the MRDS mines layer over the western camps](docs/gold-regions.webp)
 
-The USGS-engraved topographic sheet of Glacier National Park — 100-ft
-contours and hand-laid relief from the surveys of 1900–1912; this is the
-Interior Department's 1915 administrative printing, scanned at 9,788 × 8,492
-px by the [Library of Congress](https://www.loc.gov/item/2016586564/).
-Going-to-the-Sun Road does not exist on it.
+W.W. de Lacy's map of Montana Territory, drawn for its First Legislature in
+the winter of 1864–65 — *"showing the gulch or placer diggings actually
+worked, and districts where quartz (gold & silver) lodes have been
+discovered to January 1st 1865"* — scanned at 8,984 × 6,634 px by the
+[Library of Congress](https://www.loc.gov/item/2006629609/).
 
-The sheet is registered against the survey's own 30-minute quadrangles —
-Chief Mountain (1904), Kintla Lakes (1906), Nyack (1914), Marias Pass (1913),
-which the USGS distributes already georeferenced. The 49th-parallel boundary
-line seeds the alignment; shared linework (black culture, blue drainage) is
-matched by image correlation at two scales, giving 38 control points.
-Residual: **2.2 px median, 2.7 px RMS** — about 30 m on the ground.
+The sheet draws no internal graticule, only degree ticks along its borders
+(Greenwich longitudes above, Washington longitudes below). Tick combs solve a
+similarity; the degree labelling is chosen automatically as the one that lays
+the surveyed state boundary along de Lacy's heavy red territory line — they
+agree to 98 %, and the bottom border yields the sheet's own prime meridian
+(de Lacy put Washington at 77°05′ W of Greenwich). Residual across 27 ticks:
+about **5 px**. East of the divide his boundary tracks the modern survey
+almost perfectly; in the northwest the fit exposes his guesswork, which is
+the story. The terrain, grid and state-line mask are shared with `montana/`
+verbatim — same state, same conic.
 
-Special to this sheet: the park's named glaciers ride the terrain as vector
-overlays — their Little-Ice-Age maxima and their 2015 outlines, from USGS
-ScienceBase — beside the ice the surveyors drew. The layer slider also passes
-through **Ross's 1959 reconnaissance geologic map** (Professional Paper 296,
-plate 1): the Lewis Overthrust in colour, registered to the sheet by
-correlation.
+Special to this sheet: a *Mines & lodes* layer — four hundred gold and silver
+producers from the USGS [MRDS](https://mrdata.usgs.gov/mrds/) database,
+fetched over WFS at build time — over the map that started the rush. And the
+middle crossfade stop is **de Lacy's original manuscript**, pen and pencil on
+linen (Montana Historical Society), registered to the print by correlation —
+where the two disagree by miles, you are watching him revise Montana between
+draft and stone.
+
+## missouri — *The Head of Navigation*
+
+![The Head of Navigation — the Great Falls and Fort Benton degree sheets joined over the steamboat river](docs/head-of-navigation.webp)
+
+The Missouri where it earned its keep: the **Great Falls (1886) and Fort
+Benton (1890) degree sheets** joined at 111°W — the five falls by name, the
+portage plain, Decision Point at the Marias mouth, and the levee at the
+head of steamboat navigation — with **Mortson's 1890 Official Map of
+Cascade County** (the Belt Mountains' coal and silver workings coloured in)
+one slider-stop behind, anchor-seeded from Great Falls and Neihart and
+correlated at ~1 km. The river's own landmarks ride the terrain under an
+anchor glyph (⚓): falls, springs, landings, and the levee itself. Four
+flights run from the five falls to the edge of the White Cliffs, and the
+*Head of Navigation* flight says plainly what the levee's ledger carried.
+
+## paradise — *The Livingston Sheet*
+
+![The Livingston Sheet — Folio 1 of the Geologic Atlas draped over Paradise Valley, the Crazies' dike swarm at the top](docs/livingston-sheet.webp)
+
+**Folio No. 1 of the Geologic Atlas of the United States** (Livingston,
+Montana, 1894; geology by Iddings & Weed, topography by Frank Tweedy,
+1883–86) — the full degree of country between the Northern Pacific main
+line and the park boundary: Paradise Valley with the Park Branch drawn down
+it, Tom Miner Basin and the Gallatin Petrified Forest, Yankee Jim Canyon,
+Emigrant Gulch, McLeod and the Boulder to the Independence camp, and the
+Crazy Mountains' radial dike swarm bursting off the north edge. The east
+margin still carries the Crow Reservation boundary as it stood in 1891 —
+the About panel says what that line meant.
+
+The folio plate is registered to the **1891 degree-sheet edition** (HTMC,
+already georeferenced, 200-ft contours — also the middle crossfade stop) by
+correlation on the shared-ink high-pass mask: **1.9 px RMS ≈ 40 m** on 119
+control points. Forty-four recorded gold, silver, lead and copper producers
+from MRDS ride the terrain; ten summits are GNIS-placed and DEM-verified.
 
 ## yellowstone — *Yellowstone in Folio*
 
@@ -146,25 +177,29 @@ per sheet). Seventy named geysers and hot springs from GNIS ride the terrain
 as data (♨), famous names first; thirteen summits are placed from GNIS
 coordinates and verified against the elevation model.
 
-## paradise — *The Livingston Sheet*
+## glacier — *Glacier in Contours*
 
-![The Livingston Sheet — Folio 1 of the Geologic Atlas draped over Paradise Valley, the Crazies' dike swarm at the top](docs/livingston-sheet.webp)
+![Glacier in Contours — the 1915 USGS-engraved park sheet draped over its terrain, glacier margins riding the crest](docs/glacier-in-contours.webp)
 
-**Folio No. 1 of the Geologic Atlas of the United States** (Livingston,
-Montana, 1894; geology by Iddings & Weed, topography by Frank Tweedy,
-1883–86) — the full degree of country between the Northern Pacific main
-line and the park boundary: Paradise Valley with the Park Branch drawn down
-it, Tom Miner Basin and the Gallatin Petrified Forest, Yankee Jim Canyon,
-Emigrant Gulch, McLeod and the Boulder to the Independence camp, and the
-Crazy Mountains' radial dike swarm bursting off the north edge. The east
-margin still carries the Crow Reservation boundary as it stood in 1891 —
-the About panel says what that line meant.
+The USGS-engraved topographic sheet of Glacier National Park — 100-ft
+contours and hand-laid relief from the surveys of 1900–1912; this is the
+Interior Department's 1915 administrative printing, scanned at 9,788 × 8,492
+px by the [Library of Congress](https://www.loc.gov/item/2016586564/).
+Going-to-the-Sun Road does not exist on it.
 
-The folio plate is registered to the **1891 degree-sheet edition** (HTMC,
-already georeferenced, 200-ft contours — also the middle crossfade stop) by
-correlation on the shared-ink high-pass mask: **1.9 px RMS ≈ 40 m** on 119
-control points. Forty-four recorded gold, silver, lead and copper producers
-from MRDS ride the terrain; ten summits are GNIS-placed and DEM-verified.
+The sheet is registered against the survey's own 30-minute quadrangles —
+Chief Mountain (1904), Kintla Lakes (1906), Nyack (1914), Marias Pass (1913),
+which the USGS distributes already georeferenced. The 49th-parallel boundary
+line seeds the alignment; shared linework (black culture, blue drainage) is
+matched by image correlation at two scales, giving 38 control points.
+Residual: **2.2 px median, 2.7 px RMS** — about 30 m on the ground.
+
+Special to this sheet: the park's named glaciers ride the terrain as vector
+overlays — their Little-Ice-Age maxima and their 2015 outlines, from USGS
+ScienceBase — beside the ice the surveyors drew. The layer slider also passes
+through **Ross's 1959 reconnaissance geologic map** (Professional Paper 296,
+plate 1): the Lewis Overthrust in colour, registered to the sheet by
+correlation.
 
 ## bitterroot — *The Bitterroot*
 
@@ -198,21 +233,6 @@ scale that sits about a mile from the surveyed quads, which the About panel
 says out loud. The modern terrain carries Gibson Reservoir (1929) where the
 1903 sheet drew only the river; the mismatch is left in plain sight. Four
 flights: the reefs, the Old North Trail, Sun River, and the Teton.
-
-## missouri — *The Head of Navigation*
-
-![The Head of Navigation — the Great Falls and Fort Benton degree sheets joined over the steamboat river](docs/head-of-navigation.webp)
-
-The Missouri where it earned its keep: the **Great Falls (1886) and Fort
-Benton (1890) degree sheets** joined at 111°W — the five falls by name, the
-portage plain, Decision Point at the Marias mouth, and the levee at the
-head of steamboat navigation — with **Mortson's 1890 Official Map of
-Cascade County** (the Belt Mountains' coal and silver workings coloured in)
-one slider-stop behind, anchor-seeded from Great Falls and Neihart and
-correlated at ~1 km. The river's own landmarks ride the terrain under an
-anchor glyph (⚓): falls, springs, landings, and the levee itself. Four
-flights run from the five falls to the edge of the White Cliffs, and the
-*Head of Navigation* flight says plainly what the levee's ledger carried.
 
 ## rails — *Montana by Rail*
 
@@ -254,35 +274,6 @@ reservation half of the lake meant in 1910. The middle crossfade stop is
 **Jaqueth & Walters' 1908 county map** (Montana Historical Society) — the
 whole lake on one sheet, registered to the Army quads at about 4 px ≈ 200 m.
 
-## gold — *The Gold Regions, 1865*
-
-![The Gold Regions — de Lacy's 1865 territory map as a state-shaped inlay, the MRDS mines layer over the western camps](docs/gold-regions.webp)
-
-W.W. de Lacy's map of Montana Territory, drawn for its First Legislature in
-the winter of 1864–65 — *"showing the gulch or placer diggings actually
-worked, and districts where quartz (gold & silver) lodes have been
-discovered to January 1st 1865"* — scanned at 8,984 × 6,634 px by the
-[Library of Congress](https://www.loc.gov/item/2006629609/).
-
-The sheet draws no internal graticule, only degree ticks along its borders
-(Greenwich longitudes above, Washington longitudes below). Tick combs solve a
-similarity; the degree labelling is chosen automatically as the one that lays
-the surveyed state boundary along de Lacy's heavy red territory line — they
-agree to 98 %, and the bottom border yields the sheet's own prime meridian
-(de Lacy put Washington at 77°05′ W of Greenwich). Residual across 27 ticks:
-about **5 px**. East of the divide his boundary tracks the modern survey
-almost perfectly; in the northwest the fit exposes his guesswork, which is
-the story. The terrain, grid and state-line mask are shared with `montana/`
-verbatim — same state, same conic.
-
-Special to this sheet: a *Mines & lodes* layer — four hundred gold and silver
-producers from the USGS [MRDS](https://mrdata.usgs.gov/mrds/) database,
-fetched over WFS at build time — over the map that started the rush. And the
-middle crossfade stop is **de Lacy's original manuscript**, pen and pencil on
-linen (Montana Historical Society), registered to the print by correlation —
-where the two disagree by miles, you are watching him revise Montana between
-draft and stone.
-
 ## libby — *The Libby Quadrangle*
 
 ![The Libby Quadrangle — Gibson's 1948 geology over the Cabinet Mountains, mines riding the terrain](docs/libby-quadrangle.webp)
@@ -297,24 +288,6 @@ slider as the middle layer. Fifty recorded gold, silver, lead, copper and
 zinc producers from MRDS plot over the geology that explains them; the
 *Rainy Creek* flight says plainly what the 1948 sheet could not yet know
 about vermiculite and asbestos.
-
-## art — *The Flat Wing*
-
-Bird's-eye views, panoramas, brochure maps and town plans that cannot
-honestly be draped — presented as the pictures they are, each linked to its
-holding archive: Renshawe's 1914 painted panorama of Glacier (AGSL), the
-Great Northern's *Aeroplane View* (1914), the NPS Peace Park guide maps
-(1937/1948), Ayres' 1899 forest-reserve classification plate, the USFS
-Flathead National Forest map, the 1904 GLO sectionized map of the Flathead
-Reservation — hung with its provenance said plainly — Sanborn
-fire-insurance sheets for Kalispell (1910) and Bigfork (1916), and, from
-the Yellowstone shelf: Raynolds' 1859–60 reconnaissance of the upper
-Yellowstone (compiled by Hayden, the plateau still blank), the Hayden
-Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, the
-1883 and 1884 bird's-eyes of brand-new Livingston and Missoula — and,
-from the rails-and-rivers shelf, Clark's 1814 master map of the
-expedition, the Northern Pacific's land-grant checkerboard, and the
-Jawbone Railroad's own 1899 promotion.
 
 ## beyond Montana — tacoma, coeurdalene, silverton, nome
 
@@ -360,6 +333,24 @@ graticule crossings (~2 px internal; the 1904 datum's offset against
 the modern grid is stated, not hidden) — the beach placers, the
 roadstead trade, the Wild Goose Railroad, and the Iñupiaq homeland it
 all stands on.
+
+## art — *The Flat Wing*
+
+Bird's-eye views, panoramas, brochure maps and town plans that cannot
+honestly be draped — presented as the pictures they are, each linked to its
+holding archive: Renshawe's 1914 painted panorama of Glacier (AGSL), the
+Great Northern's *Aeroplane View* (1914), the NPS Peace Park guide maps
+(1937/1948), Ayres' 1899 forest-reserve classification plate, the USFS
+Flathead National Forest map, the 1904 GLO sectionized map of the Flathead
+Reservation — hung with its provenance said plainly — Sanborn
+fire-insurance sheets for Kalispell (1910) and Bigfork (1916), and, from
+the Yellowstone shelf: Raynolds' 1859–60 reconnaissance of the upper
+Yellowstone (compiled by Hayden, the plateau still blank), the Hayden
+Survey's 1871 map of the Upper Geyser Basin and 1878 park geology, the
+1883 and 1884 bird's-eyes of brand-new Livingston and Missoula — and,
+from the rails-and-rivers shelf, Clark's 1814 master map of the
+expedition, the Northern Pacific's land-grant checkerboard, and the
+Jawbone Railroad's own 1899 promotion.
 
 ## Controls
 
@@ -419,7 +410,7 @@ the one-file builds is that they work for someone who wants neither.
 ## Rebuilding
 
 ```bash
-pip install -r <sheet>/requirements.txt    # numpy, scipy, pillow (+ pyshp)
+pip install -r <sheet>/requirements.txt    # numpy, scipy, pillow, pyshp, pypdfium2
 cd <sheet>
 python3 pipeline/build.py     # fetches scans, DEM tiles, fits, re-encodes
 python3 src/assemble.py       # writes the one-file build and dist/
@@ -433,6 +424,12 @@ Every pipeline prints its fit residuals and writes QA overlays into `work/`
 so you can see the georeference laid over the scan.
 
 `assemble.py` fetches three.js r155 into `vendor/` on first run.
+
+The newer sheets share one viewer chassis: `flathead/src/app{1,2}.js` is
+the source of truth — edit there and copy to the other sheets (`montana/`
+keeps its own diverged copy). Everything an agent or contributor needs to
+build a new sheet — the registration playbook, the source cookbook, the
+quality gates — lives in [AGENTS.md](AGENTS.md).
 
 ## Deploying
 

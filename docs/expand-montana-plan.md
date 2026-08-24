@@ -423,9 +423,11 @@ Rumsey's CC BY-NC-SA items enter at Tier 2/3 with their credit line.
 
 | 6 (post-plan) | `yellowstone/` — the park and its surrounds, by user request | ✅ done, Aug 2026 — **Geologic Atlas Folio 30** (Hague, 1896): the four park quadrangles' areal-geology plates mosaicked as the drape, their **1911 engraved editions** (HTMC, self-georeferenced) as the middle layer, registered per-quad on a local high-pass **ink mask** (the shared linework is the brown contour plate, invisible to the black+blue mask) — 1.5–2.2 px RMS ≈ 16–23 m, the gallery's tightest; ~70 GNIS geysers/springs as the data layer (♨), 13 GNIS-verified summits, four flights incl. *The Great Caldera*. |
 
+| 7+ (post-plan) | the gallery outgrew this plan | ✅ by user request, Aug 2026 — the Yellowstone corridor (`paradise/`), thematic sheets (`rails/`, `missouri/`), a zoom-clarity rendering pass, and four sheets beyond Montana (`tacoma/` WA, `coeurdalene/` ID, `silverton/` CO, `nome/` AK — researched and built by orchestrated agent workflows). Current state: see [README](../README.md); working conventions: see [AGENTS.md](../AGENTS.md). |
+
 Each phase ends the montana way: pipeline reproducible from
 `python3 pipeline/build.py`, residuals printed, one-file build opens from disk,
-committed assets ≤ ~8 MB/sheet.
+committed assets ≤ ~8 MB/sheet (the folio-mosaic sheets run a little over).
 
 ---
 
