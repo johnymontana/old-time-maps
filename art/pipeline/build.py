@@ -133,6 +133,43 @@ PIECES = [
              'the reading Hague’s folio would redo with better instruments '
              'twenty years on. Hang it beside the draped Folio 30 sheet '
              'and you can watch the science grow up.'),
+    dict(id='tacoma_bev', src='tacoma_bev.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd428/g4284/g4284t/pm009810.jp2',
+         title='City of Tacoma, W.T. — Western Terminus of the N.P.R.R.',
+         line='Lithograph · 1885',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/75696669/',
+         cap='Twelve years after the Northern Pacific chose Commencement '
+             'Bay — Puyallup homeland — as its Pacific terminus, the young '
+             'city sells itself with Mount Rainier for a backdrop. The '
+             'tacoma sheet drapes the country behind this view.'),
+    dict(id='sanborn_wallace', src='sanborn_wallace.tif',
+         url='https://tile.loc.gov/storage-services/master/gmd/gmd427m/g4274m/g4274wm/g016871908/01687_1908-0001.tif',
+         title='Wallace, Idaho — Sanborn sheet 1',
+         line='Sanborn Map Company · December 1908',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/sanborn01687_003/',
+         cap='The silver capital of the Coeur d’Alene, block by block, '
+             'twenty months before the Big Burn of 1910 took a third of '
+             'the town it so carefully colour-codes.'),
+    dict(id='drg1886', src='drg1886.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd430/g4301/g4301p/rr004000.jp2',
+         title='Denver and Rio Grande Railway System',
+         line='Rand, McNally & Co. · 1886',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/98688651/',
+         cap='The narrow gauge that went where standard track could not — '
+             'over Marshall Pass, down the Animas gorge to Silverton — '
+             'drawn at the moment the three-foot empire peaked.'),
+    dict(id='akgold1898', src='akgold1898.jp2',
+         url='https://tile.loc.gov/storage-services/service/gmd/gmd437/g4371/g4371h/ct001125.jp2',
+         title='The Gold and Coal Fields of Alaska, with Steamer Routes and Trails',
+         line='U.S. Geological Survey · 1898',
+         credit='Library of Congress, Geography & Map Division',
+         link='https://www.loc.gov/item/2006629762/',
+         cap='The Survey’s answer to Klondike fever: every route north — '
+             'steamer lanes, passes, winter trails — on one sheet, printed '
+             'the year before the beach at Nome turned gold.'),
     dict(id='clark1814', src='clark1814.jp2',
          url='https://tile.loc.gov/storage-services/service/gmd/gmd412/g4126/g4126s/ct000028.jp2',
          title='A Map of Lewis and Clark’s Track Across the Western Portion of North America',

@@ -8,9 +8,10 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are eleven draped sheets
-spanning a century and a quarter of Montana cartography — parks, valleys,
-the railroad web and the steamboat river — plus a wing of flat art:
+WebGL build you can open straight from disk. There are fifteen draped
+sheets — eleven spanning a century and a quarter of Montana cartography,
+and four reaching into Washington, Idaho, Colorado and Alaska — plus a
+wing of flat art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
@@ -25,9 +26,13 @@ the railroad web and the steamboat river — plus a wing of flat art:
 | [`libby/`](libby/) | *The Libby Quadrangle* — Gibson's geologic map of the Cabinet Mountains | 1948 | the plate is rasterised from the USGS bulletin PDF and correlated against the already-georeferenced 1932 base quad it was printed on |
 | [`rails/`](rails/) | *Montana by Rail* — Rand McNally 1912 over Cram 1884, the whole railroad story on one slider | 1884 & 1912 | town-anchor seeds + correlation against the 1991 sheet's own drape; the 1912 atlas spread is fitted page by page and rejoined at its binding fold |
 | [`montana/`](montana/) | *Montana in Relief* — Allan Cartography's shaded-relief sheet | 1991 | the state silhouette, ICP-fitted through a Lambert conic |
-| [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1899–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
+| [`tacoma/`](tacoma/) | **WA** · *Tacoma: Ice and Iron* — Willis's ice-age folio of the NP terminus country | 1897–1900 | folio + timber plate correlated against the georeferenced 1897 Tacoma quad — 1.0 / 2.6 px |
+| [`coeurdalene/`](coeurdalene/) | **ID** · *The Coeur d'Alene* — PP 62's geology of the silver-lead district | 1901–08 | plate over the district's own special survey (HTMC) — 3.1 px |
+| [`silverton/`](silverton/) | **CO** · *The Silverton Folio* — economic and areal sheets of the San Juan caldera | 1901–05 | both folio plates vs the 1901 Silverton quad — 4.1 px |
+| [`nome/`](nome/) | **AK** · *Nome, the Golden Beach* — Bulletin 533's plates of the gold-rush quadrangle | 1904–13 | fitted from all 28 printed graticule crossings — ~2 px, datum caveat stated |
+| [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1814–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
 
-Nine of the sheets carry a **second historical layer** on the crossfade
+Thirteen of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
 Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
 pen-on-linen manuscript, Yellowstone through the 1911 engraved editions of
@@ -50,6 +55,10 @@ open old-time-maps/bitterroot/the-bitterroot.html
 open old-time-maps/front/rocky-mountain-front.html
 open old-time-maps/rails/montana-by-rail.html
 open old-time-maps/missouri/head-of-navigation.html
+open old-time-maps/tacoma/tacoma-ice-and-iron.html
+open old-time-maps/coeurdalene/coeur-dalene.html
+open old-time-maps/silverton/the-silverton-folio.html
+open old-time-maps/nome/nome-golden-beach.html
 ```
 
 One self-contained file each — textures and all — no server and no build step.
@@ -307,6 +316,51 @@ from the rails-and-rivers shelf, Clark's 1814 master map of the
 expedition, the Northern Pacific's land-grant checkerboard, and the
 Jawbone Railroad's own 1899 promotion.
 
+## beyond Montana — tacoma, coeurdalene, silverton, nome
+
+Four sheets carry the gallery over the state line, built by the same
+pipelines from the same kinds of sources — each a folio or survey
+publication registered against (or fitted like) the Survey's own
+georeferenced base:
+
+![Tacoma: Ice and Iron](docs/tacoma-ice-and-iron.webp)
+
+**`tacoma/` — *Tacoma: Ice and Iron* (WA).** Bailey Willis's Folio 54
+Historical Geology sheet (1899) reads the Vashon ice sheet's work under
+Puget Sound — the gallery's first sheet with the sea in it — over the
+Northern Pacific's terminus country, with the 1900 Gannett/Rankine
+timber-classification plate one stop behind (1.0 / 2.6 px vs the 1897
+quad) and the Wilkeson–Carbonado coal district riding as data. The
+About and *The Terminus* flight state plainly that this is Puyallup and
+Nisqually country and what the Medicine Creek Treaty set in motion.
+
+![The Coeur d'Alene](docs/coeur-dalene.webp)
+
+**`coeurdalene/` — *The Coeur d'Alene* (ID).** Professional Paper 62
+(Ransome & Calkins, 1908): the richest silver-lead district in America,
+its geology draped at 3.1 px over the Survey's own 1906 special map,
+the great lodes — Bunker Hill, Sunshine, Hercules — strung down the
+South Fork, with flights for the 1892/1899 labor wars and the Big Burn
+of 1910, said plainly.
+
+![The Silverton Folio](docs/the-silverton-folio.webp)
+
+**`silverton/` — *The Silverton Folio* (CO).** Folio 120's economic
+sheet (Cross, Howe & Ransome, 1905) — every vein, tunnel and mill of
+the San Juan caldera country at 4.1 px over the 1901 quad, its areal
+geology one crossfade behind, eighty mines riding 13,000-ft terrain,
+the D&RG narrow gauge and the 1873 Brunot Agreement both in the
+flights.
+
+![Nome, the Golden Beach](docs/nome-golden-beach.webp)
+
+**`nome/` — *Nome, the Golden Beach* (AK).** Bulletin 533's 1913
+geology over its 1904 topography, fitted from all twenty-eight printed
+graticule crossings (~2 px internal; the 1904 datum's offset against
+the modern grid is stated, not hidden) — the beach placers, the
+roadstead trade, the Wild Goose Railroad, and the Iñupiaq homeland it
+all stands on.
+
 ## Controls
 
 | | |
@@ -386,7 +440,8 @@ so you can see the georeference laid over the scan.
 library — Vercel runs it, gets `dist/`, and serves the landing page at the
 root with each sheet at `/montana/`, `/missouri/`, `/paradise/`,
 `/yellowstone/`, `/glacier/`, `/bitterroot/`, `/front/`, `/rails/`,
-`/flathead/`, `/gold/`, `/libby/`, and the Flat Wing at `/art/`:
+`/flathead/`, `/gold/`, `/libby/`, the state sheets at `/tacoma/`,
+`/coeurdalene/`, `/silverton/`, `/nome/`, and the Flat Wing at `/art/`:
 
 ```bash
 vercel        # preview
@@ -420,6 +475,10 @@ The code here is yours: [MIT](LICENSE). The scans belong to their libraries:
   Library of Congress; the 1912 Rand McNally from the Internet Archive,
   scan via the David Rumsey Map Collection (the works are public domain by
   age); degree sheets from the HTMC.
+- The state sheets: USGS Folio 54, Professional Paper 62, Folio 120 and
+  Bulletin 533 with their HTMC bases; the 21st Annual Report timber plate;
+  wing pieces from LOC — U.S. government works and expired-term
+  lithographs, public domain throughout.
 - Second layers: PP 296 plate 1 (USGS, public domain); Jaqueth & Walters 1908
   and the de Lacy manuscript — Montana History Portal (Montana Historical
   Society), items marked "copyright not evaluated" but public domain by age.

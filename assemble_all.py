@@ -74,10 +74,34 @@ SHEETS = [  # gallery order: oldest sheet first
                'what their state looks like, draped over the elevation model '
                'it was drawn to describe.',
          credit='American Geographical Society Library, UWM'),
-    dict(d='art', title='The Flat Wing', era='Views & panoramas · 1899–1948',
-         blurb='Bird’s-eye views, brochure maps and town plans that cannot '
-               'honestly be draped — Renshawe’s painted panorama, the Great '
-               'Northern’s aeroplane view, Sanborn sheets and more.',
+    dict(d='tacoma', g='Washington', title='Tacoma: Ice and Iron', era='U.S. Geological Survey · 1897–1900',
+         blurb='Bailey Willis reads the ice sheet that dug Puget Sound, on '
+               'the folio sheet of the Northern Pacific’s terminus country — '
+               'with the 1900 timber-classification plate one layer behind '
+               'and the Wilkeson coal district as data.',
+         credit='U.S. Geological Survey'),
+    dict(d='coeurdalene', g='Idaho', title='The Coeur d’Alene', era='U.S. Geological Survey · Ransome & Calkins, 1908',
+         blurb='The richest silver-lead district in America — Professional '
+               'Paper 62’s geology over the Survey’s own special map, with '
+               'the great lodes riding the terrain and the labor wars and '
+               'the Big Burn said plainly.',
+         credit='U.S. Geological Survey'),
+    dict(d='silverton', g='Colorado', title='The Silverton Folio', era='U.S. Geological Survey · Cross, Howe & Ransome, 1905',
+         blurb='Every vein, tunnel and mill of the San Juan caldera country '
+               'on the folio’s economic sheet, its areal geology one '
+               'crossfade behind — narrow-gauge country, high and deep.',
+         credit='U.S. Geological Survey'),
+    dict(d='nome', g='Alaska', title='Nome, the Golden Beach', era='U.S. Geological Survey · Bulletin 533 · 1904–13',
+         blurb='The only gold rush a steamer ticket could join: the Nome '
+               'quadrangle’s 1913 geology over its 1904 topography, fitted '
+               'from its own printed graticule, the placer creeks riding '
+               'the tundra as data.',
+         credit='U.S. Geological Survey'),
+    dict(d='art', g='The Flat Wing', title='The Flat Wing', era='Views & panoramas · 1814–1948',
+         blurb='Bird’s-eye views, panoramas, system maps and town plans '
+               'from five states that cannot honestly be draped — Clark’s '
+               '1814 master map, Renshawe’s panorama, the railroads’ own '
+               'promotions, Sanborn sheets and more.',
          credit='Various collections — all public domain'),
 ]
 
@@ -99,8 +123,7 @@ def main():
               for dp, _, fs in os.walk(DIST) for f in fs)
     print('gallery   dist/  %.2f MB' % (tot/1e6))
 
-def gallery():
-    cards = '\n'.join('''    <a class="card" href="%(d)s/">
+CARD = '''    <a class="card" href="%(d)s/">
       <div class="im"><img src="%(d)s/card.webp" alt="" loading="lazy"></div>
       <div class="tx">
         <h2>%(title)s</h2>
@@ -108,14 +131,26 @@ def gallery():
         <p>%(blurb)s</p>
         <div class="cr">%(credit)s</div>
       </div>
-    </a>''' % s for s in SHEETS)
-    return '''<!doctype html>
+    </a>'''
+
+def gallery():
+    out, last_g = [], None
+    for sh in SHEETS:
+        g = sh.get('g', 'Montana')
+        if g != last_g:
+            out.append('    <h2 class="stateh">%s</h2>' % g)
+            last_g = g
+        out.append(CARD % sh)
+    cards = '\n'.join(out)
+    return PAGE % cards
+
+PAGE = '''<!doctype html>
 <html lang="en">
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Old Time Maps</title>
-<meta name="description" content="Old sheets, put back on the earth — historical maps of Montana, georeferenced and draped over the terrain they describe.">
+<meta name="description" content="Old sheets, put back on the earth — historical maps of Montana and the mountain West, georeferenced and draped over the terrain they describe.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=IBM+Plex+Mono:wght@400;500&family=IBM+Plex+Sans+Condensed:wght@400;500;600&family=Spectral:ital,wght@0,300;0,400;1,400&display=swap">
@@ -133,6 +168,10 @@ h1{margin:0;font-family:Spectral,Georgia,serif;font-weight:300;
 .rule{width:64px;height:1px;background:var(--line);margin:26px auto 0}
 main{max-width:1060px;margin:0 auto;padding:26px 24px 30px;
      display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+.stateh{grid-column:1/-1;margin:26px 0 0;font-family:Spectral,Georgia,serif;
+        font-weight:300;font-size:15px;letter-spacing:.34em;text-indent:.34em;
+        text-transform:uppercase;color:var(--warm);text-align:center}
+.stateh:first-child{margin-top:0}
 .card{display:flex;flex-direction:column;text-decoration:none;color:inherit;
       background:var(--panel);border:1px solid var(--line);border-radius:3px;
       overflow:hidden;transition:border-color .18s, transform .18s}
@@ -167,7 +206,7 @@ footer a:hover{text-decoration:underline}
 </footer>
 </body>
 </html>
-''' % cards
+'''
 
 if __name__ == '__main__':
     main()
