@@ -97,6 +97,64 @@ SHEETS = [  # gallery order: oldest sheet first
                'from its own printed graticule, the placer creeks riding '
                'the tundra as data.',
          credit='U.S. Geological Survey'),
+    dict(d='mazama', g='The National Parks', title='Mazama: Crater Lake in Professional Paper 3', era='U.S. Geological Survey · Kerr & Diller · 1886–1902',
+         blurb='Kerr’s plane-table survey of the caldera, drawn with the '
+               'lake’s soundings inked across it, and Diller’s 1902 geology '
+               'one crossfade behind — the mountain that fell in, read '
+               'before anyone knew what to call it.',
+         credit='U.S. Geological Survey'),
+    dict(d='luray', g='The National Parks', title='The Hollows of Stony Man', era='U.S. Geological Survey · 1893 & 1933',
+         blurb='The Blue Ridge reconnaissance sheet of 1893 — hollows full '
+               'of farms, forty years before the park — over the 1933 '
+               'survey that mapped the same ridges as the families were '
+               'being moved off them.',
+         credit='U.S. Geological Survey'),
+    dict(d='smoky', g='The National Parks', title='The Smokies in Folio', era='U.S. Geological Survey · Keith, 1895',
+         blurb='Arthur Keith’s 1895 folio of the Knoxville sheet — the '
+               'Smokies drawn in geology and in contour on the same '
+               'engraving, four decades before the park, with eighty gaps '
+               'and balds riding the crest.',
+         credit='U.S. Geological Survey'),
+    dict(d='yosemite', g='The National Parks', title='Yosemite Before the Dam', era='U.S. Geological Survey · 1898–1911 & 1930',
+         blurb='Four engraved quadrangles joined over Matthes’ 1930 park '
+               'map: Hetch Hetchy is still a valley on the older sheets and '
+               'a reservoir on the newer one — the crossfade drowns it in '
+               'front of you.',
+         credit='U.S. Geological Survey'),
+    dict(d='brightangel', g='The National Parks', title='Bright Angel', era='U.S. Geological Survey · Matthes, 1903 & 1907',
+         blurb='François Matthes’ plane-table specials at 1:48,000 — the '
+               'canyon surveyed by mule and alidade, temple by temple — '
+               'joined over the Powell survey’s 1886 reconnaissance of the '
+               'same ground.',
+         credit='U.S. Geological Survey'),
+    dict(d='chisos', g='The National Parks', title='The Big Bend, 1903', era='U.S. Geological Survey · 1903',
+         blurb='The Chisos and the river bend as the Survey found them in '
+               '1903 — quicksilver camps, ranch tanks and crossings — with '
+               'the modern sheets behind and seventy-six springs and '
+               'tinajas riding the desert.',
+         credit='U.S. Geological Survey'),
+    dict(d='mountdesert', g='The National Parks', title='Pemetic: the Island Before Acadia', era='U.S. Geological Survey · 1904 & 1942',
+         blurb='Mount Desert Island in 1904 — rusticator hotels, buckboard '
+               'roads and the ice-scoured domes — over the 1942 War '
+               'Department resurvey, with the harbours and ledges as data.',
+         credit='U.S. Geological Survey'),
+    dict(d='estes', g='The National Parks', title='The Park Special', era='U.S. Geological Survey · 1915',
+         blurb='The only true USGS national-park special sheet in the '
+               'archive, printed the year Rocky Mountain opened — its own '
+               'georeference, no fitting at all — over the Longs Peak '
+               'quadrangle engraved the same spring.',
+         credit='U.S. Geological Survey'),
+    dict(d='kilauea', g='The National Parks', title='Kīlauea and Mauna Loa', era='U.S. Geological Survey · 1921–1930',
+         blurb='The observatory decade on paper: four quadrangles of the '
+               'volcano country over the 1930 Kaʻū geology, with the flows '
+               'and craters named — a map of ground that keeps moving.',
+         credit='U.S. Geological Survey'),
+    dict(d='blackhills', g='The National Parks', title='He Sapa in Folio', era='U.S. Geological Survey · Darton & Paige, 1925',
+         blurb='The Central Black Hills folio over the 1901 quadrangles it '
+               'was printed on — Wind Cave to Black Elk Peak, the granite '
+               'core and the artesian rim — on land the 1868 treaty '
+               'guaranteed and 1877 took.',
+         credit='U.S. Geological Survey'),
     dict(d='art', g='The Flat Wing', title='The Flat Wing', era='Views & panoramas · 1814–1948',
          blurb='Bird’s-eye views, panoramas, system maps and town plans '
                'from five states that cannot honestly be draped — Clark’s '

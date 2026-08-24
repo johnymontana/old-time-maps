@@ -1,0 +1,170 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>STONY MAN</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1893 &amp; 1933 · Blue Ridge, Virginia</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1893 Luray sheet</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1893 Luray sheet, the 1933 Stony Man resurvey and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1933 park survey</span><span id="cfA" class="on">1893 Luray sheet</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×2.0</span></label>
+        <input type="range" id="exag" min="6" max="60" value="20">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">One long north-east ridge, hollows draining off both sides — put the light <b>low from the east</b> to open the Piedmont hollows, then swing it west.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; vanished places</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Gaps, hollows &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="349"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · GNIS ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">One ridge, surveyed twice, emptied in between</h2>
+    <p class="lede">Fifteen minutes of the Blue Ridge — 38°30′ to 38°45′ north, 78°15′ to 78°30′ west — drawn first by a reconnaissance party in 1884–86 and again by a plane-table crew in 1927–29. Between the two printings the Commonwealth of Virginia condemned the mountain out from under the people living on it and gave it to the United States as <b>Shenandoah National Park</b>. The face of this drape is the older sheet — a Blue Ridge of contours, streams and a county line, with a mountain called <i>Ragged</i> where Old Rag is now, and no people on it anywhere. One slider-stop behind it is the survey that put them all on the map, made while the park was being assembled around them.</p>
+
+    <h3>The two sheets</h3>
+    <p>The drape is the USGS <b>LURAY SHEET</b>, Virginia, 1:125,000 — <i>Henry Gannett, Chief Geographer; Gilbert Thompson, Geographer in charge; Triangulation and Topography by W. T. Griswold; Surveyed in 1884–6</i>, edition of May 1893 reprinted October 1898, with J. W. Powell still named as Director in the top margin. Contour interval <b>100 feet</b>. The block here is its south-west quarter. What kind of survey it was, the sheet itself eventually admitted: the next edition of the same map, October 1905, is headed <i>RECONNAISSANCE MAP</i>, and the 1938 reprint of that edition says it outright in the bottom margin — <i>Surveyed by reconnaissance methods</i>. Nothing on the 1893 printing warns you.</p>
+    <p>The middle layer is <b>STONY MAN, VA.</b>, 1:62,500, fifteen-minute series — <i>Topography by Hersey Munroe, Fred Graff Jr., K. W. Trimble, W. K. McKinley, H. B. Smith and F. W. Cook. Surveyed in 1927–1929</i>, made in cooperation with the <i>State of Virginia represented by the Conservation Commission, Geological Survey</i>; edition of 1933, reprinted 1944. Contours at <b>20 and 50 feet</b>. Its neat is exactly this block, which is why the block is this block: it is the only park-era survey covering this ground at map scale. Skyline Drive runs the crest in red, the Shenandoah National Park boundary is the hatched red band, and the 1944 printing adds a red road-classification legend dated 1944.</p>
+
+    <h3>Three layers, and nothing fitted</h3>
+    <p>The slider passes from modern relief through the 1933 resurvey to the 1893 sheet. <b>No control point was picked and nothing was warped.</b> Both files are Historical Topographic Map Collection GeoTIFFs carrying their own polyconic transform on NAD27, and each layer is resampled straight through its own geokeys; the 1:62,500 sheet, which is 2.7 times finer than this grid, is low-passed by half a texel before the downsample so its twenty-foot contours do not alias into speckle.</p>
+    <p>What the build does instead is <i>measure</i> the two against each other. Patches of the 1933 engraving were correlated into the 1893 scan at the positions the 1893 geokeys predict on their own; the correlation returned sixty-two control points and fifty-four survived an outlier trim, and they say the old sheet puts the country <b>240 m from the resurvey at the median, 303 m RMS</b> — twenty-three pixels on a scan of 10.58 m per pixel, about two millimetres at 1:125,000. Split it and it is mostly one thing: <b>185 m of straight shift</b> (62 m east, 174 m north) and about <b>90 m of local wander</b> around it. Both scans corner-probe cleanly onto the same printed graticule, so this is not a difference between the sheets' frames; it is the difference between what two surveys forty years apart put inside them. It was measured and printed, never applied.</p>
+    <p>The practical consequence is visible and worth knowing: the 1893 ink lands roughly 185 m north-north-east of the ground it describes, so its contour bullseye for Hawksbill sits a little uphill of the summit the elevation model actually carries. Crossfade to 1933 and the two agree. The labels on this sheet come from GNIS and the model, not from either printing, so they stay on the mountain while the drape drifts.</p>
+
+    <h3>Which sheet saw the people</h3>
+    <p>The obvious guess is wrong, and it is the most useful thing on this page. Crossfade to 1893 over any hollow — Corbin, Nicholson, Weakley, Dark Hollow — and there is nothing there: contours, a stream, sometimes a road, no buildings, no hollow names, nobody. A reconnaissance survey mapped the ground, not the households. Crossfade forward to 1933 and every dwelling is a black square, every hollow is lettered, the schools and the churches are marked, the bench marks are set, and the park boundary runs around the whole of it in hatched red. That sheet was made in cooperation with Virginia's Conservation Commission — the state body that was at that moment buying and condemning this land for Shenandoah National Park. <b>The survey that finally recorded where these families lived is the survey made in order to move them.</b></p>
+
+    <h3>The ⌂ layer: what is no longer there</h3>
+    <p>GNIS keeps a record after the thing itself is gone and appends one word to the name: <i>(historical)</i>. Every such place inside this neat carries a <b>⌂</b> here — thirty-six of them. Twenty are schools, five are churches, three are Shenandoah River ferries, two are stores, two are trail shelters; one is the post office at Skyland, one is Aaron Nicholson's house at 2,011 feet in the hollow his family gave its name to, and one is the hamlet of Old Rag, whose GNIS elevation of 1,913 feet is the bench mark the 1933 sheet prints on it. There is no editorial selection here — the filter is the parenthesis. Some of these closed when Page County consolidated its schools and some when a bridge replaced a ferry. The ones up on the ridge — Community School at 3,186 feet, Dark Hollow Church, Thorofare Mountain School, Saint Luke Mission — closed because the people were condemned out from under them between 1935 and 1938.</p>
+    <p>One name on the middle layer should be said out loud rather than scrolled past. The stream coming off Thorofare Mountain, between Whiteoak Canyon and Robertson Mountain, is lettered on the 1944 printing with a racial slur — as hundreds of features on federal maps were. The U.S. Board on Geographic Names ordered that word replaced throughout in 1963, and GNIS carries no such name anywhere in this block today. It is left where it is because this layer is the printing, not a redrawing of it.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 13 on a local conic grid — about 14.5 m per drape texel over the 37 × 43 km grid, of which the printed block is 21.7 × 27.7 km. On the sheet the ground runs from <b>181 m</b> at the east edge, where the Piedmont streams leave the block below Etlan, to <b>1,228 m</b> on Hawksbill; the grid keeps falling to 129 m out in the Piedmont beyond the neat. Hawksbill is the sheet's own argument in miniature: the 1893 engraving letters <i>Hawks Bill 4066</i>, the 1933 bench mark reads <b>4,049</b>, GNIS carries 4,029 and the model gives 4,030. Eighteen summits are named here, and every one of them stands within 14 m of its GNIS elevation in the model. Twelve more real summits — Bushytop, Pollock Knob, Millers Head, Nakedtop, Little Stony Man, Bettys Rock, Tanbark Flat, Marys Rock, Robertson, Corbin, Catlett and Hazel Mountains — sit inside 1.5 km of a taller neighbour, which is close enough that the label-snapping would have climbed them onto it; they are carried as plain names instead, claiming no elevation at all.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>37 × 43 km · 22 m per height sample</dd>
+      <dt>Relief</dt><dd>on the sheet, 181 m (the east edge, below Etlan) to 1,228 m (Hawksbill); the grid floor is 129 m beyond the neat</dd>
+      <dt>Georeference</dt><dd>both sheets self-georeferenced · nothing fitted · they disagree by 240 m median over 54 points, of which 185 m is one shift</dd>
+      <dt>Contours</dt><dd>the drape's 100 ft — the 1933 sheet's are 20 and 50 ft — key C</dd>
+      <dt>⌂</dt><dd>36 places GNIS marks <i>(historical)</i></dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Both sheets from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> — <i>Luray</i> 1:125,000, scan 189048 (edition of May 1893, reprinted October 1898) and <i>Stony Man</i> 1:62,500, scan 188599 (edition of 1933, reprinted 1944). The <i>reconnaissance</i> admission quoted above was read off two later printings of the Luray sheet in the same collection, scans 189049 and 189053. Names, coordinates and elevations from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>, using the frozen 2021 archive file, which still carries elevations; every figure in <code>places.py</code> is re-read from that file at build time and the build stops if one has drifted. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. East of this crest is <b>Manahoac</b> country — Siouan-speaking towns on the Rappahannock headwaters, met and fought by John Smith's party at that river's falls in August 1608 and gone from the Piedmont by about 1700 under Iroquois raiding and epidemic disease; west of it, the Valley was the Great Warriors Path. The crest itself was made a treaty line at Albany in 1722 and the Six Nations' claim beyond it was signed away at Lancaster in June 1744. The <b>Monacan Indian Nation</b>, recognised by Virginia in 1989 and by the United States on 29 January 2018, is still here, and Shenandoah National Park names both peoples in its own account of this ground. Neither name appears anywhere on the 1893 sheet. The <i>Manahoac and Monacan country</i> and <i>The hollows emptied</i> flights say all of this at length.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>STONY MAN</h1>
+  <div class="s">The Luray sheet of 1893 · the 1933 resurvey · the Blue Ridge</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

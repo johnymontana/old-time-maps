@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>HE SAPA</h1>
+    <div class="sub"><b>Geologic Atlas, Folio 219</b> · Darton &amp; Paige, 1925 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1925 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1925 folio geology, the 1901 topography and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1901 topography</span><span id="cfA" class="on">1925 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.9</span></label>
+        <input type="range" id="exag" min="6" max="60" value="19">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The hogback and the Red Valley ring show best with the light <b>low from the east</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Parks &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="400" height="297"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Folio 219 · Historical Topographic Map Collection ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The southern hills, in colour</h2>
+    <p class="lede">N.&thinsp;H. Darton and Sidney Paige's Central Black Hills folio (Geologic Atlas of the United States, Folio 219, 1925) — pink Harney Peak granite in the middle, grey Pahasapa limestone around it, the red ring of the Spearfish shale outside that — draped over the country it maps, with the 1901 engraved topography of the HARNEY PEAK and HERMOSA quadrangles one slider-stop behind. Wind Cave National Park is at the bottom of the sheet. Mount Rushmore is an uncarved granite ridge at the top.</p>
+
+    <h3>The folio</h3>
+    <p>Folio 219 covers a full degree — 43°30′ to 44°30′, 103° to 104° — over the Deadwood, Rapid, Harney Peak and Hermosa quadrangles, "thus embracing about 3,441 square miles." This sheet is its southern half, the two quadrangles that hold the granite core, the cave and the whole southern mining district. The areal plate is the <i>Edition of Nov. 1921</i> and still names Albert B. Fall as Secretary of the Interior; by the time the folio was bound and issued in 1925 the cover read Hubert Work. Under the map: "Topography from U.S. Geological Survey maps of Deadwood, Harney Peak, Hermosa, and Rapid quadrangles. Surveyed in 1891-1899. Partially revised in 1913-1915." The geology of the Cambrian and later rocks is chiefly Darton's, the pre-Cambrian is Paige's, surveyed 1900–1915; contour interval 100 feet; engraved and printed by the Survey itself.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the <i>1901 quadrangles</i> — Harney Peak, edition of June 1901, surveyed 1897–98; Hermosa, edition of March 1901 reprinted June 1913, surveyed 1898–99; both under E.&thinsp;M. Douglas with topography by A.&thinsp;F. Dunnington — to the 1925 geology. Each quad carries its own polyconic georeference and drapes straight from it; the two printings are tone-matched at their paper whites and meet at their neatlines on 103°30′. The folio plate is rasterised at 300 dpi (10.5 m per pixel, the scale the quads were scanned at), seeded from two of its own printed neat corners, then registered by correlation against <i>both</i> quads at once on a local high-pass ink mask. The folio's topography is literally these sheets, so the fit is folio-tight: <b>220 control points, none trimmed, 1.48 px RMS — about 16 m on the ground</b>, worst residual 3.3 px.</p>
+
+    <h3>The mines as data</h3>
+    <p>The <i>Summits &amp; mines</i> layer plots 69 named mines and quarries from the U.S. Board on Geographic Names — the frozen 2021 gazetteer, because the live product retired the Mine feature class that year. They trace one thing: the Harney Peak pegmatite field, gold at Keystone at its top and industrial minerals everywhere under it. Darton and Paige printed their own ledger in the plate's corner: "tin and mica in pegmatitic dikes and veins; spodumene and amblygonite (lithia rock) in pegmatitic dikes… limestone for lime, flux, and cement manufacture in Minnekahta, Whitewood, Pahasapa, Englewood, and Niobrara limestones." Wind Cave itself has no point in the gazetteer at all — GNIS names the park, the canyon and every ranch around it, but not the hole; its label here was read off the cave symbol printed on the 1901 Hermosa sheet.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 37 m per drape texel over the 96 × 71 km grid, from 816 m (2,676 ft) out on the plains east of the hogback to 2,191 m (7,188 ft) on the crest. The model reads Black Elk Peak at 7,171 ft against its surveyed 7,247: a 30-metre elevation grid rounds a sharp granite summit off, and the broad limestone top of Odakota Mountain — grey on the folio where Black Elk is pink — comes out highest instead. Nothing in this terrain shows the reason the park at the bottom of the sheet exists: the cave is more than 150 miles of mapped passage under a surface that reads as grass.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>96 × 71 km · 56 m per height sample</dd>
+      <dt>Relief</dt><dd>816 m (plains, east edge) to 2,191 m (Odakota Mountain)</dd>
+      <dt>Georeference</dt><dd>quads self-georeferenced · folio plate vs both quads · 1.48 px ≈ 16 m, 220 points</dd>
+      <dt>Contours</dt><dd>the sheets' 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/publication/gf219" target="_blank" rel="noopener">USGS Geologic Atlas, Folio 219</a> (Darton &amp; Paige, 1925; <a href="https://pubs.usgs.gov/gf/219/" target="_blank" rel="noopener">plates and text</a>); base quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scans 344786 and 344793, editions of 1901); names and mines from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a> and its 2021 archive. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This is He Sapa, the Black Hills — Lakota land, and Cheyenne, Arapaho, Kiowa and Crow country before and beside them. The 1868 Fort Laramie treaty set these hills apart for the Lakota's "absolute and undisturbed use and occupation"; Custer's expedition found gold on French Creek in 1874, and an act of Congress took the hills on 28 February 1877. In <i>United States v. Sioux Nation of Indians</i> (1980) the Supreme Court held that taking unlawful and awarded compensation; it has never been accepted, because the claim was never for money. Darton borrowed the same name for his limestone: Pahasapa.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>HE SAPA</h1>
+  <div class="s">Central Black Hills Folio · Harney Peak &amp; Hermosa · 1925</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>YOSEMITE</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1898–1911 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1898–1911 quads</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1930 park map and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1930 park map</span><span id="cfA" class="on">1898–1911 quads</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.7</span></label>
+        <input type="range" id="exag" min="6" max="60" value="17">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The Valley runs east–west — put the light <b>low from the west</b> and the walls stand up.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; falls</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · Professional Paper 160 ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">Hetch Hetchy, still a valley</h2>
+    <p class="lede">Four engraved quadrangles at 1:125,000 — YOSEMITE (1909), MT. LYELL (1901), DARDANELLES (1898) and BRIDGEPORT (1911) — tiled into one block of the Sierra Nevada and draped over modern elevations. Every one of them was printed before the Raker Act of December 1913, so on this drape Hetch Hetchy is still a valley with a river in it. Pull the slider one stop and François Matthes' 1930 park map puts the reservoir there instead.</p>
+
+    <h3>The sheets</h3>
+    <p>These are the 30-minute quadrangles the Survey ran up the Sierra while the park was being argued over: <i>Yosemite</i> (surveyed 1893–94, engraved June 1896, this edition of April 1909), <i>Mt. Lyell</i> (1898–99, edition of May 1901), <i>Dardanelles</i> (1891–96, edition of May 1898) and <i>Bridgeport</i> (1905–09, edition of December 1911). R.&thinsp;B. Marshall drew the topography on the first three and signs the fourth as chief geographer; H.&thinsp;E.&thinsp;C. Feusier ran the triangulation for all three of the early ones. Contour interval 100 feet throughout. The Yosemite sheet carries a confession in its bottom margin — <i>“The elevations on this map were later found to be 85 feet too high”</i> — and the park's changing shape is written across the set: the 1898 Dardanelles sheet still rules YOSEMITE NATIONAL PARK BOUNDARY LINE straight east–west across itself, while the 1909 Yosemite sheet, printed after the 1905 reduction, letters STANISLAUS and SIERRA NATIONAL FOREST over the western and southern ground the park had lost. Matthes' 1930 plate draws a third line again, in green, and it agrees with neither.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through <i>Matthes' 1930 topographic map of Yosemite National Park</i> — USGS Professional Paper 160, plate 2, “from Geological Survey maps surveyed between 1893 and 1909, roads and trails added 1928 by National Park Service” — to the quadrangles themselves. The plate is drawn on the block's exact sheet lines, so it covers the drape corner to corner, title block and all; the engraver set that cartouche inside the neat line over the Bodie Hills and it is left where he put it. Matthes' collar admits its projection sits <i>690 feet south and 300 feet west</i> of the North American datum; the registration absorbs that automatically. Fitted by correlation on shared engraved ink against all four quads at once — 265 control points, <b>4.8 px RMS</b> at the plate's 10.5 m/px, about <b>50 m on the ground</b>. Same survey, same engraving house, so the disagreement is thin: reduction, revision and a 1930 press.</p>
+
+    <h3>The falls as data</h3>
+    <p>The <i>Summits &amp; falls</i> layer plots 39 named falls and cascades from the U.S. Board on Geographic Names, from Yosemite Falls and Bridalveil to Waterwheel and Le Conte in the Grand Canyon of the Tuolumne, and Wapama and Tueeulala on the wall of Hetch Hetchy — the two that now drop into a reservoir. They sit where the granite breaks; turn the sun low and the cliffs that make them come out.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 32 m per drape texel over the 103 × 99 km block, from the Merced canyon at 1,069 ft on the western edge to Mount Ritter at 13,051 ft in the model. The modern terrain holds Hetch Hetchy Reservoir and Lake Eleanor behind their dams; the 1898–1911 sheets show meadow, river and a shallow natural lake, and the mismatch is left in plain sight — it is the whole point of this sheet.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Block</dt><dd>37°30′–38°15′ N × 119°–120° W · 103 × 99 km · 49 m per height sample</dd>
+      <dt>Relief</dt><dd>326 m (the Merced at the west edge) to 3,978 m (Mount Ritter)</dd>
+      <dt>Georeference</dt><dd>quads self-georeferenced · 1930 plate vs quads · 4.8 px ≈ 50 m · 265 points</dd>
+      <dt>Contours</dt><dd>the sheets' 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> (scans 299699, 299480, 299315, 299235); the park map from <a href="https://pubs.usgs.gov/pp/0160/" target="_blank" rel="noopener">Professional Paper 160</a>, plate 2 (Matthes, 1930); names, summit elevations and the falls from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a> (the frozen 2021 archive of the domestic names file, which still carries elevations). All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This block is the homeland of the Ahwahneechee and the Southern Sierra Miwok on the west slope and the Kutzadika'a Paiute at Mono Lake, who traded across these passes for as long as anyone can measure; in March 1851 the state-funded Mariposa Battalion rode into Yosemite Valley, burned the villages and the acorn stores, and drove Chief Tenaya's people to the Fresno River reservation — the <i>Valley</i> flight says so where it happened.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>YOSEMITE</h1>
+  <div class="s">Yosemite · Mt. Lyell · Dardanelles · Bridgeport · 1898–1911</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

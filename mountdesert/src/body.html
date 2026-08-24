@@ -1,0 +1,164 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>MOUNT DESERT</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1904, reprinted 1920 &amp; 1928 · 1:62,500</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1904 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1904 quadrangle sheets, the 1942 resurvey and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1942 resurvey</span><span id="cfA" class="on">1904 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×3.0</span></label>
+        <input type="range" id="exag" min="6" max="60" value="30">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">These summits take the sunrise off open water — try the light <b>low from the east</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; islands</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; harbours</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Bays &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Historical Topographic Map Collection · 1904 &amp; 1942 ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The island when the park was called Lafayette</h2>
+    <p class="lede">Two 15-minute quadrangles — BAR HARBOR and MOUNT DESERT, surveyed 1902–03 and published in 1904 — joined at 68°15′ into one island, in the state their plates were reprinted in during the 1920s: <b>LAFAYETTE NATIONAL PARK</b> lettered across the mountains, and every summit wearing the new name it was given in 1918. One slider-stop behind lies the 1942 edition of the same two cells: a wholly new survey, drawn under a War Department imprint, with the park renamed Acadia.</p>
+
+    <h3>The sheets</h3>
+    <p>Both cells were mapped by the U.S. Coast and Geodetic Survey with W. H. Lovell, in cooperation with the State of Maine, under H. M. Wilson as geographer in charge — Bar Harbor surveyed in 1902 and printed April 1904, Mount Desert printed May 1904. Then the plates were reissued, and each reissue is a snapshot of what the island was called that year. The Bar Harbor sheet here is the <b>1920 reprint</b>; the Mount Desert sheet is the <b>1928 reprint</b>, its Survey file stamp dated SEP 6 – 1928. Both carry a park that did not exist when the topography was drawn: Woodrow Wilson proclaimed <i>Sieur de Monts National Monument</i> on 8 July 1916, Congress made it <i>Lafayette National Park</i> on 26 February 1919 — the first national park east of the Mississippi — and on 19 January 1929 it became <i>Acadia</i>. Earlier printings of these same plates carry the monument boundary in red, and the earliest carry no park at all and the old names: Green, Dry and Newport Mountain, Robinson, Browns, Jordan and Dog.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the <i>1942 editions</i> — surveyed 1934-35 and 1939-40 by A. J. Ogle's parties, printed with ACADIA NATIONAL PARK hatched in red, Schoodic Peninsula inside it, the motor road up Cadillac and Rockefeller's carriage roads drawn for the first time — to the 1904 plates. All four scans are HTMC GeoTIFFs carrying their own polyconic georeference, so <b>nothing here is fitted</b>: every layer drapes by passthrough, and the two cells of each edition meet at their own neat lines, tone-matched at the paper white (no channel had to move by more than 2.1%).</p>
+    <p>What was measured instead is how far apart the two surveys actually are. The 1904 ink was correlated against the 1942 ink on a lattice over the island — 131 matched patches — and compared against each sheet's own georeference: <b>6.2 px on Mount Desert and 8.5 px on Bar Harbor, about 33 and 45 m on the ground</b>, median 25–27 m, with a plain shift and rotation accounting for most of it (24–26 m residual after a degree-1 fit). That is the honest distance between a 1902 reconnaissance on the old North American datum and a 1930s plane-table survey on NAD 1927, and it is left in the sheet rather than fitted away. Watch it on the shoreline when you cross the slider.</p>
+
+    <h3>The archipelago</h3>
+    <p>The data layer under the anchor glyph is the islands: 69 of them, from Bartlett and Ironbound down to Junk of Pork and Old Soaker, keyed by GNIS <i>feature_id</i> because four separate islands inside this one block are called Bar Island. On a sheet that is a third open water, they are the structure. Baker Island and the Bass Harbor Head light fall a kilometre and more below the 44°15′ neat line, and are simply not on the paper.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 12 m per drape texel over the 47 × 35 km block. The Gulf of Maine's real bathymetry is carried through the mosaic and then flattened at zero, so the sea in the model is exactly flat and every depth curve you can see belongs to the 1942 sheet, not to the terrain. Land runs from that sea surface to 464 m on Cadillac Mountain, which the 1942 plate marks 1,530 feet — the model reads 1,521. Nineteen summits are labelled, each with the elevation printed beside its triangulation mark on the 1942 sheet; every one was checked against the model and none is more than 25 m out.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>47 × 35 km · 23 m per height sample</dd>
+      <dt>Relief</dt><dd>sea level to 464 m (Cadillac Mountain, printed 1,530 ft)</dd>
+      <dt>Georeference</dt><dd>all four scans self-georeferenced · 1904 vs 1942 measured at 131 points · 6.2–8.5 px ≈ 33–45 m</dd>
+      <dt>Contours</dt><dd>the sheets' 20 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>All four quadrangle scans from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> — Bar Harbor 807360 (1904, reprinted 1920) and Mount Desert 807575 (1904, reprinted 1928); Bar Harbor 460150 and Mount Desert 460635 (edition of 1942). Names and island coordinates from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The Bar Harbor sheet is a Survey file copy and looks it: a rubber stamp reading FILE COPY — MAPS &amp; DRAFTING sits out in the Atlantic in the southeast corner, and the symbol table printed on the back of the paper shows faintly through the ocean. Both are left where they are.</p>
+    <p>This island is Pemetic, the sloping land — Wabanaki homeland, the country of the Penobscot and Passamaquoddy with their Maliseet and Mi'kmaq relations, lived in for some five thousand years by the record of the shell heaps along these shores. Champlain struck a ledge off the east side on 5 September 1604 and wrote down another name. Through the whole resort era drawn on the 1904 sheets, Penobscot and Passamaquoddy families camped each summer on the Bar Harbor waterfront selling ash baskets and canoes, and were moved on and finally moved off; no edition of this quadrangle marks the encampment. Maine took Wabanaki land without a ratified federal treaty, and the claims over that failure ran until the Maine Indian Claims Settlement Act of 1980. The <i>Pemetic</i> flight says so on the ground it happened.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>MOUNT DESERT</h1>
+  <div class="s">Bar Harbor &amp; Mount Desert · 1904 · 1:62,500</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

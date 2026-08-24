@@ -1,0 +1,165 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>ROCKY MOUNTAIN</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1915 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1915 park sheet</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1915 park sheet, the 1915 Longs Peak quadrangle and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">Longs Peak 1915</span><span id="cfA" class="on">1915 park sheet</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Every cirque on this sheet faces the sunrise — try the light <b>low from the east</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="368"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · GNIS ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">One survey, printed twice</h2>
+    <p class="lede">The one classic USGS park special that survives complete and georeferenced: <i>Topographic Map of Rocky Mountain National Park, Colorado</i>, 1:125,000, surveyed 1912–15 — with the <b>Longs Peak</b> quadrangle of the same survey, engraved February 1915, one slider-stop behind it. One field party, one half degree of the Front Range, and thirty-six years of history printed in between.</p>
+
+    <h3>The two sheets</h3>
+    <p>Both cover exactly the same block: 40°00′–40°30′ north by 105°30′–106°00′ west, the graticule box printed on each. Both credit R.&thinsp;B. Marshall as chief geographer, Sledge Tatum as geographer in charge, and the topography to B.&thinsp;A. Jenkins and C.&thinsp;A. Ecklund — with Cornelius Schurr added on the park sheet. The quadrangle says <i>Surveyed in 1912–1913</i>, carries a <b>50-foot</b> contour interval, and is the edition of May 1915. The park sheet says <i>Surveyed in 1912–1915</i>, generalises to <b>100 feet</b>, and is the edition of 1915 <i>reprinted in 1951</i> — with a line in its margin admitting that <i>roads and trails</i> were <i>added 1940 by National Park Service</i>. Every red road and dashed trail on the drape is that 1940 addition; the red hatched ribbon is the park limit, already swollen west by the Never Summer extension of 1930. The park sheet's map body runs north past the shared neat to about 40°33′, over Comanche Peak and Mummy Pass, but this block is cut to the thirty-minute graticule both sheets print, so the crossfade holds edge to edge.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the <i>1915 Longs Peak quadrangle</i> to the park sheet. <b>Nothing here was fitted and no control point was picked.</b> Both files are Historical Topographic Map Collection GeoTIFFs carrying their own polyconic transform on NAD27, and each layer is resampled straight through its own geokeys. To check that the two transforms agree, 169 patches of the park sheet's engraving were correlated into the Longs Peak scan at the positions the Longs Peak geokeys predict on their own: the two land <b>3.3 px apart at the median, 3.4 px RMS</b>, on scans of 10.58 m per pixel — about <b>34 m</b> on the ground, roughly a pen width at this scale. That number was measured, not applied; neither sheet was moved.</p>
+
+    <h3>What the thirty-six years did</h3>
+    <p>Pull the slider between the two printings and the changes are the history of the place. The <b>park boundary</b> is a thin line in 1915 and a hatched red band on the park sheet, swollen west across the Never Summer Mountains by the addition of 1930. <b>Fall River Road</b> does not exist on the quadrangle — the wagon road ends at Horseshoe Falls and goes on as a dashed trail — and on the park sheet it switchbacks to Fall River Pass with <b>Trail Ridge Road</b> beside it. At Grand Lake, one lake becomes three: Shadow Mountain Lake and Granby Reservoir are stencilled straight over the 1915 survey, so Soda Creek still meanders across the middle of Lake Granby and Stillwater still stands in it. Even a name moves — the glacier under Hagues Peak is lettered <i>Hallett Glacier</i> in 1915 and <i>Rowe Glacier</i> on the park sheet.</p>
+
+    <h3>Summits, and no mine layer</h3>
+    <p>This sheet ships without a data layer, and the reason is worth stating. The frozen 2021 GNIS archive — the last edition that still carries the Mine feature class — puts 65 mine and tunnel records inside this neat, but <b>28 of them share one identical coordinate</b> at Ward, in the block's far south-east corner: the Boulder County tungsten camps, off the park and off this sheet's story. The Colorado headwaters, where the mining that matters here happened, hold none at all: Lulu City is a <i>Locale</i>, not a mine. A layer that stacks twenty-eight glyphs on one point would be worse than no layer, so the <i>Summits</i> chip carries the nineteen peaks alone — each one checked against the model within 25 m of its printed feet.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 23 m per drape texel over the 58 × 71 km grid, of which the printed block is 42 × 56 km. On the sheet itself the ground runs from 2,277 m, where the Big Thompson leaves the block at 105°30′ below Estes Park, to 4,342 m on Longs Peak; the grid keeps going down to 2,035 m out in the St. Vrain foothills beyond the neat. That summit is worth a moment: the bench mark engraved on the sheet reads <b>14,255 feet</b>, GNIS now carries 14,262, and the elevation model gives 14,245. Three answers to one question, a century apart, and none of them wrong by much.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>58 × 71 km · 34 m per height sample</dd>
+      <dt>Relief</dt><dd>on the sheet, 2,277 m (Big Thompson at the east neat) to 4,342 m (Longs Peak); the grid floor is 2,035 m beyond it</dd>
+      <dt>Georeference</dt><dd>both sheets self-georeferenced · nothing fitted · they agree to 3.3 px ≈ 34 m over 169 points</dd>
+      <dt>Contours</dt><dd>the park sheet's 100 ft — the quadrangle's are 50 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Both sheets from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> — <i>Rocky Mountain National Park</i> 1:125,000, scan 234287 (edition of 1915, reprinted 1951) and <i>Longs Peak</i> 1:125,000, scan 402456 (edition of May 1915); names, coordinates and elevations from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>, with the frozen 2021 archive file used for the summit elevations, and every figure re-checked against that file at build time. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This half degree is Núuchi-u (Ute) and Hinono'eino' (Arapaho) homeland: the Ute Trail lettered across Trail Ridge on both sheets is theirs, and the Arapaho names now official on it — Kawuneeche, Ni-chebe-chii — were written down in July 1914 from Gun Griswold and Sherman Sage, brought back from the Wind River Reservation because they had been removed from this country in 1878. The <i>Ute and Arapaho Country</i> flight says it at length.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>ROCKY MOUNTAIN</h1>
+  <div class="s">The park special · Longs Peak quadrangle · 1915</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

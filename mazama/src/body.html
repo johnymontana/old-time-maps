@@ -1,0 +1,165 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>MAZAMA</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · Professional Paper 3 · surveyed 1886</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1886 topography</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between Kerr's 1886 topography, Diller's geology and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">Diller's geology</span><span id="cfA" class="on">1886 topography</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Park boundary</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The wall is two thousand feet of it — try the light <b>low from the east</b> and watch the rim reach across the water.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; soundings</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Camps &amp; landings</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Waters &amp; rims</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Professional Paper 3, 1902 ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The pit where a mountain stood</h2>
+    <p class="lede">Mark B. Kerr's plane-table survey of 1886, printed as Plate I of Professional Paper 3 and cut to the four lines Congress had just made the boundary of Crater Lake National Park — draped on modern elevations, with J. S. Diller's coloured geology one slider-stop behind and the soundings of the boat <i>Cleetwood</i> floating over the water they were taken from. This is giiwas, Klamath homeland.</p>
+
+    <h3>The plates</h3>
+    <p>Professional Paper 3, <i>The Geology and Petrography of Crater Lake National Park</i> (Joseph Silas Diller and Horace Bushnell Patton, 1902), carries both layers. <b>Plate I</b> is Kerr's topography — Henry Gannett chief geographer, A. H. Thompson geographer in charge, "Surveyed in 1886" — everything red on it is Diller's: the numbers where he collected the specimens the paper describes, and the single letters that class the rock (A hypersthene-andesite, B basalt, D dacite, D′ tuffaceous dacite, G glacial moraine and dacite tuff). It also carries a dashed "possible pack-train route, but no trail" around the rim, with his camps numbered along it. <b>Plate VI</b> paints those same five classes on the identical base — pink andesite for the body of the old cone and the ridges radiating off it, pale yellow dacite along the north rim at Llao Rock, orange tuffaceous dacite at Round Top and the Wineglass, blue-grey basalt for the outlying cones (Timber Crater, Bald Crater, Desert Cone, Crater Peak), olive moraine and dacite tuff over the low ground north and west — and adds little arrows for the glacial striae. Both were rasterised at 300 dpi straight out of the report's own scan; both were lithographed by Julius Bien &amp; Co. of New York.</p>
+    <p>Diller says how Plate I was assembled, and it shows at the edges: the country between 122°00′ and 122°15′ and between 42°50′ and 43°04′ came from the <i>Crater Lake special sheet</i> at an inch to the mile, while the strips outside it — one minute of longitude along the west, two minutes of latitude along the south — were reduced from the <i>Ashland sheet</i> at an inch to four miles. The west and south margins of this drape are softer than the rest because they were drawn from farther off.</p>
+
+    <h3>Three layers</h3>
+    <p>There is no early georeferenced base for this country. The oldest Crater Lake quadrangles the USGS has staged are <b>1985</b>, and they are Lambert conformal rather than the polyconic this pipeline reads, so there is nothing whatever to correlate a 1902 plate against. Both plates were therefore fitted from their own printed graticule, the way the Nome sheet was: the 25 crossings of the five-minute net on each were located by ruler-grid crops and a darkness-centroid profile, and a degree-2 polynomial in the sheet's own conic plane carried them to the earth. Plate I lands on its net at <b>1.11 px RMS</b> (worst 2.20), Plate VI at <b>1.02 px</b> (worst 1.53) — about <b>12 metres</b> at the plates' 11.9 m per pixel. A degree-1 fit leaves Plate I at 3.06 px, because that sheet's paper carries a keystone of roughly 0.7 per cent; the second-degree term is exactly that much paper.</p>
+    <p>Paper is not ground, so the lake was made to answer for the survey. Lifted off this drape and off the 1985 <i>Crater Lake West</i> and <i>Crater Lake East</i> quadrangles, the two shorelines agree to a <b>median 171 m</b>, nine tenths of Kerr's outline within 363 m, his water 55.2 km² against the modern 54.7; the best rigid shift that would improve the overlap is <b>268 m</b>. That number — old datum, plane table and a century of paper together — is what an 1886 triangulation taken at face value is worth here. His heights ran high the same way: the plate letters "Lake surface 6239 feet above sea level" where the model reads a dead-flat <b>6,175</b>.</p>
+
+    <h3>The soundings</h3>
+    <p>The data layer is the lake floor. In 1886 the survey party hauled the boat <i>Cleetwood</i> to the rim and lowered her down the inside wall, and "to determine the configuration of the bottom of Crater Lake a large number (168) of soundings were made under the direction of Major Dutton" — lead and wire, cast after cast. Plate I prints <b>56</b> of those depths inside the shoreline, and all 56 are here, read once off the 300-dpi scan and carried to the ground by the inverse of the plate's own graticule fit. The deepest reads <b>1,996 feet</b>; Dutton added "a small but unknown correction for the stretching of the wire, which will make the true depth of this cast fully 2,000 feet," and called it the deepest fresh water in the United States. Modern sonar puts the floor about fifty feet shallower than his figure. The terrain under the labels is flat because the elevation model is a surface model: it stops at the water, and these numbers are the only depth on the sheet.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles on a local conic grid — <b>zoom 13</b> rather than the gallery's usual 12, because this is the smallest block in the collection and at zoom 12 a post is 28 m here, enough to round the Devils Backbone and Llao Rock off the rim. That gives about 11 m per drape texel over a 28 × 36 km grid. The park itself measures 21.7 × 29.6 km — 249 square miles, exactly the figure in the act.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>28.1 × 36.0 km · 11.0 m per drape texel · 16.5 m per height sample</dd>
+      <dt>Relief</dt><dd>1,177 m at the south-west corner to 2,715 m on Mount Scott; the lake surface sits at 1,882 m</dd>
+      <dt>Georeference</dt><dd>printed 5′ graticule, 25 crossings per plate, degree 2 · Pl. I 1.11 px, Pl. VI 1.02 px ≈ 12 m · shoreline vs the 1985 quads: median 171 m</dd>
+      <dt>Contours</dt><dd>the plate's 100 ft, index every 500 — key C</dd>
+      <dt>Data layer</dt><dd>56 printed soundings, in feet below the 1886 lake surface — key toggles with the summits</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Both plates from <a href="https://pubs.usgs.gov/pp/0003/report.pdf" target="_blank" rel="noopener">USGS Professional Paper 3</a> (1902), pages 18 and 38 of the scan; the modern quadrangles used only as a check are <i>Crater Lake West</i> (scan 279504) and <i>Crater Lake East</i> (279501), 1985, from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a>; names and coordinates from <a href="https://www.usgs.gov/tools/geographic-names-information-system-gnis" target="_blank" rel="noopener">GNIS</a>; elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. All U.S. government works, public domain. The place this sheet draws is <b>giiwas</b> — Klamath homeland, and a place of power in Klamath tradition, which holds the mountain's destruction as a battle between Llao of the below world and Skell of the above. By the Treaty of Council Grove of 14 October 1864 the Klamath, Modoc and Yahooskin ceded some twenty million acres, this mountain among them; Fort Klamath, from which this map's only wagon road climbs, is where four Modoc leaders were hanged in October 1873. The Klamath Tribes were terminated by Congress in 1954 and restored in 1986. The rim's Klamath names were put on the map by others, in the 1880s and '90s, out of stories that were not theirs to take — Llao Rock is the one already lettered on this 1886 sheet, and the <i>giiwas</i> flight says so plainly.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>MAZAMA</h1>
+  <div class="s">Crater Lake · Diller &amp; Kerr · 1886–1902</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the plates…</div>
+</div></div>

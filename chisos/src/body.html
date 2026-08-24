@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>THE BIG BEND</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1903 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1903 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1903 quadrangles, the 1984–85 metric sheets and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1984–85 sheets</span><span id="cfA" class="on">1903 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.9</span></label>
+        <input type="range" id="exag" min="6" max="60" value="19">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The Carmen wall faces west across the river — try the light <b>low from the west</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; springs</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Places</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; canyons</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · GNIS ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The bend, forty years before the park</h2>
+    <p class="lede">Two Geological Survey quadrangles of 1903 — <i>TERLINGUA</i> and <i>CHISOS MOUNTAINS</i>, 1:125,000, joined at 103°30′ — draped over modern elevations, with the 1984–85 metric sheets of the same ground one slider-stop behind. Between them the two old sheets hold nearly all of Big Bend National Park, which would not exist until 12 June 1944.</p>
+
+    <h3>The sheets</h3>
+    <p>Arthur Stiles ran the triangulation and drew both, assisted by J.&thinsp;E. Blackburn and (on the Chisos sheet) S.&thinsp;T. Penick, under E.&thinsp;M. Douglas as geographer in charge. Terlingua was surveyed in 1902–03 <i>in cooperation with the University of Texas Mineral Survey</i> — quicksilver had been found on the Terlingua flats and somebody wanted a map of it — which is much of why these sheets exist this early at all, while the country immediately north of them waited for the Bone Spring sheet of 1918. <i>Chisos Mountains</i> is not a standard quadrangle at all but 45′ of longitude by 30′ of latitude, cut to hold the mountains and the bend. Both print 100-foot contours, both carry the era's printed datum note — <i>to place on 1927 North American datum move projection lines 225 feet south and 100 feet west</i> — and both stop where the country stops being American: Terlingua leaves Mexico as blank paper, while the Chisos sheet carries its contours miles into Coahuila and letters Boquillas and San Vicente on the far bank.</p>
+
+    <h3>Three layers</h3>
+    <p>All four scans carry their own georeference, so <b>nothing here is fitted</b>: the 1903 pair is polyconic on NAD&nbsp;27, the 1984–85 pair transverse Mercator on NAD&nbsp;27, each read from its own GeoTIFF geokeys and resampled straight onto the conic grid. What the pipeline does instead is measure. Correlating the 1903 engraving into the 1985 sheet at the positions the 1985 georeference predicts on its own gives 73 shared points and a disagreement of <b>31 px median, 44 px rms at 8.47 m per pixel — about 265 m, 370 m rms, worst 780 m</b>. That is not a registration error; it is the distance between a plane-table survey carried on a sparse triangulation net in 1903 and a photogrammetric compilation from 1:24,000 sheets of 1970–71 — four times the sheets' own printed datum note. Nothing was adjusted to hide it, and the modern terrain arbitrates: the 1985 river lies in the model's canyon, the 1903 river a few hundred metres beside it.</p>
+
+    <h3>Water as data</h3>
+    <p>The <i>Summits &amp; springs</i> layer plots the named springs and tinajas GNIS records inside the block — 76 of them, thinned one to a cell so the basins stay readable: Comanche, Glenn, Neville, Dripping, Ernst Tinaja, Tinaja Blanca, McGuirks Tanks. In the Chihuahuan Desert the map of water is the map of everything: the ranches, the wax camps, the crossings and the raiding trails all sit where water sits, and the 1903 topographers lettered spring after spring in brown because that is what a survey party in this country had to know.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 33 m per drape texel over the 137 × 71 km grid, of which the two sheets fill 70 per cent and the rest is table. The block runs from the Rio Grande leaving the east neat at 1,672 ft to Emory Peak, which the model puts at 7,726 ft where GNIS says 7,798 — a 22 m disagreement on a summit, and the model is the one that has been right before. Emory Peak stands 1,775 m above the river at Mariscal Canyon, thirty-two kilometres south of it.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>137 × 71 km · 53 m per height sample</dd>
+      <dt>Relief</dt><dd>on the block, 510 m (Rio Grande at Heath Canyon) to 2,355 m (Emory Peak)</dd>
+      <dt>Georeference</dt><dd>all four sheets self-georeferenced · 1903 vs 1985 measured at 31 px ≈ 265 m</dd>
+      <dt>Contours</dt><dd>the 1903 sheets' 100 ft — key C (the metric sheets' own interval is 20 m)</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>All four quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> — scans 121887 (Terlingua, 1903) and 108199 (Chisos Mountains, 1903) for the drape, 122109 (Chisos Mountains, 1985) and 121986 (Boquillas, 1984) for the middle layer, the latter pair compiled from 1:24,000 sheets of 1970–71 with the Mexican portion taken from a 1983 DGG 1:50,000 map, <i>San Vicente H13D46</i>; names, elevations and springs from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>, the frozen 2021 archive that still carries elevations. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This is Chisos, Mescalero Apache and Comanche country: the range carries the name of the Chisos people, who lived in this desert when the Spanish came and were killed, enslaved or absorbed by the mid-1700s; the Mescalero held the high country into the 1880s; and for a century the Comanche War Trail forded the river at Lajitas and below San Vicente on its way into Chihuahua and Coahuila — the 1903 sheets still letter Comanche Spring and Comanche Creek along its line. The villages on the Mexican bank that these sheets name — Boquillas del Carmen, San Vicente, Santa Elena — are ejidos, communal grants of the Mexican agrarian reform, and their people crossed to trade at Boquillas until that port of entry was closed in 2002; it reopened in 2013. On the Texas bank the farm villages the sheets draw — Castolon, La Coyota, Terlingua Abaja, Santa Elena Crossing — were bought out or left as the park came in.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>THE BIG BEND</h1>
+  <div class="s">Terlingua · Chisos Mountains · 1903</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>
