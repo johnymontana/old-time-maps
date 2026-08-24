@@ -102,6 +102,17 @@ void main(){
 
 const TERRAIN_FS = COMMON + `
 uniform sampler2D uDrape, uRamp;
+uniform vec2  uDTexel;
+uniform float uSharp, uEmboss;
+vec3 inkTap(sampler2D s, vec2 uv, vec2 tx, float amt, out vec2 grad){
+  vec3 c = texture2D(s, uv).rgb;
+  vec3 l = texture2D(s, uv-vec2(tx.x,0.0)).rgb, r = texture2D(s, uv+vec2(tx.x,0.0)).rgb;
+  vec3 d = texture2D(s, uv-vec2(0.0,tx.y)).rgb, u = texture2D(s, uv+vec2(0.0,tx.y)).rgb;
+  const vec3 W = vec3(0.299,0.587,0.114);
+  grad = vec2(dot(r,W)-dot(l,W), dot(d,W)-dot(u,W));
+  vec3 blur = (l+r+d+u)*0.25;
+  return clamp(c + (c-blur)*amt, 0.0, 1.0);
+}
 uniform vec3  uSun, uSunCol, uAmbCol, uFogCol, uBorderCol;
 uniform float uMix, uShade, uShadow, uContour, uContourInt, uBorder, uFog, uHmin, uHmax;
 uniform float uOutside;
@@ -142,10 +153,16 @@ void main(){
   float elev = uHmin + hC*(uHmax-uHmin);
   float ft = elev/0.3048;
   vec3 hyp = texture2D(uRamp, vec2(clamp((ft-1400.0)/8800.0,0.003,0.997), 0.5)).rgb;
-  vec3 drp = texture2D(uDrape, vUv).rgb;
+  float tpp = max(fwidth(vUv.x)/uDTexel.x, fwidth(vUv.y)/uDTexel.y);
+  float mag = clamp(1.35 - tpp, 0.0, 1.0);
+  vec2 gInk;
+  vec3 drp = inkTap(uDrape, vUv, uDTexel*0.6, uSharp*mag*smoothstep(0.08, 0.30, tpp), gInk);
 
   float d = border(vUv);
   float ins = smoothstep(-0.6, 1.4, d);
+  float embT = mag*(1.0 - 0.72*smoothstep(0.45, 0.95, mag));
+  float embK = uEmboss*embT*uMix*ins;
+  N = normalize(N + vec3(gInk.x*embK, 0.0, -gInk.y*embK));
   vec3 col = mix(hyp, drp, uMix*ins);
   float gray = dot(col, vec3(0.299,0.587,0.114));
   col = mix(mix(vec3(gray), col, 0.5)*uOutside, col, ins);
@@ -352,12 +369,16 @@ function buildScene(){
 
   drapeTex = new THREE.Texture(drapeImg);
   drapeTex.colorSpace = THREE.SRGBColorSpace;
-  drapeTex.anisotropy = Math.min(8, renderer.capabilities.getMaxAnisotropy());
+  drapeTex.anisotropy = Math.min(16, renderer.capabilities.getMaxAnisotropy());
   drapeTex.minFilter = THREE.LinearMipmapLinearFilter;
   drapeTex.magFilter = THREE.LinearFilter;
   drapeTex.wrapS = drapeTex.wrapT = THREE.ClampToEdgeWrapping;
   drapeTex.needsUpdate = true;
   rampTex = makeRampTexture();
+  U.uDTexel = {value:new THREE.Vector2(1/drapeImg.width, 1/drapeImg.height)};
+  U.uSharp  = {value:1.3};
+  U.uEmboss = {value:2.2};
+  window.TUNE = {sharp:U.uSharp, emboss:U.uEmboss};
 
   const fogCol = new THREE.Color(0x2a2620);
   U.uH        = {value:hTex};

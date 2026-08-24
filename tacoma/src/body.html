@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>TACOMA</h1>
+    <div class="sub"><b>Geologic Atlas, Folio 54</b> · Willis &amp; Smith, 1899 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1899 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1899 geology, the 1900 timber survey and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1900 timber survey</span><span id="cfA" class="on">1899 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×2.2</span></label>
+        <input type="range" id="exag" min="6" max="60" value="22">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The drift lies combed north–south with the ice — rake it <b>low from the east</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Hills &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Waters &amp; prairies</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Folio 54 · 21st Annual Report ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The ice sheet's work, the railroad's harbour</h2>
+    <p class="lede">Bailey Willis and George Otis Smith's Historical Geology sheet of the Tacoma quadrangle (Geologic Atlas of the United States, Folio 54, 1899) — Vashon drift, outwash prairies, the drowned trench of Puget Sound and the coal measures up the Carbon — with Rankine and Plummer's 1897 standing-timber classification of the very same engraving one slider-stop behind.</p>
+
+    <h3>The folio</h3>
+    <p>Willis knew this ground before the Survey did: he first came to the Carbon River in the early 1880s as a Northern Pacific man, hunting coal. The quadrangle was triangulated and drawn in 1894–95 by W.&thinsp;T. Griswold, G.&thinsp;E. Hyde and R.&thinsp;H. McKee under chief geographer Henry Gannett; Willis and Smith surveyed the geology in 1895–96, and Folio 54 printed in 1899 under Director Charles D. Walcott. The historical sheet is a reading of the ice age: <i>Vashon drift</i> over an older <i>Admiralty till</i> — both names coined here, on Willis's 1898 evidence, and still in every textbook — with the <i>Steilacoom gravels</i> spread as prairie and the Sound itself left as the trench the ice cut. One unit is an honest mistake: the white <i>Osceola till</i> of the Buckley plateau is the Osceola Mudflow, a collapse of Mount Rainier's summit about 5,700 years ago, recognised for what it is only in the 1950s.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through <i>plate CXXIX of the 21st Annual Report</i> — J.&thinsp;W. Rankine and G.&thinsp;H. Plummer's 1897 land classification, greens for standing timber, red hatching for cutover, yellow for the naturally treeless prairies — to the folio geology. Both plates were printed on the 1897 engraved base the USGS distributes georeferenced (HTMC scan 244174), and each is registered to it by correlation on shared linework. The folio fits to 1.0 px RMS — about 11 m on the ground, from 141 control points; the timber plate, its linework under heavier tints and its paper creased by book folds, still fits to 2.6 px (about 28 m, 141 points). The tints carry less ink, but the section lines and the drainage carry enough.</p>
+
+    <h3>The mines as data</h3>
+    <p>The <i>Hills &amp; mines</i> layer plots the Survey's own mapped mine workings from USMIN — the adits, shafts, coal mines, prospects and quarries its topographers drew on later editions of these quadrangles. They cluster where the folio's Eocene coal measures crop out: the Wilkeson–Carbonado–Burnett–Fairfax district up the Carbon, and the Renton and Cedar Mountain seams in the northeast corner. The folio itself prints coal-mine symbols at the same bends of the same creeks.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 21 m per drape texel over the 53 × 71 km block, from tidewater to 2,440 ft on Cowling Ridge. Puget Sound is held at sea level: the tiles' patchy soundings below zero are voided to the sea surface, so the drape lies on flat water, not on the glacial trench beneath it. Two anachronisms are left in plain sight — Lake Tapps is the 1911 power reservoir, four kettle ponds in the sheets' day; and the modern terrain carries the White River into the Puyallup, a course the river only took in the flood of 1906, after these plates were engraved with it flowing north to the Duwamish.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>53 × 71 km · 31 m per height sample</dd>
+      <dt>Relief</dt><dd>0 m (Puget Sound) to 744 m (Cowling Ridge)</dd>
+      <dt>Georeference</dt><dd>two plates vs the 1897 base · correlation · 1.0 / 2.6 px RMS ≈ 11 / 28 m</dd>
+      <dt>Contours</dt><dd>the sheets' 50 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/publication/gf54" target="_blank" rel="noopener">USGS Geologic Atlas, Folio 54</a> (Willis &amp; Smith, 1899); timber plate from the <a href="https://pubs.usgs.gov/publication/ar21_5" target="_blank" rel="noopener">21st Annual Report, part V</a> (Gannett, 1900); base quadrangle from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scan 244174, edition of 1897); names from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>; mine features from <a href="https://mrdata.usgs.gov/usmin/" target="_blank" rel="noopener">USMIN</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The estuary at the centre of this sheet is Puyallup homeland and the prairies south of it Nisqually country, with the Muckleshoot on the White River bench; the Medicine Creek Treaty was signed in December 1854 six miles off the sheet's southwest corner, the reservations it left are lettered on both plates, and the <i>Terminus</i> flight says so plainly.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>TACOMA</h1>
+  <div class="s">Folio 54 · 1899 · 1:125,000</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

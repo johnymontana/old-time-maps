@@ -1,0 +1,159 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>BY RAIL</h1>
+    <div class="sub"><b>Rand McNally · Geo. F. Cram</b> · 1884 &amp; 1912</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1912 network</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1884 territory and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1884 territory</span><span id="cfA" class="on">1912 network</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×5.0</span></label>
+        <input type="range" id="exag" min="6" max="200" value="50">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Neither map was shaded — light the grades <b>as you please</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Passes &amp; tunnels</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Division points</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    Rumsey Collection scan · Library of Congress ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">Twenty-eight years of iron</h2>
+    <p class="lede">Two railroad maps of Montana on one slider: Rand McNally&rsquo;s <i>New Commercial Atlas</i> map of 1912 &mdash; four transcontinental routes, the branch web, electric lines already in the legend &mdash; and Geo. F. Cram&rsquo;s <i>Railroad and County Map of Montana Ty.</i> of 1884, when the Northern Pacific was one year old and almost alone. Pull the slider back and the web vanishes.</p>
+
+    <h3>The maps</h3>
+    <p>Cram&rsquo;s 1884 pocket map shows a territory with two railroads: the just-completed Northern Pacific along the Yellowstone and the Clark Fork, and the Utah &amp; Northern narrow gauge reaching Butte from the south. By Rand McNally&rsquo;s 1912 sheet the Great Northern runs the Hi-Line, the Milwaukee&rsquo;s Puget Sound extension threads between its rivals, the Burlington slips in from the southeast, and the index lists a dozen roads down to the White Sulphur Springs &amp; Yellowstone Park. Both maps hang on the montana sheet&rsquo;s own terrain and grid.</p>
+
+    <h3>Registration, honestly</h3>
+    <p>Neither map carries a trustworthy projection. Each is seeded from two printed townsites and correlated against the already-georeferenced 1991 relief sheet on shared drainage ink. The 1912 atlas spread is fitted as two pages and rejoined at its binding fold (a cubic per page, <b>&asymp;1.8&thinsp;km</b> &mdash; about the drafting accuracy of a commercial atlas). Cram&rsquo;s 1884 compilation disagrees with the modern grid by up to <b>five miles</b>: territorial mapping, bent as far as a cubic will follow and left honest beyond that.</p>
+
+    <h3>Passes &amp; tunnels as data</h3>
+    <p>The data layer (&#8745;) marks where the rails beat the mountains: Mullan and Bozeman Pass tunnels, Stevens&rsquo; Marias Pass, the Milwaukee&rsquo;s Pipestone crossing, Monida, Lookout &mdash; and Gold Creek, where Ulysses S. Grant drove the Northern Pacific&rsquo;s last spike on September 8, 1883. Five flights run from the last spike to the electrics.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>the montana sheet&rsquo;s, reused &mdash; 1,030 &times; 500 km</dd>
+      <dt>Terrain</dt><dd>the montana sheet&rsquo;s height field, re-encoded</dd>
+      <dt>Georeference</dt><dd>1912: two cubic fits &asymp;1.8 km &middot; 1884: &asymp;8 km, period-honest</dd>
+      <dt>Layers</dt><dd>1912 network &middot; 1884 territory &middot; modern relief</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Rand McNally 1912 map from the <a href="https://archive.org/details/dr_montana-2790233" target="_blank" rel="noopener">Internet Archive</a>, scan via the David Rumsey Map Collection (the work itself is public domain by age); Cram 1884 from the <a href="https://www.loc.gov/item/99441786/" target="_blank" rel="noopener">Library of Congress</a>, Geography &amp; Map Division. Pass and townsite coordinates from GNIS. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. Both maps draw the reservations of 1884 and 1912 as the railroads&rsquo; era bounded them; the land the grants and the lines crossed was, and is, treaty land.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>BY RAIL</h1>
+  <div class="s">Rand McNally 1912 · Cram 1884</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

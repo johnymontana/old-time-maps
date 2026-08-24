@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>BITTERROOT</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1901 &amp; 1912 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1901 &amp; 1912 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1898 forest survey and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1898 forest survey</span><span id="cfA" class="on">1901 &amp; 1912 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The canyons run east — light them <b>down their length</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · 20th Annual Report ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The valley and the wall</h2>
+    <p class="lede">Two engraved quadrangles joined at 46°30′ — HAMILTON (edition of 1901) and MISSOULA (edition of 1912) — the Bitterroot Valley end to end, from the Como moraines to the Hellgate, with J.B. Leiberg's 1898 Bitterroot Forest Reserve survey one slider-stop behind.</p>
+
+    <h3>The sheets</h3>
+    <p>The Survey mapped the valley at the turn of the century: the Hamilton quadrangle surveyed 1899–1900, the Missoula quadrangle behind it, both with 100-ft contours and the township grid ruled across the irrigated floor. The 1912 sheet ends at Missoula's doorstep — the city's street grid touches the neat line — and the pair together hold the whole story: mission and treaty valley, railroad and orchard boom, and forty miles of granite canyons on the west wall.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through <i>Leiberg's 1898 land-classification map</i> of the Bitterroot Forest Reserve (USGS 20th Annual Report) to the quadrangles. Leiberg's plate is a sketch-contour compilation, not the quad engraving — it is seeded from the printed symbols of Stevensville and Hamilton and refined by correlation where the valley's grid and drainage hold, to about <b>7 px ≈ 150 m</b>. The reserve ended at the Lolo divide, so the layer fades to paper in the sheet's north; its greens are board-feet of standing timber, its hatching the burns the 1910 fires would redouble.</p>
+
+    <h3>The mines as data</h3>
+    <p>Seventeen recorded producers from MRDS ride the terrain — the Curlew at Victor, placers on Hughes Creek, prospects in the Sapphires — a modest layer, honestly: this valley's fortunes were water, timber and soil.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 28 m per drape texel over the 53 × 126 km strip, from the Clark Fork near 3,100 ft to Saint Joseph Peak at 9,587. Look at Sentinel and Jumbo above Missoula: the horizontal benches are the strandlines of Glacial Lake Missoula.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>53 × 126 km · 42 m per height sample</dd>
+      <dt>Relief</dt><dd>875 m (Clark Fork) to 2,930 m (St. Joseph Peak)</dd>
+      <dt>Georeference</dt><dd>quads self-georeferenced · Leiberg vs quads · 7.4 px ≈ 150 m</dd>
+      <dt>Contours</dt><dd>the sheets' 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> (scans 268555, 268581); Leiberg's plate from the <a href="https://pubs.usgs.gov/ar/20-5/" target="_blank" rel="noopener">20th Annual Report, part V</a>; mines from <a href="https://mrdata.usgs.gov/mrds/" target="_blank" rel="noopener">MRDS</a>; names from GNIS. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This valley is the homeland of the Bitterroot Salish, promised to them by the 1855 Hellgate Treaty and taken from them in 1891; the <i>St. Mary's Mission</i> flight says so plainly.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>BITTERROOT</h1>
+  <div class="s">Hamilton &amp; Missoula quadrangles · 1901–12</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

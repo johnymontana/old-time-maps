@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>LIVINGSTON</h1>
+    <div class="sub"><b>Geologic Atlas, Folio 1</b> · Iddings &amp; Weed, 1894 · 1:250,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1894 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1894 geology, the 1891 topography and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1891 topography</span><span id="cfA" class="on">1894 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The folio carries no hillshade — light the valley <b>as you please</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Folio 1 · Historical Topographic Map Collection ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">Folio Number One</h2>
+    <p class="lede">The first folio of the <i>Geologic Atlas of the United States</i> (Livingston, Montana, 1894; geology by Joseph Iddings and Walter Weed) — Paradise Valley, Tom Miner Basin, the Boulder and the southern Crazy Mountains, one full degree of country between the Northern Pacific main line and the Yellowstone Park boundary — with the 1891 engraved topography one slider-stop behind.</p>
+
+    <h3>The folio</h3>
+    <p>When the Survey set out to map the nation's geology folio by folio, it started here: the Livingston degree sheet, triangulated in 1883–86 under Henry Gannett with topography by Frank Tweedy, geology worked by Iddings and Weed out of the same campaigns that produced the Yellowstone Park folio two years later. The plate reads like a fever map — hot-pink Archean gneiss in the Absaroka front, brown volcanic breccias southward toward the park, olive Cretaceous belts through the Livingston coal country, and the Crazy Mountains' radial dike swarm bursting off the sheet's north edge like a firework. The east margin still carries the boundary of the Crow Reservation as it stood in 1891, the year before the tribe was pressed into ceding this strip; that line, and what it meant, are part of what the sheet records.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the <i>1891 topographic edition</i> (USGS Historical Topographic Map Collection, carrying its own georeference, 200-ft contours) to the 1894 folio geology. The folio plate is registered to the 1891 base by correlation on a local high-pass ink mask — the same engraving beneath both printings — at <b>1.9 px RMS ≈ 40 m</b> on 119 control points.</p>
+
+    <h3>The mines as data</h3>
+    <p>The <i>Summits &amp; mines</i> layer plots forty-four recorded gold, silver, lead and copper producers from the USGS MRDS database — Emigrant Gulch's placers and lodes, Jardine's gold-and-arsenic veins above Gardiner, the snowbound Independence camp at the head of the Boulder — over the geology the folio's own <i>economic</i> plate first keyed to them.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 27 m per drape texel over the 93 × 127 km block, from the Yellowstone's exit near 3,980 ft to Mount Cowen at 11,206, with Electric Peak shared across the park line from the Yellowstone folio sheet. The bottom edge of the block is the park's northern boundary, engraved across the sheet exactly where the terrain still changes hands today.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>93 × 127 km · 55 m per height sample</dd>
+      <dt>Relief</dt><dd>1,214 m (Yellowstone River) to 3,416 m (Mount Cowen)</dd>
+      <dt>Georeference</dt><dd>folio plate vs 1891 base · correlation · 1.9 px ≈ 40 m</dd>
+      <dt>Contours</dt><dd>the sheet's 200 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/publication/gf1" target="_blank" rel="noopener">USGS Geologic Atlas, Folio 1</a> (Iddings &amp; Weed, 1894); base sheet from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scan 268784, edition of December 1891); mines from <a href="https://mrdata.usgs.gov/mrds/" target="_blank" rel="noopener">MRDS</a>; names from GNIS. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The Crazy Mountains are Awaxaawippíia, a fasting and vision place of the Apsáalooke, and this whole sheet is their treaty country.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>LIVINGSTON</h1>
+  <div class="s">Folio 1 · 1894 · 1:250,000</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheet…</div>
+</div></div>

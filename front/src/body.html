@@ -1,0 +1,159 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>THE FRONT</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1903–1920 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1903–20 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1899 forest survey and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1899 forest survey</span><span id="cfA" class="on">1903–20 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The reefs face sunrise — try the light <b>low from the east</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · 21st Annual Report ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">Where the mountains meet the plains</h2>
+    <p class="lede">Four engraved quadrangles tiled into one degree of the Rocky Mountain Front — SAYPO (1903), CHOTEAU (1920), HEART BUTTE (1918) and DUPUYER (1920) — the overthrust wall the Blackfeet call Miistákis, the Backbone of the World, with H.B. Ayres' 1899 forest-reserve survey one slider-stop behind.</p>
+
+    <h3>The sheets</h3>
+    <p>The block reads as two worlds because it is one: on the west half, reef after reef of thrust-faulted limestone drawn in hundred-foot contours, with the young Lewis and Clarke Forest Reserve lettered across it; on the east, the ruled township grid of the wheat and sheep bench, surveyed after the homestead boom. The north half is the <b>Blackfeet Nation</b> — the sheets carry the reservation lettering, and the 1896 cession line along Birch Creek is part of what they record. Augusta sits just off the south edge, Choteau anchors the east, and every canyon — Sun, Teton, Deep, Birch, Two Medicine — is a water gap sawed through the reefs.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through <i>Ayres' 1899 land-classification map</i> of the Lewis and Clark Forest Reserve (USGS 21st Annual Report — "GREAT PLAINS (TREELESS)" sweeping its east half) to the quadrangles. Ayres drew with sketch contours at reconnaissance scale; seeded from the printed symbols of Choteau and Dupuyer and refined by correlation, his plate sits about <b>a mile</b> from the surveyed quads in places (39 px RMS at the plate's ~41 m/px). That disagreement is the distance between reconnaissance and survey — the greens are where the timber stood, even where the streams wander.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 27 m per drape texel over the 90 × 126 km block, from the Teton's exit near 3,600 ft to Rocky Mountain at 9,392. The modern terrain holds Gibson Reservoir in the Sun River Canyon; the 1903 sheet shows only the river — the dam came in 1929, and the mismatch is left in plain sight.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>90 × 126 km · 53 m per height sample</dd>
+      <dt>Relief</dt><dd>1,050 m (Teton River) to 2,849 m (Rocky Mountain)</dd>
+      <dt>Georeference</dt><dd>quads self-georeferenced · Ayres vs quads · 39 px ≈ 1.6 km</dd>
+      <dt>Contours</dt><dd>the sheets' 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> (scans 268609, 472643, 268562, 472677); Ayres' plate from the <a href="https://pubs.usgs.gov/ar/21-5/" target="_blank" rel="noopener">21st Annual Report, part V</a>; names from GNIS. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The northern half of this sheet is the Blackfeet Nation; the Old North Trail along the mountain foot, the Starvation Winter on Badger Creek, and the star-story mountain names are theirs, and the <i>Old North Trail</i> flight says so plainly.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>THE FRONT</h1>
+  <div class="s">Saypo · Choteau · Heart Butte · Dupuyer · 1903–20</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

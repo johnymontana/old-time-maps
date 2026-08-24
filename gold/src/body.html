@@ -1,0 +1,165 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>THE GOLD REGIONS</h1>
+    <div class="sub"><b>W.W. de Lacy</b> · 1865 · for the First Legislature</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1865 map</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1865 map and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">Manuscript</span><span id="cfA" class="on">1865 map</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×5.0</span></label>
+        <input type="range" id="exag" min="6" max="200" value="50">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>State line</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Hachures own no single sun — <b>light this one as you please</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Mines &amp; lodes</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Camps &amp; forts</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Gulches &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="400" height="244"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    Library of Congress, Geography &amp; Map Division ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The first map of Montana</h2>
+    <p class="lede">Walter W. de Lacy's map of Montana Territory, drawn in the winter of 1864–65 for the First Legislature — every worked placer gulch and quartz district hatched in red — draped over the terrain he was mapping largely from hearsay.</p>
+
+    <h3>The map</h3>
+    <p>The territory was ten months old and its capital was a mining camp when the legislature hired de Lacy — surveyor, ex-soldier, prospector — to draw the first official map of Montana. Lithographed by Julius Hutawa of St. Louis, 1865; this is the Library of Congress copy, scanned at 8,984 × 6,634 pixels. The red overprint is the whole point: <i>gulch diggings</i> hatched, <i>quartz lodes</i> solid, from Bannack and Alder Gulch to camps that were weeks old when the stone was cut.</p>
+
+    <h3>Putting it back on the earth</h3>
+    <p>The sheet draws no internal graticule — only degree ticks along its borders: Greenwich longitudes above, Washington longitudes below, latitudes on the sides. The ticks are comb-matched and the degree labelling is chosen automatically as the one that lays the surveyed state boundary along de Lacy's heavy red territory line (it agrees to 98%). Residual across 27 border ticks: <b>about 5 px</b>, roughly 550 m at map scale — far tighter than the map itself, which is the point: east of the divide his boundary tracks the modern survey almost perfectly; in the northwest, where no surveyor had been, the blue truth cuts straight through his imagined ranges. The bottom border even yields the sheet's own prime meridian: de Lacy placed Washington 77°05′ west of Greenwich.</p>
+
+    <h3>The draft beneath</h3>
+    <p>The layer slider passes through de Lacy's <i>original</i> on its way to the modern relief: the pen-and-pencil manuscript on linen he drew that winter, held by the Montana Historical Society. It is registered to the print by correlation; where the two disagree by miles — and they do — you are watching de Lacy revise Montana between draft and stone.</p>
+
+    <h3>The mines that came after</h3>
+    <p>The <i>Mines &amp; lodes</i> layer plots gold and silver producers from the USGS Mineral Resources Data System — four hundred of the strongest sites from a century and a half of digging — over the map that started the rush. Butte, in 1865, is a modest placer creek labelled Silver Bow.</p>
+
+    <h3>The terrain</h3>
+    <p>The grid, elevations and state-line mask are shared verbatim with the <i>Montana in Relief</i> sheet — same conic projection, same Terrarium tiles — because the footprint is the same state. The <i>modern relief</i> layer is toned in the lithograph's own sepia.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>987 × 602 km · 362 m per height sample</dd>
+      <dt>Georeference</dt><dd>27 border ticks · affine · ~5 px RMS</dd>
+      <dt>Prime meridian</dt><dd>Washington, 77°05′ W of Greenwich (measured)</dd>
+      <dt>Red overprint</dt><dd>diggings worked to January 1st, 1865</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://www.loc.gov/item/2006629609/" target="_blank" rel="noopener">Map of the territory of Montana… 1865</a> — Library of Congress, Geography and Map Division, free to use and reuse. Mines: <a href="https://mrdata.usgs.gov/mrds/" target="_blank" rel="noopener">USGS MRDS</a>, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. The rush this map advertises ran across the unceded homelands of the Séliš, Ql̓ispé, Ksanka, Niitsítapi, Apsáalooke and other nations; de Lacy's blank northwest was not empty country.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>THE GOLD REGIONS</h1>
+  <div class="s">Montana Territory · 1865</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the map…</div>
+</div></div>

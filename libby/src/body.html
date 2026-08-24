@@ -1,0 +1,162 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>LIBBY</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · Gibson, 1948 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1948 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1948 geology, the 1932 base and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1932 base</span><span id="cfA" class="on">1948 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.6</span></label>
+        <input type="range" id="exag" min="6" max="60" value="16">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Geology carries no shadows — light the rock <b>as you please</b>.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; mines</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Ranges &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Bulletin 956 · Historical Topographic Map Collection ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The ore beneath the Cabinets</h2>
+    <p class="lede">Russell Gibson's geologic map of the Libby quadrangle (USGS Bulletin 956, 1948) — Belt rocks, granite stocks, and the silver-lead veins that paid for the town — draped over the Cabinet Mountains with its 1932 topographic base one slider-stop behind it.</p>
+
+    <h3>The sheet</h3>
+    <p>Gibson mapped the quadrangle for the Survey through the 1930s; the bulletin's plate colours the Precambrian Belt series — the same stack of argillites and quartzites that builds Glacier Park — cut by granite stocks whose margins carry the veins. A printed <i>List of Mines, Prospects and Placers</i> keys every numbered working on the map. Gold was panned on Libby Creek in 1867; the Snowshoe silver-lead vein carried the district from 1889.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from the modern relief through the <i>1932 topographic base</i> (USGS Historical Topographic Map Collection, already georeferenced) to the 1948 geology printed over that very base. The plate is registered to the base by correlation — about 46 px, some 370 m, the drafting difference between the bulletin's re-engraved base and the original quad.</p>
+
+    <h3>The mines as data</h3>
+    <p>The <i>Summits &amp; mines</i> layer plots fifty recorded gold, silver, lead, copper and zinc producers from the USGS MRDS database over the geology that explains them. Northeast of town, past the sheet's edge, Rainy Creek's vermiculite mine is part of the story too — the <i>Rainy Creek</i> flight says plainly what the 1948 map could not yet know about asbestos, and what Libby has carried since.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 26 m per drape texel over a 52 × 71 km plate, from the Kootenai's cedar bottoms near 1,800 ft to Snowshoe Peak at 8,738.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>52 × 71 km · 38 m per height sample</dd>
+      <dt>Relief</dt><dd>556 m (Kootenai River) to 2,644 m (Snowshoe Peak)</dd>
+      <dt>Georeference</dt><dd>plate vs 1932 base · correlation · ~370 m</dd>
+      <dt>Contours</dt><dd>the base map's 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/publication/b956" target="_blank" rel="noopener">USGS Bulletin 956</a>, plate 1 (1948); base quad from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scan 268577); mines from <a href="https://mrdata.usgs.gov/mrds/" target="_blank" rel="noopener">MRDS</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. Kootenai Falls remains a sacred site of the Ktunaxa Nation.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>LIBBY</h1>
+  <div class="s">Bulletin 956 · 1948 · 1:125,000</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheet…</div>
+</div></div>
