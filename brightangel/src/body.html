@@ -1,0 +1,165 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>BRIGHT ANGEL</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1903 &amp; 1907 · 1:48,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1903 &amp; 1907 specials</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1903 and 1907 specials, the 1886 reconnaissance and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1886 reconnaissance</span><span id="cfA" class="on">1903 &amp; 1907 specials</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.5</span></label>
+        <input type="range" id="exag" min="6" max="60" value="15">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">28°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="28">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">The gorge runs east and west — take the light <b>low from the west</b> and the side canyons open.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; waters</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Camps &amp; hotels</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Rims &amp; canyons</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="400" height="265"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · Matthes, 1902–03 ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">A mile of rock, drawn in fifty-foot lines</h2>
+    <p class="lede">François E. Matthes' two 1:48,000 specials of the Grand Canyon — <i>BRIGHT ANGEL</i> and <i>VISHNU</i>, surveyed with plane table and mule in 1902–03 — joined at 112°W over modern terrain, with the Powell-era reconnaissance of 1886 one slider stop behind, and the canyon's named rapids, springs and falls riding the ground as data.</p>
+
+    <h3>The two sheets</h3>
+    <p>The Survey sent a party to the canyon in 1902 to do something nobody had done: map it properly. The credit line is short — <b>E.&thinsp;M. Douglas, geographer in charge; topography by François E. Matthes</b> (and, on the east sheet, Richard T. Evans); <b>triangulation by H.&thinsp;L. Baldwin, Jr. and J.&thinsp;T. Stewart; surveyed in 1902–1903</b> — and the result was a fifteen-minute quadrangle pair at four thousand feet to the inch with a <b>fifty-foot contour interval</b>, fine enough that in the Redwall the lines merge into a solid band. The east sheet was engraved in June 1906 and printed as the <i>edition of September 1907</i>; the west sheet carries the note that "a map of Grand Canyon National Park … is published in two sheets (east and west)," which is what you are standing on. The Survey did not replace them until the 1960s: the next Bright Angel and Vishnu editions in the collection are 1962.</p>
+    <p>Two honest notes about the paper. The west sheet is dated 1903 and its contours are Matthes' 1902–03 work, but the scan is a mid-century reissue and the <i>culture</i> on it kept accruing: El Tovar (1905), the Powell Memorial (1918), the Kaibab Trail and its 1928 suspension bridge, Grand Canyon Lodge (1928) are all lettered on a 1903 sheet. The east sheet is the plain 1907 first edition, printed before there was a park at all — so the drape crosses from a built rim to an empty one at 112°W, and that is a real difference, not a seam artefact.</p>
+
+    <h3>Three layers, none of them fitted</h3>
+    <p>All four scans are USGS Historical Topographic Map Collection GeoTIFFs, and every one of them carries its own polyconic projection on NAD27 in its geokeys. So there is <b>no registration on this sheet</b>: no control points, no correlation, no polynomial. Each plate is placed by the transform it was scanned with, clipped to its own printed neatline, and the four corners of every neat were probed against the raster before anything was resampled. The two printings in each pair are tone-matched at both ends of their histogram — paper white and deepest ink — so the 1903 and 1907 presses meet at 112°W without a colour step.</p>
+    <p>What that leaves is a disagreement worth measuring. The middle stop is the <i>1886 reconnaissance</i>: the ARIZONA <i>Kaibab</i> and <i>Echo Cliffs</i> sheets at 1:250,000, drawn with 250-foot contours and signed <b>J.&thinsp;W. Powell, Director</b> — the man who ran the river in 1869. Sample the blue line on each layer and the river Powell's men drew lies a <b>median 570 m</b> from the river Matthes drew, a quarter of it more than 1.4 km away. That is the distance between reconnaissance and survey, and it is left in plain sight. The temples show it too: slide back to 1886 and forty miles of rim carries almost no names — Point Sublime and Shivas Temple, and little else.</p>
+    <p>One more number. Both specials predate the 1927 datum, and the west sheet says so: <i>"To place on 1927 North American datum move projection lines 420 feet south and 350 feet west."</i> We drape the georeference as staged rather than nudging it, and the drawn Colorado duly runs a <b>median 113 m south</b> of the modern channel through the west half — 420 feet is 128 m, so what you see is the printed correction, measured.</p>
+
+    <h3>The water as data</h3>
+    <p>The <i>Summits &amp; waters</i> layer plots thirty named waters from the U.S. Board on Geographic Names: every rapid the Colorado runs through this block, the springs that keep both rims and the inner canyon alive, and the two waterfalls. Read together they explain the place. Each rapid sits at a side-canyon mouth — Hance below Red Canyon, Granite below Monument Creek, Crystal below Crystal Creek — because rapids in this canyon are boulder piles delivered by flash floods, not river work. The springs are the other half: Redwall and Muav water leaking back out at Roaring Springs, Santa Maria, Dripping and Cliff, which is why every trail on the sheet goes where it goes.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 20 m per drape texel over a 51 × 34 km grid holding a 45 × 28 km block. The relief inside the neat runs 705 m to 2,642 m: 6,355 feet of it, in a place where you can stand at the top and the bottom on the same afternoon. The north edge cuts the Kaibab Plateau just short of Point Imperial, so the block's high ground sits on the neat line itself; the low point is the Colorado leaving the sheet at Crystal, 2,314 feet.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>51 × 34 km · 30 m per height sample</dd>
+      <dt>Relief</dt><dd>705 m (2,314 ft, the Colorado at the west neat) to 2,642 m (8,669 ft, the Kaibab Plateau on the north neat)</dd>
+      <dt>Georeference</dt><dd>four HTMC GeoTIFFs on their own polyconic/NAD27 keys · no fitted control points · 1886 vs 1903–07 river ≈ 570 m median</dd>
+      <dt>Contours</dt><dd>key C draws the sheets' 250 ft index line — the printed interval is 50 ft, finer than a 30 m model can honestly carry</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>All four plates from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> — <i>Bright Angel</i> 1903 (scan 314253) and <i>Vishnu</i> 1907 (scan 464981) at 1:48,000, <i>Kaibab</i> and <i>Echo Cliffs</i> 1886 (scans 315511, 315475) at 1:250,000; names, coordinates and summit elevations from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This canyon is Havasupai and Hualapai homeland, and Hopi, Diné, Southern Paiute and Zuni country: the Havasu 'Baaja farmed the spring bench the west sheet letters "Indian Garden" until an 1882 executive order cut their land to 518 acres and the Park Service forced the last family out in 1928; 185,000 acres were returned by act of Congress in 1975, and the U.S. Board on Geographic Names restored the name <i>Havasupai Gardens</i> in 2022. Sipapuni, the Hopi place of emergence, lies in the Little Colorado gorge at the sheet's east edge. The <i>Bright Angel and the garden</i> flight says all of this on the ground it happened.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>BRIGHT ANGEL</h1>
+  <div class="s">Bright Angel &amp; Vishnu · 1903–1907 · 1:48,000</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

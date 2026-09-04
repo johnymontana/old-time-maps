@@ -1,0 +1,167 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>KĪLAUEA</h1>
+    <div class="sub"><b>U.S. Geological Survey</b> · 1921–1928 · 1:62,500</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1921–28 sheets</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the quadrangle sheets, the 1930 Kaʻū geology and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1930 Kaʻū geology</span><span id="cfA" class="on">1921–28 sheets</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.6</span></label>
+        <input type="range" id="exag" min="6" max="60" value="16">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">A shield has no ridges to catch the sun — light it <b>low from the southwest</b>, along the rift.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; flows</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Craters &amp; shore</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="410"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS HTMC · Water-Supply Paper 616 ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The observatory decade</h2>
+    <p class="lede">Four engraved fifteen-minute quadrangles of the island of Hawaiʻi tiled into one half-degree block — MAUNA LOA (1928), KILAUEA (1921), HONUAPO (1924) and PAHALA (1923), all 1:62,500 with a fifty-foot contour interval — draped from the Kaʻū surf to Mokuʻāweoweo at 13,665 feet, with Harold Stearns' 1930 geologic map of the Kaʻū district one slider-stop behind. This is Kanaka ʻŌiwi land in the moku of Kaʻū and Puna, and the caldera on the east edge is Kaluapele, the home of Pelehonuamea.</p>
+
+    <h3>The sheets</h3>
+    <p>These are the Territory-era topography of Hawaiʻi: surveyed between 1912 and 1922 by the Geological Survey with the Territory of Hawaii — the Mauna Loa sheet's collar credits the Commissioner of Public Lands — and drawn at fifty-foot contours from the surf to thirteen thousand six hundred feet. <b>HAWAII NATIONAL PARK</b> is lettered in open capitals across Mauna Loa's summit and again around Kīlauea: the two pieces Congress protected on 1 August 1916, three weeks before the National Park Service itself existed. (Haleakalā on Maui was the third piece, and stayed in the same park until 1961.) Everything else on the block is Kaʻū — the ahupuaʻa lettered mountain-to-sea, the Hawaiian Agricultural Company's cane land and its railroad down to Punaluʻu, the landings at Punaluʻu and Honuʻapo, the ʻĀinapō trail with its waterholes, and, on the caldera rim, a Volcano House, a Park Hotel, a Summer Camp, a Prison Camp and a Museum. Look out to sea off the Kaʻū coast and you will find, twice, a pair of small ruled boxes captioned <i>Boundary of lava flow</i> and <i>Cracks</i>: the Honuapo and Pahala engravers put the sheets' own symbol key inside the neatline, in the only empty water they had. It is left where they put it.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through <i>Harold T. Stearns' geologic map of the Kaʻū district</i> — Water-Supply Paper 616, Plate 1: geology 1924, published 1930, 43 inches of paper at the same 1:62,500 — to the quadrangles themselves. Stearns drew on these very sheets, and his margin says so: <i>"Base from U. S. Geological Survey maps of Puna, Kilauea, Mauna Loa, Pahala, Honuapo, and Kalae quadrangles, surveyed in 1912–1922."</i> Same lineage, so the fit is tight. Rasterised at 300 dpi the plate lands on the quads' own 5.29 m per pixel, and <b>573 automatically matched control points fit to 3.5 px RMS — about 19 m on the ground</b> (median 3.0 px, worst 6.7). Nothing was picked by hand: the plate's position was seeded from the projection it shares with the quads, then correlated on a local high-pass ink mask. Slide between the two over the caldera and the benchmarks, the Stone Corral and the word <i>Halemaumau</i> stay put while the colour arrives.</p>
+    <p>Two-thirds of the block carries Stearns' colour; the rest goes to bare paper, honestly. He mapped the Kaʻū district and stopped, so Mauna Loa above roughly 8,000 feet is white on his plate — Mokuʻāweoweo is on the quadrangle only — and the two panels he printed inside his own neatline, the EXPLANATION and four cross-sections drawn out in the Pacific, are masked out rather than draped onto ground they do not describe.</p>
+
+    <h3>The flows as data</h3>
+    <p>The <b>≈</b> layer plots every named lava flow and kīpuka the U.S. Board on Geographic Names carries inside the block — 52 of them, fifteen named for the year they ran: 1823, 1851, 1868, 1880, 1887, 1907, 1916, 1919, 1920, 1921, 1926, 1949, 1950, 1959, 1974. Four of those are younger than every sheet here, which is rather the point: on this block the ground is regularly newer than its cartography. Maunaiki, 3,018 feet in the Kaʻū Desert, did not exist when the century began — and the 1921 sheet is new enough to draw it. The rest of the layer is kīpuka: islands of older ground that the flows went round, still forested, and named.</p>
+
+    <h3>Which datum?</h3>
+    <p>The Historical Topographic Map Collection stages every Hawaii sheet with a NAD27 datum key, and it is wrong. The graticule printed on these quadrangles is the <i>Old Hawaiian Datum</i>, and on this island the two are <b>575 m apart</b> — a third of a mile, twenty-seven drape texels. This build uses the island-of-Hawaiʻi three-parameter shift instead, and does not ask to be taken on faith: the pipeline's <code>datum</code> stage draws the model's own shoreline over the 1924 Honuapo sheet under each candidate and keeps the three panels side by side. Under the Old Hawaiian shift the line lies along the printed surf at Honuʻapo, Hanakaula and Papine; under NAD27 it lies a quarter of a mile out in the blue.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 13 on a local conic grid — about 21 m per drape texel and 32 m per height sample across the 60 × 63 km grid, from a flat Pacific to 4,165 m at Mokuʻāweoweo (13,665 feet, which is exactly the figure GNIS gives for Mauna Loa). A quarter of the block is ocean. The tiles carry bathymetry there and none of it is drawn: the sea is held dead flat at zero, because a sea floor that drops thousands of metres within a few miles of the beach would swallow the whole hypsometric ramp. The caldera sits hard against the east neatline — Kīlauea Iki's centre is three metres inside it, and the Chain of Craters below Puhimau is off the sheet.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>60 × 63 km · 32 m per height sample</dd>
+      <dt>Relief</dt><dd>0 m (the Pacific) to 4,165 m (Mauna Loa)</dd>
+      <dt>Georeference</dt><dd>four sheets self-georeferenced, Old Hawaiian datum · Stearns 1930 vs the sheets · 3.5 px ≈ 19 m, 573 points</dd>
+      <dt>Contours</dt><dd>the sheets' 50 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p>Quadrangles from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">USGS Historical Topographic Map Collection</a> (scans 349891, 349872, 349835, 349895); the geology from <a href="https://pubs.usgs.gov/wsp/0616/" target="_blank" rel="noopener">Water-Supply Paper 616</a>, Plate 1 (Stearns, 1930); names from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a> — the current file for the names, because it carries the ʻokina and kahakō, and the 2021 archive for the summit feet, which the live product no longer publishes. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>.</p>
+    <p>This block is Kanaka ʻŌiwi land in the moku of Kaʻū and Puna. Kīlauea is Kaluapele; hoʻokupu are still carried to the rim of Halemaʻumaʻu, which is a temple and not a viewpoint. The park was made in 1916 out of ahupuaʻa land — Keauhou and Kapāpala among them — part of it Crown and Government land of the Kingdom of Hawaiʻi that passed to the United States at the 1898 annexation, five years after the Kingdom was overthrown, and part of it bought from the Bishop Estate. The <i>Kaʻū Desert</i> flight says plainly what the ash bed at the Footprints records of 1790; the <i>Kaʻū sugar</i> flight ends on Wailau, one of two Hawaiian Home Lands tracts on this block set aside under the Act of 1921 — the same year the Kilauea sheet was surveyed.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>KĪLAUEA</h1>
+  <div class="s">Mauna Loa · Kilauea · Honuapo · Pahala · 1921–28</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

@@ -1,0 +1,169 @@
+<div id="stage"><canvas id="gl"></canvas></div>
+<div id="labels" aria-hidden="true"></div>
+
+<!-- ============ left rail ============ -->
+<section class="rail" id="left" aria-label="Map controls">
+  <header id="masthead">
+    <h1>THE SMOKIES</h1>
+    <div class="sub"><b>Geologic Atlas, Folio 16</b> · the Knoxville sheet · Keith, 1895 · 1:125,000</div>
+    <button id="sheetToggle" aria-expanded="false" aria-controls="panels"><span>Controls</span><i></i></button>
+  </header>
+  <div id="panels">
+
+    <div class="grp">
+      <h2>Surface</h2>
+      <div class="ctl">
+        <label for="mix">Layer<span class="v" id="mixv">1895 geology</span></label>
+        <input type="range" id="mix" min="0" max="100" value="100" aria-label="Blend between the 1895 geology, the 1895 topography and modern relief">
+        <div class="crossfade"><span id="cfB">Modern relief</span><span id="cfM">1895 topography</span><span id="cfA" class="on">1895 geology</span></div>
+      </div>
+      <div class="ctl">
+        <label for="exag">Vertical exaggeration<span class="v" id="exagv">×1.8</span></label>
+        <input type="range" id="exag" min="6" max="60" value="18">
+      </div>
+      <div class="ctl">
+        <label for="shade">Relief shading<span class="v" id="shadev">55%</span></label>
+        <input type="range" id="shade" min="0" max="100" value="55">
+      </div>
+      <div class="chips">
+        <button class="tog chip" id="tShadow" aria-pressed="true"><span class="box"></span>Cast shadows</button>
+        <button class="tog chip" id="tContour" aria-pressed="false"><span class="box"></span>Contours</button>
+        <button class="tog chip" id="tBorder" aria-pressed="true"><span class="box"></span>Sheet edge</button>
+      </div>
+    </div>
+
+    <div class="grp">
+      <h2>Illumination</h2>
+      <div class="sunrow">
+        <canvas id="dial" width="140" height="140" aria-label="Sun azimuth dial" role="slider" tabindex="0"></canvas>
+        <div class="stack">
+          <div class="ctl">
+            <label for="sunalt">Altitude<span class="v" id="sunaltv">35°</span></label>
+            <input type="range" id="sunalt" min="3" max="85" value="35">
+          </div>
+          <div class="row">
+            <button class="btn" id="sunplay">Move sun</button>
+          </div>
+        </div>
+      </div>
+      <p class="hint">Every ridge here runs northeast — cross the light <b>low from the southeast</b> and the valley combs out.</p>
+    </div>
+
+    <div class="grp">
+      <h2>Names</h2>
+      <div class="chips">
+        <button class="tog chip" id="tPeaks" aria-pressed="true"><span class="box"></span>Summits &amp; gaps</button>
+        <button class="tog chip" id="tCities" aria-pressed="true"><span class="box"></span>Towns &amp; camps</button>
+        <button class="tog chip" id="tFeatures" aria-pressed="true"><span class="box"></span>Coves &amp; waters</button>
+      </div>
+      <div class="chips" id="ovchips"></div>
+    </div>
+
+  </div>
+  <div class="grp foot">
+    <div class="row">
+      <button class="btn" id="btnProfile">Cross-section</button>
+      <button class="btn" id="btnPlan">Plan view</button>
+    </div>
+    <div class="row" style="margin-top:7px">
+      <button class="btn" id="btnReset">Reset view</button>
+      <button class="btn" id="btnAbout">About</button>
+    </div>
+    <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
+  </div>
+</section>
+
+<!-- ============ right rail ============ -->
+<section class="rail" id="right" aria-label="Guided flights">
+  <h2>Guided flights</h2>
+  <div id="tourlist"></div>
+</section>
+
+<!-- ============ hud ============ -->
+<div id="hud" role="status" aria-live="off">
+  <div class="cell"><span class="k">Lat</span><span class="v off" id="rLat">—</span></div>
+  <div class="cell"><span class="k">Lon</span><span class="v off" id="rLon">—</span></div>
+  <div class="cell"><span class="k">Elev</span><span class="v off" id="rEl">—</span></div>
+  <div class="cell" id="scalebar">
+    <div class="bar" style="width:88px"><i></i></div>
+    <div class="t" id="scaletxt">—</div>
+  </div>
+</div>
+
+<!-- ============ minimap ============ -->
+<div id="corner">
+  <div id="mini">
+    <canvas id="minicv" width="300" height="352"></canvas>
+    <div class="cap"><span>Sheet index</span><span id="minihint">click to fly</span></div>
+  </div>
+  <div id="credit">
+    USGS Folio 16 · Historical Topographic Map Collection ·
+    <button id="creditBtn">Sources &amp; method</button>
+  </div>
+</div>
+
+<!-- ============ profile ============ -->
+<div id="profile" aria-hidden="true">
+  <header>
+    <h3>Cross-section</h3>
+    <div class="stats">
+      <span>Length <b id="pLen">—</b></span>
+      <span>Low <b id="pMin">—</b></span>
+      <span>High <b id="pMax">—</b></span>
+      <span>Relief <b id="pRel">—</b></span>
+    </div>
+    <button class="x" id="pClose" aria-label="Close cross-section">×</button>
+  </header>
+  <canvas id="profcv"></canvas>
+</div>
+
+<!-- ============ tour caption ============ -->
+<div id="caption"><div class="t" id="capTitle"></div><div class="c" id="capText"></div></div>
+<div id="tourbar"><span class="prog"><i id="tourprog"></i></span><button class="btn" id="tourstop">End flight</button></div>
+
+<!-- ============ about ============ -->
+<div id="info" role="dialog" aria-modal="true" aria-labelledby="infoTitle">
+  <div class="sheet" style="position:relative">
+    <button class="btn x close" id="infoClose" style="position:absolute;top:14px;right:14px;padding:4px 9px">Close</button>
+    <h2 id="infoTitle">The sheet before the park</h2>
+    <p class="lede">Arthur Keith's geologic folio of the Knoxville quadrangle (Geologic Atlas of the United States, Folio 16, edition of January 1895) — the folded reds of the Great Valley of East Tennessee, and the single grey mass of the Great Smoky Mountains lying on top of them — draped over modern elevations, with the folio's own engraved topography sheet one slider-stop behind. Thirty-nine years before there was a park.</p>
+
+    <h3>The folio</h3>
+    <p>The Knoxville sheet runs between the parallels 36° and 35°30′ and the meridians 84° and 83°30′ and holds, in Keith's count, a thousand square miles of Knox, Sevier and Blount counties in Tennessee and Swain County in North Carolina. Henry Gannett was chief topographer and Gilbert Thompson chief geographer; S.&thinsp;S. Gannett ran the triangulation; F.&thinsp;M. Pearson and C.&thinsp;G. Van Hook drew the topography, surveyed in 1884, 1885 and 1890. Keith mapped the geology in 1889–91 under Bailey Willis, with G.&thinsp;K. Gilbert as chief geologist, and signed his description in May 1895. The plates still name J.&thinsp;W. Powell as Director, though he had resigned the year before they printed. Folio 16 went out as a set of sheets — description, topography, areal geology, economic geology, structure sections — engraved and printed by the Survey itself, Bailey Willis editing the geologic maps and S.&thinsp;J. Kubel cutting the plates.</p>
+
+    <h3>Four windows</h3>
+    <p>Northwest of Chilhowee Mountain the sheet is Great Valley country: Cambrian and Ordovician limestones and shales folded, faulted and planed off, so that every ridge, every creek and every farm road runs northeast in the same comb. Southeast of that one long ridge the map changes character completely — a single wash of grey and brown over the whole mountain quarter, the Ocoee series, marked <i>age unknown</i> on Keith's own legend, shoved northwest over the younger valley rocks. Inside the grey lie four pale islands: <b>Cades Cove</b>, <b>Tuckaleechee</b>, <b>Wear</b> and <b>Millers</b> coves, limestone floors showing through where erosion has worn holes clean through the thrust sheet. Keith read them correctly in 1895 — the coves &ldquo;were produced by erosion of the Wilhite slate and Knox dolomite, while the harder rocks around them were not reduced&rdquo; — and he named formations off this very block that are still in use: the Cades, Thunderhead and Clingman conglomerates, the Wilhite and Pigeon slates.</p>
+
+    <h3>Three layers</h3>
+    <p>The slider passes from modern relief through the folio's <i>topography sheet</i> — the identical engraved base, hundred-foot contours in brown, drainage in blue — to the areal geology printed on it, so the colour blooms onto lines that do not move. Both plates are rasterised at 300 dpi from the USGS PDFs and registered by correlation on shared linework against the 1895 scan of the same quadrangle in the Historical Topographic Map Collection, which carries the Survey's own polyconic georeference on NAD27. Same survey, same engraving, so the fits are tight: <b>1.33 px RMS</b> on 100 automatically detected control points for the geology and <b>1.27 px</b> on 100 for the topography — about 14 metres on the ground either way, roughly the width of the line the engraver drew. No control point was placed by hand.</p>
+
+    <h3>The gaps as data</h3>
+    <p>The <i>Summits &amp; gaps</i> layer plots eighty named gaps from the U.S. Board on Geographic Names, thinned so the crest stays readable. A gap is the only way through a ridge, and this sheet is nothing but ridges: Chilhowee Gap, where Little River saws through the wall; Ekaneetlee Gap, from the Cherokee <i>Egwanulti</i>, &lsquo;by the river&rsquo; — the trace over the crest from Cades Cove to the Oconaluftee; Indian Grave Gap, Big Medicine Gap, Tali Gap, Schoolhouse Gap. Coordinates and summit heights are GNIS's own, taken from the 2021 archive file — the last release that still carried elevations. Every summit label was hunted against the elevation model within 600 m of its GNIS point and agrees with its published feet to within 20 m; anything that missed by more than 130 m was dropped rather than guessed at.</p>
+
+    <h3>What came after</h3>
+    <p>Keith's last paragraph, May 1895: &ldquo;the mountain timber has been touched only in the most accessible places, and is for the most part virgin forest.&rdquo; The Little River Lumber Company was chartered six years later, in 1901, ran its railroad up the gorge he had just mapped, built some 150 miles of track and sawed about 560 million board feet before the mill closed in 1938. Congress authorised Great Smoky Mountains National Park in 1926; it was assembled from roughly 1,200 separate landholdings with state money and five million dollars from the Rockefellers, and fully established on 15 June 1934. The people of Cades Cove, Tremont and the Sugarlands were bought out or condemned out; a few stayed on lifetime leases. The folio drew the country while all of that was still ahead of it.</p>
+
+    <h3>The terrain</h3>
+    <p>Elevations are open Terrarium tiles at zoom 12 on a local conic grid — about 24 m per drape texel over a 60 × 71 km frame that carries the 45 × 55 km sheet with room around it. The high ground on the sheet, 2,013 m, is the west shoulder of <b>Clingmans Dome</b>; the summit itself, 6,644 ft, stands roughly 120 m east of the neat line, and Keith — who named the Clingman conglomerate for it — sends his reader to the Mount Guyot sheet. The highest named summit inside the line is Mount Buckley, 6,555 ft. The low point is not the river: the Tennessee stands at 248 m behind Fort Loudoun Dam, while a quarry cut in the South Knoxville marble belt reaches 193. Two sheets of water on the modern terrain postdate the folio entirely — Fort Loudoun's pool on the Tennessee, backed up by TVA in 1943, and Chilhowee Lake in the southwest corner, closed by Alcoa in 1957, where the 1895 sheet still draws a running river.</p>
+
+    <h3>Reading it</h3>
+    <dl>
+      <dt>Grid</dt><dd>60 × 71 km · 44 m per height sample</dd>
+      <dt>Sheet</dt><dd>45 × 55 km · 1:125,000 · edition of Jan. 1895</dd>
+      <dt>Relief</dt><dd>193 m (a South Knoxville quarry) to 2,013 m (Clingmans Dome's west shoulder)</dd>
+      <dt>Georeference</dt><dd>two folio plates vs the 1895 base · correlation · 1.3 px ≈ 14 m · 200 points</dd>
+      <dt>Contours</dt><dd>the sheet's 100 ft — key C</dd>
+    </dl>
+
+    <h3>Sources</h3>
+    <p><a href="https://pubs.usgs.gov/gf/016/" target="_blank" rel="noopener">USGS Geologic Atlas, Folio 16</a> (Keith, 1895) — the areal geology and topography plates; base quadrangle from the <a href="https://ngmdb.usgs.gov/topoview/" target="_blank" rel="noopener">Historical Topographic Map Collection</a> (scan 153456, edition of 1895); names, coordinates and heights from <a href="https://www.usgs.gov/us-board-on-geographic-names" target="_blank" rel="noopener">GNIS</a>. All U.S. government works, public domain. Elevation tiles are <a href="https://registry.opendata.aws/terrain-tiles/" target="_blank" rel="noopener">open data</a>. This block is Cherokee homeland: the Overhill towns — Chilhowee, Tallassee, Chota — stood on the Little Tennessee just off the sheet's southwest corner; the Treaty of the Holston was signed at James White's fort, now downtown Knoxville, on 2 July 1791; and in 1838–39 the Cherokee were held in stockades and marched west, those who evaded removal in these mountains becoming the Eastern Band, whose Qualla Boundary adjoins the park beyond the sheet's southeast corner. The <i>Cherokee ground</i> flight says so on the ground itself.</p>
+  </div>
+</div>
+
+<!-- ============ loader ============ -->
+<div id="load"><div class="in">
+  <h1>THE SMOKIES</h1>
+  <div class="s">Folio 16 · the Knoxville sheet · 1895</div>
+  <div class="track"><i id="ldbar"></i></div>
+  <div class="st" id="ldtxt">unrolling the sheets…</div>
+</div></div>

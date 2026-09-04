@@ -8,10 +8,11 @@ Old sheets, put back on the earth.
 
 Each sheet in this repository is a self-contained project: a pipeline that
 georeferences a scan **without hand-picked control points**, and a one-file
-WebGL build you can open straight from disk. There are fifteen draped
+WebGL build you can open straight from disk. There are twenty-five draped
 sheets — eleven spanning a century and a quarter of Montana cartography,
-and four reaching into Washington, Idaho, Colorado and Alaska — plus a
-wing of flat art:
+four reaching into Washington, Idaho, Colorado and Alaska, and ten of the
+national parks as their surveyors first drew them — plus a wing of flat
+art:
 
 | | sheet | year | the trick that georeferences it |
 |---|---|---|---|
@@ -31,6 +32,24 @@ wing of flat art:
 | [`silverton/`](silverton/) | **CO** · *The Silverton Folio* — economic and areal sheets of the San Juan caldera | 1901–05 | both folio plates vs the 1901 Silverton quad — 4.1 px |
 | [`nome/`](nome/) | **AK** · *Nome, the Golden Beach* — Bulletin 533's plates of the gold-rush quadrangle | 1904–13 | fitted from all 28 printed graticule crossings — ~2 px, datum caveat stated |
 | [`art/`](art/) | *The Flat Wing* — panoramas, bird's-eyes and town plans | 1814–1948 | nothing — oblique views can't be draped honestly, so they hang as pictures |
+
+And the first ring of the national-park atlas — every one a survey
+publication over the Survey's own base, or fitted from its printed
+graticule (see [docs/national-parks-atlas-candidates.md](docs/national-parks-atlas-candidates.md)
+for the sixty-three-park survey behind it):
+
+| | park sheet | year | the trick that georeferences it |
+|---|---|---|---|
+| [`mazama/`](mazama/) | *Mazama* — Kerr's caldera survey and Diller's geology (Crater Lake, OR) | 1886 & 1902 | both PP 3 plates fitted from their printed graticule — 1.1 px, checked against modern quads |
+| [`luray/`](luray/) | *The Hollows of Stony Man* — the Blue Ridge before the park (Shenandoah, VA) | 1893 & 1933 | two HTMC editions, passthrough; the 1893-vs-1933 disagreement measured (~300 m) and left visible |
+| [`smoky/`](smoky/) | *The Smokies in Folio* — Keith's Knoxville sheet (Great Smoky Mtns, TN/NC) | 1895 | both folio plates correlated against the 1895 quad they were printed on — 1.3 px |
+| [`yosemite/`](yosemite/) | *Yosemite Before the Dam* — four quads over Matthes' park map (CA) | 1898–1930 | quads passthrough; Matthes' 1930 sheet correlated onto them — 4.8 px ≈ 50 m |
+| [`brightangel/`](brightangel/) | *Bright Angel* — Matthes' plane-table specials (Grand Canyon, AZ) | 1903 & 1907 | two 1:48,000 specials joined E–W, passthrough, over the 1886 reconnaissance pair |
+| [`chisos/`](chisos/) | *The Big Bend, 1903* — the Chisos and the river bend (TX) | 1903 | 1903 sheets passthrough; the 1980s resurvey behind, its ~370 m disagreement measured not hidden |
+| [`mountdesert/`](mountdesert/) | *Pemetic* — the island before Acadia (ME) | 1904 & 1942 | two 1904 sheets over the 1942 resurvey, all passthrough; cross-era drift measured at 33–45 m |
+| [`estes/`](estes/) | *The Park Special* — the only true USGS park sheet (Rocky Mountain, CO) | 1915 | nothing to fit: the sheet carries its own georeference, with Longs Peak 1915 behind it |
+| [`kilauea/`](kilauea/) | *Kīlauea and Mauna Loa* — the observatory decade (Hawaiʻi Volcanoes, HI) | 1921–1930 | four 15′ quads passthrough; the 1930 Kaʻū geology correlated onto them — 3.5 px |
+| [`blackhills/`](blackhills/) | *He Sapa in Folio* — Darton & Paige's Central Black Hills (Wind Cave, SD) | 1925 | the folio plate correlated against both 1901 quads it was printed on — 1.5 px |
 
 Thirteen of the sheets carry a **second historical layer** on the crossfade
 slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
@@ -416,6 +435,11 @@ python3 pipeline/build.py     # fetches scans, DEM tiles, fits, re-encodes
 python3 src/assemble.py       # writes the one-file build and dist/
 python3 -m http.server -d dist 8000
 ```
+
+With twenty-six cards the stdlib server serialises image requests and the
+gallery fills in slowly; any threaded static server (or `vercel dev`)
+loads it at once. The sheets themselves are unaffected — each is one
+self-contained file.
 
 Each `build.py` runs named stages (`fetch`, `georef`, `resample`, `encode` —
 montana's differ slightly) that cache into `work/`; name a stage to start
