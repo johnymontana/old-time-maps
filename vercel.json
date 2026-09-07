@@ -1,8 +1,8 @@
 {
   "$schema": "https://openapi.vercel.sh/vercel.json",
   "framework": null,
-  "installCommand": "echo 'no dependencies — assemble_all.py is pure stdlib'",
-  "buildCommand": "python3 assemble_all.py",
+  "installCommand": "npm ci --include=dev --ignore-scripts",
+  "buildCommand": "npm run build",
   "outputDirectory": "dist",
   "headers": [
     {

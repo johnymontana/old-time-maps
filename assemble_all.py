@@ -9,6 +9,7 @@ page.  This is what vercel.json runs; any static host works the same way.
 """
 import os, shutil, subprocess, sys
 
+from lib.analytics import analytics_script
 from lib.print_downloads import DOWNLOAD_CSS, gallery_downloads, load_catalog
 
 ROOT = os.path.dirname(os.path.abspath(__file__))
@@ -212,7 +213,7 @@ def gallery(print_models=None):
         downloads = gallery_downloads(print_models[sh['d']]) if sh['d'] != 'art' else ''
         out.append(CARD % dict(sh, downloads=downloads))
     cards = '\n'.join(out)
-    return PAGE % (DOWNLOAD_CSS, cards)
+    return (PAGE % (DOWNLOAD_CSS, cards)).replace('</body>', analytics_script() + '\n</body>')
 
 PAGE = '''<!doctype html>
 <html lang="en">

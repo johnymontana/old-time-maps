@@ -405,6 +405,10 @@ docs/                          screenshots and dated research plans
 lib/                           shared pipeline modules (projections, datums,
                                Terrarium DEM, georeferencing fits, encoders)
   print_downloads.py           model catalog checks, download UI and copying
+  analytics.py                 production analytics injection for served HTML
+package.json, package-lock.json  pinned Vercel SDKs and esbuild
+scripts/build-analytics.mjs     bundles the installed browser SDKs
+web/                           analytics source, committed bundle and licenses
 work/dem/                      Terrarium tile cache shared by all sheets
                                (gitignored)
 art/                           the Flat Wing — a static typeset page
@@ -431,7 +435,7 @@ printing/                      25 terrain models, in STL and 3MF
   validation.json              independent validation results
   README.md, CATALOG.md         printing instructions and individual downloads
   SOURCES.md                   source and history text from viewer About panels
-vercel.json                    build assemble_all.py, serve dist/
+vercel.json                    npm ci, npm run build, serve dist/
 ```
 
 The newer sheets share one viewer chassis (`app1.js`/`app2.js` are
@@ -464,6 +468,9 @@ standard library; Node and the scientific-Python dependencies are not
 required. It fetches three.js r155 into each terrain sheet's `vendor/` on
 first run, then reuses that cache. The build includes 26 gallery cards and
 50 model downloads at `dist/<sheet>/models/<sheet>.{3mf,stl}`.
+Analytics uses a committed JavaScript bundle; when changing its source or
+packages, use `npm ci --include=dev --ignore-scripts` and `npm run build` to refresh it
+and assemble the gallery. See [analytics setup](docs/analytics.md).
 
 For one sheet, run `python3 <sheet>/src/assemble.py` from the repository
 root. It writes `<sheet>/dist/` and refreshes the committed one-file HTML.
@@ -516,11 +523,14 @@ quality gates — lives in [AGENTS.md](AGENTS.md).
 
 ## Deploying
 
-`vercel.json` runs `python3 assemble_all.py` and serves `dist/`. The gallery
+`vercel.json` installs the locked JavaScript packages with
+`npm ci --include=dev --ignore-scripts`, runs `npm run build` to bundle analytics and
+assemble the Python site, and serves `dist/`. The gallery
 is at `/`, each of the 25 terrain viewers is at `/<sheet>/`, the Flat Wing
 is at `/art/`, and model downloads are at
 `/<sheet>/models/<sheet>.3mf` and `/<sheet>/models/<sheet>.stl`.
-There are no runtime functions or required environment variables.
+There are no runtime functions. Vercel supplies the environment and public
+analytics configuration at build time.
 
 With the Vercel CLI installed, the deployment commands are:
 
@@ -546,6 +556,19 @@ Any other static host works the same way: run `python3 assemble_all.py` and
 upload the complete `dist/`, including each sheet's `models/` directory.
 Deployments and pushes require the maintainer's explicit request, as
 described in [AGENTS.md](AGENTS.md).
+
+## Analytics
+
+Production served pages include Vercel Web Analytics (`@vercel/analytics`
+2.0.1) and Speed Insights (`@vercel/speed-insights` 2.0.0). They cover the
+gallery, all terrain viewers and the Flat Wing. Local builds, preview
+deployments and the one-file viewers omit analytics.
+
+Enable Web Analytics in the Vercel project before deploying this integration.
+Traffic appears in **Analytics** and performance in **Speed Insights**;
+available metrics and allowances depend on the plan. See
+[docs/analytics.md](docs/analytics.md) for build commands, package updates,
+configuration and production verification. Printing remains managed by uv.
 
 ## Rights
 

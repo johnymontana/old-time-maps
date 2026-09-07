@@ -17,10 +17,15 @@ in both STL and 3MF, and the Flat Wing's 21 illustrations. Use
   Printing uses the locked uv project in `printing/`; keep its dependencies
   out of the website build. Download UI and copying live in
   `lib/print_downloads.py`.
+- Vercel's build uses `npm ci --include=dev --ignore-scripts` and `npm run build` to
+  bundle Web Analytics and Speed Insights before Python assembly. Commit
+  the generated analytics bundle and preserve the production-only gate in
+  `lib/analytics.py`; one-file viewers must stay free of analytics.
 - Follow the QA gates in AGENTS.md. Pushes, PRs and deployments require the
   maintainer's explicit request.
 
 See [README.md](README.md#rebuilding) for setup and serving, and
 [printing/README.md](printing/README.md) for uv commands, model regeneration,
-validation, custom sizes and packaging. The dated memos in `docs/` are
+validation, custom sizes and packaging. [docs/analytics.md](docs/analytics.md)
+covers analytics setup and verification. The dated memos in `docs/` are
 research history; their proposed work is not necessarily the current state.

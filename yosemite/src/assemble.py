@@ -18,6 +18,7 @@ import base64, os, shutil, sys, urllib.request
 SRC   = os.path.dirname(os.path.abspath(__file__))
 ROOT  = os.path.dirname(SRC)
 sys.path.insert(0, os.path.dirname(ROOT))
+from lib.analytics import analytics_script
 from lib.print_downloads import DOWNLOAD_CSS, copy_models, load_catalog, viewer_downloads
 BUILD = os.path.join(ROOT, 'assets')
 DIST  = os.path.join(ROOT, 'dist')
@@ -59,6 +60,7 @@ def page(asset_js, standalone):
                '<script>%s</script>\n<script>%s</script>' % (three, asset_js, app1, app2))
     if not standalone:
         return head + '\n' + page_body + '\n' + scripts + '\n'
+    scripts += '\n' + analytics_script()
     return ('<!doctype html>\n<html lang="en">\n<head>\n'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
             + head + '\n</head>\n<body>\n' + page_body + '\n' + scripts + '\n</body>\n</html>\n')

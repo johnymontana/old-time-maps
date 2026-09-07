@@ -4,10 +4,12 @@ dependencies beyond the standard library.
 
     python3 src/assemble.py     # writes dist/index.html + dist/assets/
 """
-import html, json, os, shutil
+import html, json, os, shutil, sys
 
 SRC = os.path.dirname(os.path.abspath(__file__))
 ROOT = os.path.dirname(SRC)
+sys.path.insert(0, os.path.dirname(ROOT))
+from lib.analytics import analytics_script
 BUILD = os.path.join(ROOT, 'assets')
 DIST = os.path.join(ROOT, 'dist')
 
@@ -92,6 +94,6 @@ os.makedirs(os.path.join(DIST, 'assets'))
 for f in os.listdir(BUILD):
     if f.endswith('.webp'):
         shutil.copy(os.path.join(BUILD, f), os.path.join(DIST, 'assets', f))
-open(os.path.join(DIST, 'index.html'), 'w').write(PAGE)
+open(os.path.join(DIST, 'index.html'), 'w').write(PAGE.replace('</body>', analytics_script() + '\n</body>'))
 tot = sum(os.path.getsize(os.path.join(dp, f)) for dp, _, fs in os.walk(DIST) for f in fs)
 print('dist      %-30s %6.2f MB' % ('dist/', tot/1e6))

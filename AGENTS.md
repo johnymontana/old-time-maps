@@ -43,6 +43,8 @@ inventory; `printing/manifest.json` must cover all terrain sheets exactly.
    committed. `work/`, `dist/`, `vendor/`, Python environments and printing
    ZIP bundles are gitignored. Rebuilding pulls hundreds of MB — the
    committed assets are the point.
+   Commit `web/analytics.min.js` and its license notices with analytics
+   source/package changes so Python-only assembly continues to work.
 6. **Don't push, don't publish.** Commit locally with clear messages;
    pushing and PRs happen only when the maintainer asks.
 
@@ -50,6 +52,9 @@ inventory; `printing/manifest.json` must cover all terrain sheets exactly.
 
 ```
 assemble_all.py     builds every sheet + the grouped landing page into dist/
+package.json        pinned Vercel SDKs and esbuild; npm build/test commands
+scripts/            build-analytics.mjs bundles web/analytics.js
+web/                analytics source, committed browser bundle and licenses
 lib/                shared pipeline modules:
   proj.py             Lambert conic (unit sphere!), polyconic, Molodensky
                       NAD27<->WGS84, inverse TM, poly_basis
@@ -61,6 +66,7 @@ lib/                shared pipeline modules:
                       feature_mask (black+blue — see mask note below)
   encode.py           Grid, encode_height/drape, snap_places, write_meta
   print_downloads.py  stdlib catalog validation, download UI and asset copying
+  analytics.py        production-only analytics injection for served HTML
 <sheet>/            montana, gold, missouri, paradise, yellowstone, glacier,
                     bitterroot, front, rails, flathead, libby, tacoma,
                     coeurdalene, silverton, nome, mazama, luray, smoky,
@@ -76,14 +82,19 @@ art/                the Flat Wing: flat pieces, stdlib-typeset page
 printing/           build.py, verify.py, package.py; pyproject.toml + uv.lock;
                     models/, previews/, manifest.json, validation.json,
                     README.md, CATALOG.md, SOURCES.md and preview.jpg
-docs/               README heroes and dated research/candidate memos
+docs/               README heroes, analytics setup, dated research memos
 ```
 
 ## Environment & commands
 
-- Python ≥ 3.10. Website assembly is pure stdlib and uses committed map and
-  printing assets. No Node or printing environment is needed; `assemble.py`
+- Python ≥ 3.10. Website assembly is pure stdlib and uses committed map,
+  printing and analytics assets. Python-only assembly needs no Node or
+  printing environment; `assemble.py`
   fetches three.js r155 into each sheet's `vendor/` on first run.
+- Analytics package/source changes: `npm ci --include=dev --ignore-scripts`, then
+  `npm run build` to refresh the browser bundle and assemble the gallery.
+  Vercel uses these same commands. `npm test` runs analytics integration
+  checks; npm dependencies are separate from the printing uv project.
 - Source-map pipelines use scientific Python; install the selected sheet's
   `requirements.txt` into an environment before running it. Requirements
   vary by sheet. See README's rebuilding example using `uv venv` and
@@ -112,6 +123,24 @@ docs/               README heroes and dated research/candidate memos
 - Concurrent builds of different sheets are safe: they touch disjoint
   directories and the shared DEM cache tolerates parallel writers of
   different tiles.
+
+## Analytics maintenance
+
+- `web/analytics.js` uses the installed `@vercel/analytics` and
+  `@vercel/speed-insights` packages. Bundle with `npm run build:analytics`;
+  never edit the minified output by hand. Commit the npm lockfile, generated
+  bundle and license notices with changes. See [docs/analytics.md](docs/analytics.md).
+- Every served HTML builder calls `lib.analytics.analytics_script()` once.
+  It emits the SDK bundle only for `VERCEL_ENV=production` and forwards the
+  public analytics sections of `VERCEL_OBSERVABILITY_CLIENT_CONFIG`.
+  Preserve this production gate and omit analytics from one-file artifacts.
+- Check production initialization for the gallery, all terrain pages and
+  Flat Wing; verify preview/local builds and file-based viewers send no
+  analytics requests. Test both default SDK routes and Vercel-provided
+  routes without sending synthetic traffic to the real dashboard.
+- Web Analytics dashboard enablement and a deployment are needed before
+  live collection can be verified. Installation alone does not prove data
+  is arriving. Plan upgrades and deployment remain maintainer decisions.
 
 ## Printable terrain maintenance
 
@@ -289,7 +318,8 @@ are fetched only after a click and the Flat Wing has no model links.
 Keep [README.md](README.md) current for setup, inventory and hosting;
 [printing/README.md](printing/README.md) owns printing commands and output
 details. `CLAUDE.md` points here so agent instructions have one source of
-truth. Update generated catalogs and provenance via their owning scripts.
+truth. [docs/analytics.md](docs/analytics.md) covers the JavaScript SDKs and
+production collection. Update generated catalogs and provenance via their owning scripts.
 The research memos in `docs/` retain their dated findings: add a current
 status note when a candidate is built, rather than presenting an old plan
 as the current implementation. Current hosting is static Vercel delivery;
