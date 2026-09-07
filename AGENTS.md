@@ -77,6 +77,17 @@ docs/               README heroes, research plans, candidates memos
 - Assemble one sheet: `python3 src/assemble.py` (from the sheet dir).
 - Whole gallery: `python3 assemble_all.py`, serve with
   `python3 -m http.server -d dist 8000`.
+- 3D printing (from the repo root): `uv sync --project printing --locked`,
+  then `uv run --project printing --locked printing/build.py`.
+  uv manages `printing/.venv` from `printing/pyproject.toml` and `uv.lock`;
+  use `uv add --project printing` or `uv remove --project printing` for
+  dependency changes.
+  Independent mesh QA: `uv run --project printing --locked --group qa printing/verify.py`.
+  See `printing/README.md` for tests, custom sizes and packaging commands.
+- Model download UI and copying live in `lib/print_downloads.py`. Every
+  terrain sheet's `body.html` has one `<!-- PRINT_DOWNLOADS -->` marker;
+  its assembler fills it and copies the models into `dist/models/`.
+  Keep the web build stdlib-only; it reads committed printing assets.
 - Concurrent builds of different sheets are safe: they touch disjoint
   directories and the shared DEM cache tolerates parallel writers of
   different tiles.

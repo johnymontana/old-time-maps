@@ -17,6 +17,8 @@ import base64, os, shutil, sys, urllib.request
 
 SRC   = os.path.dirname(os.path.abspath(__file__))
 ROOT  = os.path.dirname(SRC)
+sys.path.insert(0, os.path.dirname(ROOT))
+from lib.print_downloads import DOWNLOAD_CSS, copy_models, load_catalog, viewer_downloads
 BUILD = os.path.join(ROOT, 'assets')
 DIST  = os.path.join(ROOT, 'dist')
 THREE = os.path.join(ROOT, 'vendor', 'three.min.js')
@@ -43,6 +45,7 @@ def vendor_three():
     return read(THREE)
 
 def page(asset_js, standalone):
+    page_body = viewer_downloads(body, print_model, served=standalone)
     # charset first and in head — the artifact build has no head of its own,
     # and it must land in the first 1024 bytes or degree signs go mojibake.
     head = ('<meta charset="utf-8">\n'
@@ -55,16 +58,18 @@ def page(asset_js, standalone):
     scripts = ('<script>%s</script>\n<script>%s</script>\n'
                '<script>%s</script>\n<script>%s</script>' % (three, asset_js, app1, app2))
     if not standalone:
-        return head + '\n' + body + '\n' + scripts + '\n'
+        return head + '\n' + page_body + '\n' + scripts + '\n'
     return ('<!doctype html>\n<html lang="en">\n<head>\n'
             '<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">\n'
-            + head + '\n</head>\n<body>\n' + body + '\n' + scripts + '\n</body>\n</html>\n')
+            + head + '\n</head>\n<body>\n' + page_body + '\n' + scripts + '\n</body>\n</html>\n')
 
 if not os.path.exists(os.path.join(BUILD, 'meta.json')):
     raise SystemExit('run pipeline/build.py first — assets/ is empty')
 
 css   = read(os.path.join(SRC, 'style.css'))
 body  = read(os.path.join(SRC, 'body.html'))
+print_model = load_catalog()[os.path.basename(ROOT)]
+css += '\n' + DOWNLOAD_CSS
 app1  = read(os.path.join(SRC, 'app1.js'))
 app2  = read(os.path.join(SRC, 'app2.js'))
 three = vendor_three()
@@ -86,6 +91,7 @@ print('artifact  %-30s %6.2f MB' % (ONE, os.path.getsize(one)/1e6))
 
 # served build
 os.makedirs(os.path.join(DIST, 'assets'), exist_ok=True)
+copy_models(print_model, DIST)
 for f in ('drape.webp', 'height.webp') + (('alt.webp',) if os.path.exists(ALT) else ()):
     shutil.copy(os.path.join(BUILD, f), os.path.join(DIST, 'assets', f))
 open(os.path.join(DIST, 'assets', 'meta.json'), 'w').write(meta)

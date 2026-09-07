@@ -9,6 +9,8 @@ page.  This is what vercel.json runs; any static host works the same way.
 """
 import os, shutil, subprocess, sys
 
+from lib.print_downloads import DOWNLOAD_CSS, gallery_downloads, load_catalog
+
 ROOT = os.path.dirname(os.path.abspath(__file__))
 DIST = os.path.join(ROOT, 'dist')
 
@@ -164,6 +166,10 @@ SHEETS = [  # gallery order: oldest sheet first
 ]
 
 def main():
+    print_models = load_catalog()
+    expected = {s['d'] for s in SHEETS if s['d'] != 'art'}
+    if set(print_models) != expected:
+        raise ValueError('Print catalog must contain every terrain sheet and no Flat Wing entries')
     if os.path.isdir(DIST):
         shutil.rmtree(DIST)
     os.makedirs(DIST)
@@ -176,12 +182,13 @@ def main():
         card = os.path.join(ROOT, s['d'], 'assets', 'card.webp')
         if os.path.exists(card):
             shutil.copy(card, os.path.join(DIST, s['d'], 'card.webp'))
-    open(os.path.join(DIST, 'index.html'), 'w').write(gallery())
+    open(os.path.join(DIST, 'index.html'), 'w').write(gallery(print_models))
     tot = sum(os.path.getsize(os.path.join(dp, f))
               for dp, _, fs in os.walk(DIST) for f in fs)
     print('gallery   dist/  %.2f MB' % (tot/1e6))
 
-CARD = '''    <a class="card" href="%(d)s/">
+CARD = '''    <article class="card">
+    <a class="card-link" href="%(d)s/">
       <div class="im"><img src="%(d)s/card.webp" alt="" loading="lazy"></div>
       <div class="tx">
         <h2>%(title)s</h2>
@@ -189,18 +196,23 @@ CARD = '''    <a class="card" href="%(d)s/">
         <p>%(blurb)s</p>
         <div class="cr">%(credit)s</div>
       </div>
-    </a>'''
+    </a>
+    %(downloads)s
+    </article>'''
 
-def gallery():
+def gallery(print_models=None):
+    if print_models is None:
+        print_models = load_catalog()
     out, last_g = [], None
     for sh in SHEETS:
         g = sh.get('g', 'Montana')
         if g != last_g:
             out.append('    <h2 class="stateh">%s</h2>' % g)
             last_g = g
-        out.append(CARD % sh)
+        downloads = gallery_downloads(print_models[sh['d']]) if sh['d'] != 'art' else ''
+        out.append(CARD % dict(sh, downloads=downloads))
     cards = '\n'.join(out)
-    return PAGE % cards
+    return PAGE % (DOWNLOAD_CSS, cards)
 
 PAGE = '''<!doctype html>
 <html lang="en">
@@ -225,7 +237,7 @@ h1{margin:0;font-family:Spectral,Georgia,serif;font-weight:300;
 .tag{margin-top:14px;font-size:12px;letter-spacing:.22em;text-transform:uppercase;color:var(--dim)}
 .rule{width:64px;height:1px;background:var(--line);margin:26px auto 0}
 main{max-width:1060px;margin:0 auto;padding:26px 24px 30px;
-     display:grid;grid-template-columns:repeat(auto-fit,minmax(300px,1fr));gap:18px}
+     display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%%,300px),1fr));gap:18px}
 .stateh{grid-column:1/-1;margin:26px 0 0;font-family:Spectral,Georgia,serif;
         font-weight:300;font-size:15px;letter-spacing:.34em;text-indent:.34em;
         text-transform:uppercase;color:var(--warm);text-align:center}
@@ -234,6 +246,8 @@ main{max-width:1060px;margin:0 auto;padding:26px 24px 30px;
       background:var(--panel);border:1px solid var(--line);border-radius:3px;
       overflow:hidden;transition:border-color .18s, transform .18s}
 .card:hover{border-color:var(--warm);transform:translateY(-2px)}
+.card-link{display:flex;flex-direction:column;flex:1;color:inherit;text-decoration:none;min-width:0}
+.card-link:focus-visible{outline:2px solid var(--accent);outline-offset:-3px}
 .im{height:210px;overflow:hidden;border-bottom:1px solid var(--line2);background:#26221c}
 .im img{width:100%%;height:100%%;object-fit:cover;filter:saturate(.96)}
 .card:hover .im img{filter:none}
@@ -246,6 +260,7 @@ footer{max-width:1060px;margin:0 auto;padding:8px 24px 60px;text-align:center;
        font-size:11px;color:var(--dim);line-height:1.7}
 footer a{color:var(--accent);text-decoration:none}
 footer a:hover{text-decoration:underline}
+%s
 </style>
 </head>
 <body>

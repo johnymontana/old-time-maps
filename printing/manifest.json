@@ -1,0 +1,1515 @@
+{
+  "format_version": 1,
+  "units": "millimeter",
+  "footprint": "full rectangular viewer grid",
+  "orientation": "X east, Y grid north, Z up; bottom at Z=0",
+  "size_mm": 180,
+  "base_mm": 3,
+  "maximum_mesh_spacing_mm": 0.5,
+  "terrain_only": true,
+  "excluded": {
+    "art": "Flat Wing illustrations have no elevation grids"
+  },
+  "models": [
+    {
+      "sheet": "gold",
+      "title": "The Gold Regions",
+      "dimensions_mm": [
+        180.0,
+        109.733313,
+        5.923227
+      ],
+      "base_mm": 3,
+      "exaggeration": 5.0,
+      "horizontal_scale_denominator": 5483617.639,
+      "geographic_extent_km": [
+        987.0511749529734,
+        601.7355306463573
+      ],
+      "source_elevation_range_m": [
+        326.6906732771479,
+        3757.8921907541962
+      ],
+      "sampled_elevation_range_m": [
+        407.84038970722185,
+        3613.8126538169604
+      ],
+      "elevation_datum_m": 407.84038970722185,
+      "mesh_grid": [
+        361,
+        221
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49878778630935133
+      ],
+      "source_height": "gold/assets/height.webp",
+      "source_height_sha256": "62f426224b178ffafea1a11c9e1efd41deacc1c00d32bee41778bc4b56f5c606",
+      "source_meta": "gold/assets/meta.json",
+      "source_meta_sha256": "5f15ae17bd3c11c17bcd5f8300ebd5fa527f40ed072612d0bb4623f83e604720",
+      "about": "gold/src/body.html",
+      "description": "180.000 x 109.733 x 5.923 mm; 3 mm minimum base; 5x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: gold/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 80942,
+        "triangles": 161880,
+        "volume_mm3": 76055.63777
+      },
+      "files": {
+        "stl": {
+          "path": "models/gold.stl",
+          "bytes": 8094084,
+          "sha256": "42908e20d2ad7ac2c130276fccd9240646c2a774eb6699b5b3f9b48ab3bac0f0"
+        },
+        "3mf": {
+          "path": "models/gold.3mf",
+          "bytes": 1760535,
+          "sha256": "7b79d1fa0e1bb7a1b8d0789c6ebfc6a44bf930a93992615cccfd64c3713ac76c"
+        }
+      }
+    },
+    {
+      "sheet": "missouri",
+      "title": "The Head of Navigation",
+      "dimensions_mm": [
+        180.0,
+        137.533219,
+        7.6468
+      ],
+      "base_mm": 3,
+      "exaggeration": 2.2,
+      "horizontal_scale_denominator": 919603.341,
+      "geographic_extent_km": [
+        165.52860135044125,
+        126.47600779799882
+      ],
+      "source_elevation_range_m": [
+        746.7135009765625,
+        2699.3948644319007
+      ],
+      "sampled_elevation_range_m": [
+        752.5891711414928,
+        2694.958686435693
+      ],
+      "elevation_datum_m": 752.5891711414928,
+      "mesh_grid": [
+        361,
+        277
+      ],
+      "mesh_spacing_mm": [
+        0.49999999999999994,
+        0.4983087650037614
+      ],
+      "source_height": "missouri/assets/height.webp",
+      "source_height_sha256": "d32fa9106f58f88d17f565d140c238375db4dc0857594befba97a641ec2a00d5",
+      "source_meta": "missouri/assets/meta.json",
+      "source_meta_sha256": "75defcba2d04b49e56b928f921a2048d18d540a1afb354a3ba082bcd37db0fb0",
+      "about": "missouri/src/body.html",
+      "description": "180.000 x 137.533 x 7.647 mm; 3 mm minimum base; 2.2x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: missouri/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 101270,
+        "triangles": 202536,
+        "volume_mm3": 100744.25841
+      },
+      "files": {
+        "stl": {
+          "path": "models/missouri.stl",
+          "bytes": 10126884,
+          "sha256": "5ca7c72a5e93f116cad2053b304a1affe03b2881e3d04d35af8dceb7d45a72ab"
+        },
+        "3mf": {
+          "path": "models/missouri.3mf",
+          "bytes": 2193909,
+          "sha256": "c72049d335badf108856f79838ff0b798e49fe2a126651fd25fd5d702ba5b688"
+        }
+      }
+    },
+    {
+      "sheet": "paradise",
+      "title": "The Livingston Sheet",
+      "dimensions_mm": [
+        132.671908,
+        180.0,
+        8.749457
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 702683.666,
+      "geographic_extent_km": [
+        93.22638263579275,
+        126.48305980393212
+      ],
+      "source_elevation_range_m": [
+        1214.095947265625,
+        3580.2436943752864
+      ],
+      "sampled_elevation_range_m": [
+        1214.7546437982594,
+        3459.2267234840974
+      ],
+      "elevation_datum_m": 1214.7546437982594,
+      "mesh_grid": [
+        267,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.4987665714457188,
+        0.5
+      ],
+      "source_height": "paradise/assets/height.webp",
+      "source_height_sha256": "1b8affbcb8e7e2691457f860341b100e662f92299d5b09373d9b240fc7dec563",
+      "source_meta": "paradise/assets/meta.json",
+      "source_meta_sha256": "38be473ccbb5fec3197eb40ce76294abdeea0876e984d3e05bf890e1a2fdd283",
+      "about": "paradise/src/body.html",
+      "description": "132.672 x 180.000 x 8.749 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: paradise/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 97640,
+        "triangles": 195276,
+        "volume_mm3": 124979.4832
+      },
+      "files": {
+        "stl": {
+          "path": "models/paradise.stl",
+          "bytes": 9763884,
+          "sha256": "97af684100104f1a40d05b6cb1a1578a6936e5b0832a3c0a41c8586c62ad41b0"
+        },
+        "3mf": {
+          "path": "models/paradise.3mf",
+          "bytes": 2192589,
+          "sha256": "f4880da34f6c86aada1f4397661640f4a376dcf2e16e7e7d59ea530cdcd12e13"
+        }
+      }
+    },
+    {
+      "sheet": "yellowstone",
+      "title": "Yellowstone in Folio",
+      "dimensions_mm": [
+        134.624724,
+        180.0,
+        7.80961
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.7,
+      "horizontal_scale_denominator": 702684.076,
+      "geographic_extent_km": [
+        94.59864967727314,
+        126.48313369693051
+      ],
+      "source_elevation_range_m": [
+        1569.5142979660313,
+        3587.108709560296
+      ],
+      "sampled_elevation_range_m": [
+        1573.710890580065,
+        3561.7322721297096
+      ],
+      "elevation_datum_m": 1573.710890580065,
+      "mesh_grid": [
+        271,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49861008822432346,
+        0.5
+      ],
+      "source_height": "yellowstone/assets/height.webp",
+      "source_height_sha256": "147bb1edeea1fefe632f3ccdd59e933eb9e438a6dfb3824b57a7922652b2e1cd",
+      "source_meta": "yellowstone/assets/meta.json",
+      "source_meta_sha256": "9e688333d2639f4837a624ce9feae96d3939ad732352d592fe1192ca7fbb9994",
+      "about": "yellowstone/src/body.html",
+      "description": "134.625 x 180.000 x 7.810 mm; 3 mm minimum base; 1.7x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: yellowstone/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 99092,
+        "triangles": 198180,
+        "volume_mm3": 125267.3749
+      },
+      "files": {
+        "stl": {
+          "path": "models/yellowstone.stl",
+          "bytes": 9909084,
+          "sha256": "972917e610cbd0f3ec185720bb33c988d258c8f326f2b4ad48659551457caad2"
+        },
+        "3mf": {
+          "path": "models/yellowstone.3mf",
+          "bytes": 2203445,
+          "sha256": "b88fd2895fb2a18fb32ad1beebff0c3308f8828900f27c125e08260b3c925175"
+        }
+      }
+    },
+    {
+      "sheet": "glacier",
+      "title": "Glacier in Contours",
+      "dimensions_mm": [
+        180.0,
+        158.307344,
+        7.865447
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.4,
+      "horizontal_scale_denominator": 622337.749,
+      "geographic_extent_km": [
+        112.02079479438989,
+        98.52063588921231
+      ],
+      "source_elevation_range_m": [
+        881.6475184700282,
+        3165.919876862504
+      ],
+      "sampled_elevation_range_m": [
+        882.7078562535778,
+        3045.5301825946726
+      ],
+      "elevation_datum_m": 882.7078562535778,
+      "mesh_grid": [
+        361,
+        318
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49939225133495163
+      ],
+      "source_height": "glacier/assets/height.webp",
+      "source_height_sha256": "fa0b42bb7c6e54bacd88a35477fee01f0a34e892417f3e60d85d362e272b01c8",
+      "source_meta": "glacier/assets/meta.json",
+      "source_meta_sha256": "d60c01212ccf37ad844685271a2e0b4fdcde85d60656ebf7bd1d2a8bdcc46a3f",
+      "about": "glacier/src/body.html",
+      "description": "180.000 x 158.307 x 7.865 mm; 3 mm minimum base; 1.4x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: glacier/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 116153,
+        "triangles": 232302,
+        "volume_mm3": 128766.11869
+      },
+      "files": {
+        "stl": {
+          "path": "models/glacier.stl",
+          "bytes": 11615184,
+          "sha256": "971927017fcc578215408de55d666515b51b105284598141cf0bd512f3629124"
+        },
+        "3mf": {
+          "path": "models/glacier.3mf",
+          "bytes": 2568698,
+          "sha256": "c18200634242cd0020ed9fcfb6ece3f65d0245d79d6298c99638164ac25e6198"
+        }
+      }
+    },
+    {
+      "sheet": "bitterroot",
+      "title": "The Bitterroot",
+      "dimensions_mm": [
+        76.221928,
+        180.0,
+        8.190399
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 702692.538,
+      "geographic_extent_km": [
+        53.56057976854137,
+        126.48465680465765
+      ],
+      "source_elevation_range_m": [
+        877.5744774973291,
+        3021.6788077590813
+      ],
+      "sampled_elevation_range_m": [
+        882.5721993526747,
+        2908.824777944361
+      ],
+      "elevation_datum_m": 882.5721993526747,
+      "mesh_grid": [
+        154,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49818253358457076,
+        0.5
+      ],
+      "source_height": "bitterroot/assets/height.webp",
+      "source_height_sha256": "428ccda14416d0d39fd122c75f9533cd39cdfc110af187f8b7e8e369a42c2b9a",
+      "source_meta": "bitterroot/assets/meta.json",
+      "source_meta_sha256": "8a1cbed848081534d66395c91657119cdc4c7e3f8dcba3e1e5c9609516519441",
+      "about": "bitterroot/src/body.html",
+      "description": "76.222 x 180.000 x 8.190 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: bitterroot/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 56621,
+        "triangles": 113238,
+        "volume_mm3": 66059.29559
+      },
+      "files": {
+        "stl": {
+          "path": "models/bitterroot.stl",
+          "bytes": 5661984,
+          "sha256": "c664b05b43dd0ab4d398c99db3e7bca3f9dfc789255a8342ee5dbb194ba00f9a"
+        },
+        "3mf": {
+          "path": "models/bitterroot.3mf",
+          "bytes": 1266804,
+          "sha256": "24a1a0e79f8576ba35b2ab4b41198d262014f9432d9862147b5919551f04979b"
+        }
+      }
+    },
+    {
+      "sheet": "front",
+      "title": "The Rocky Mountain Front",
+      "dimensions_mm": [
+        127.64338,
+        180.0,
+        7.342178
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 702682.641,
+      "geographic_extent_km": [
+        89.69278723506787,
+        126.48287546537091
+      ],
+      "source_elevation_range_m": [
+        1050.0,
+        2838.2661094656214
+      ],
+      "sampled_elevation_range_m": [
+        1049.9999999999998,
+        2745.096106686105
+      ],
+      "elevation_datum_m": 1049.9999999999998,
+      "mesh_grid": [
+        257,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49860695206857,
+        0.5
+      ],
+      "source_height": "front/assets/height.webp",
+      "source_height_sha256": "02fe8a3de642cd7a02d4dda4547f05e45543706c309552ca8ee6e00a31aabf7e",
+      "source_meta": "front/assets/meta.json",
+      "source_meta_sha256": "3f699b43d26e896b355899d44fe083c1279ffdd00d1123334a9d546c3fa34aa3",
+      "about": "front/src/body.html",
+      "description": "127.643 x 180.000 x 7.342 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: front/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 94010,
+        "triangles": 188016,
+        "volume_mm3": 91089.60539
+      },
+      "files": {
+        "stl": {
+          "path": "models/front.stl",
+          "bytes": 9400884,
+          "sha256": "74a79b58691b8353c08c31637377756cdd6657049e1b288af8b8bba81c3d37d1"
+        },
+        "3mf": {
+          "path": "models/front.3mf",
+          "bytes": 2070056,
+          "sha256": "a1bc03531efee61f094261ecb8a4be7058901caee3d6b12d9c6407b2622567e3"
+        }
+      }
+    },
+    {
+      "sheet": "rails",
+      "title": "Montana by Rail",
+      "dimensions_mm": [
+        180.0,
+        109.733313,
+        5.923227
+      ],
+      "base_mm": 3,
+      "exaggeration": 5.0,
+      "horizontal_scale_denominator": 5483617.639,
+      "geographic_extent_km": [
+        987.0511749529734,
+        601.7355306463573
+      ],
+      "source_elevation_range_m": [
+        326.6906732771479,
+        3757.8921907541962
+      ],
+      "sampled_elevation_range_m": [
+        407.84038970722185,
+        3613.8126538169604
+      ],
+      "elevation_datum_m": 407.84038970722185,
+      "mesh_grid": [
+        361,
+        221
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49878778630935133
+      ],
+      "source_height": "rails/assets/height.webp",
+      "source_height_sha256": "62f426224b178ffafea1a11c9e1efd41deacc1c00d32bee41778bc4b56f5c606",
+      "source_meta": "rails/assets/meta.json",
+      "source_meta_sha256": "eafd579b776422ad7add5044f4af0b49a7e46203d7a723e4c62e78e99c825648",
+      "about": "rails/src/body.html",
+      "description": "180.000 x 109.733 x 5.923 mm; 3 mm minimum base; 5x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: rails/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 80942,
+        "triangles": 161880,
+        "volume_mm3": 76055.63777
+      },
+      "files": {
+        "stl": {
+          "path": "models/rails.stl",
+          "bytes": 8094084,
+          "sha256": "ed7c608da68dda1fefd2050ffab463e580bfa626938d4044bb81576afae771e4"
+        },
+        "3mf": {
+          "path": "models/rails.3mf",
+          "bytes": 1760536,
+          "sha256": "f852ef7f23d5570b95b4ffdceb4d1aaabd11a21f72809d27272cba9c7658ab49"
+        }
+      }
+    },
+    {
+      "sheet": "flathead",
+      "title": "The Flathead Country",
+      "dimensions_mm": [
+        76.005145,
+        180.0,
+        7.432487
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.7,
+      "horizontal_scale_denominator": 709771.273,
+      "geographic_extent_km": [
+        53.94626879793097,
+        127.7588291824276
+      ],
+      "source_elevation_range_m": [
+        771.4010620117188,
+        2732.8684178912454
+      ],
+      "sampled_elevation_range_m": [
+        775.7564916617412,
+        2626.3751424383954
+      ],
+      "elevation_datum_m": 775.7564916617412,
+      "mesh_grid": [
+        154,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49676565597808797,
+        0.5
+      ],
+      "source_height": "flathead/assets/height.webp",
+      "source_height_sha256": "431f5a5bea47c9f26e42b29a1bea17f2624d08b8da28f11fd803ff47f6054279",
+      "source_meta": "flathead/assets/meta.json",
+      "source_meta_sha256": "77c693f19d76fb8d54d236e83b63ce1efc9d3b90bd08ddc83c3ec918c10c8988",
+      "about": "flathead/src/body.html",
+      "description": "76.005 x 180.000 x 7.432 mm; 3 mm minimum base; 1.7x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: flathead/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 56621,
+        "triangles": 113238,
+        "volume_mm3": 53830.95993
+      },
+      "files": {
+        "stl": {
+          "path": "models/flathead.stl",
+          "bytes": 5661984,
+          "sha256": "4c85cd9b8a8b1f5ec43bd377eceb9a72bad2cb9ca155a7caabe37f69d8c1883c"
+        },
+        "3mf": {
+          "path": "models/flathead.3mf",
+          "bytes": 1243102,
+          "sha256": "f309191be69c440729825b1527db47e821afe2ea4a1675535179fcfd4f5910ce"
+        }
+      }
+    },
+    {
+      "sheet": "libby",
+      "title": "The Libby Quadrangle",
+      "dimensions_mm": [
+        132.831201,
+        180.0,
+        11.235731
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.6,
+      "horizontal_scale_denominator": 393818.925,
+      "geographic_extent_km": [
+        52.31144057063635,
+        70.88740643851862
+      ],
+      "source_elevation_range_m": [
+        556.130232657967,
+        2635.3352882469094
+      ],
+      "sampled_elevation_range_m": [
+        558.8151789266902,
+        2585.931947578879
+      ],
+      "elevation_datum_m": 558.8151789266902,
+      "mesh_grid": [
+        267,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.4993654156869042,
+        0.5
+      ],
+      "source_height": "libby/assets/height.webp",
+      "source_height_sha256": "a3ebe0e93314ff9ed7fb880328ba9df8187b769f091702f862e327223b9ac31a",
+      "source_meta": "libby/assets/meta.json",
+      "source_meta_sha256": "71cbe342a5ffe744de7bd961c844c9490c39f196aacd9137cf3de9b4794c9a68",
+      "about": "libby/src/body.html",
+      "description": "132.831 x 180.000 x 11.236 mm; 3 mm minimum base; 1.6x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: libby/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 97640,
+        "triangles": 195276,
+        "volume_mm3": 136950.80192
+      },
+      "files": {
+        "stl": {
+          "path": "models/libby.stl",
+          "bytes": 9763884,
+          "sha256": "ba4a8ed9b69ebff8691cc13b95354b623bf700c23a5b8cda71d18e064c20d6d9"
+        },
+        "3mf": {
+          "path": "models/libby.3mf",
+          "bytes": 2210698,
+          "sha256": "c52744d71229bb4a9ff19e4b2780a4323dd0ac212dc07fbd7392ddb56d4d7f1b"
+        }
+      }
+    },
+    {
+      "sheet": "montana",
+      "title": "Montana in Relief",
+      "dimensions_mm": [
+        180.0,
+        109.733313,
+        5.930174
+      ],
+      "base_mm": 3,
+      "exaggeration": 5.0,
+      "horizontal_scale_denominator": 5483617.639,
+      "geographic_extent_km": [
+        987.0511749529734,
+        601.7355306463573
+      ],
+      "source_elevation_range_m": [
+        309.42676627097404,
+        3844.211725785066
+      ],
+      "sampled_elevation_range_m": [
+        407.66013160213265,
+        3621.25036710959
+      ],
+      "elevation_datum_m": 407.66013160213265,
+      "mesh_grid": [
+        361,
+        221
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49878778630935133
+      ],
+      "source_height": "montana/assets/height.webp",
+      "source_height_sha256": "2f35534333d866ef60c03fc4a943bfde7fc2bcfae6fa331f8a8f25251cff6a80",
+      "source_meta": "montana/assets/meta.json",
+      "source_meta_sha256": "5244e739b80b4accc311354cb7f72b3dbd7bf83873fad79c123a1f251e2b58c3",
+      "about": "montana/src/body.html",
+      "description": "180.000 x 109.733 x 5.930 mm; 3 mm minimum base; 5x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: montana/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 80942,
+        "triangles": 161880,
+        "volume_mm3": 76059.01371
+      },
+      "files": {
+        "stl": {
+          "path": "models/montana.stl",
+          "bytes": 8094084,
+          "sha256": "8e08aa2be6f89d26bf9d5b018b96b9341e761dca933f7c896619b2e15e8a92ab"
+        },
+        "3mf": {
+          "path": "models/montana.3mf",
+          "bytes": 1760492,
+          "sha256": "61d26b104875804d3958252e1efcb6952f6a505a7f293c1b7912132fd3a7c378"
+        }
+      }
+    },
+    {
+      "sheet": "nome",
+      "title": "Nome, the Golden Beach",
+      "dimensions_mm": [
+        160.88239,
+        180.0,
+        9.185566
+      ],
+      "base_mm": 3,
+      "exaggeration": 2.0,
+      "horizontal_scale_denominator": 203988.412,
+      "geographic_extent_km": [
+        32.818143326289565,
+        36.71791420219191
+      ],
+      "source_elevation_range_m": [
+        6.63154253288667e-07,
+        633.6936956130323
+      ],
+      "sampled_elevation_range_m": [
+        6.631542532886667e-07,
+        630.8919312699438
+      ],
+      "elevation_datum_m": 6.631542532886667e-07,
+      "mesh_grid": [
+        323,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49963475206607066,
+        0.5
+      ],
+      "source_height": "nome/assets/height.webp",
+      "source_height_sha256": "6fecf560e18a231b4d766c55b3ecef94a9dfbff02ed1dd02ee2ebc701bcbf90b",
+      "source_meta": "nome/assets/meta.json",
+      "source_meta_sha256": "5c01d267787fb8a3a52befab3465dab272868a8e2ee7b00160e9e69c41960adc",
+      "about": "nome/src/body.html",
+      "description": "160.882 x 180.000 x 9.186 mm; 3 mm minimum base; 2x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: nome/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 117968,
+        "triangles": 235932,
+        "volume_mm3": 110406.36947
+      },
+      "files": {
+        "stl": {
+          "path": "models/nome.stl",
+          "bytes": 11796684,
+          "sha256": "07d9ee454930729c22779dc6cb9c02bf76a3bdd9913feff911a0c51de79361b1"
+        },
+        "3mf": {
+          "path": "models/nome.3mf",
+          "bytes": 2578074,
+          "sha256": "9b4b95ac4024cdbccb0f82fbe9f30f886a1b1ad70b5dceb6e91719c9520b00d7"
+        }
+      }
+    },
+    {
+      "sheet": "brightangel",
+      "title": "Bright Angel",
+      "dimensions_mm": [
+        180.0,
+        119.491968,
+        13.454578
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.5,
+      "horizontal_scale_denominator": 282758.569,
+      "geographic_extent_km": [
+        50.89654236072342,
+        33.78737792209271
+      ],
+      "source_elevation_range_m": [
+        697.0457240513393,
+        2681.4058210100447
+      ],
+      "sampled_elevation_range_m": [
+        708.8688034605868,
+        2679.616549222891
+      ],
+      "elevation_datum_m": 708.8688034605868,
+      "mesh_grid": [
+        361,
+        240
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49996639453021285
+      ],
+      "source_height": "brightangel/assets/height.webp",
+      "source_height_sha256": "0ab31a572a5a71a9e047fd93411d6887f199598553d969475d9d6cf548548df6",
+      "source_meta": "brightangel/assets/meta.json",
+      "source_meta_sha256": "77e22a55bc1231241ba37dcd62e7dc0910bddb1ec420bba52e7dda185fa19f6f",
+      "about": "brightangel/src/body.html",
+      "description": "180.000 x 119.492 x 13.455 mm; 3 mm minimum base; 1.5x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: brightangel/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 87839,
+        "triangles": 175674,
+        "volume_mm3": 182647.50096
+      },
+      "files": {
+        "stl": {
+          "path": "models/brightangel.stl",
+          "bytes": 8783784,
+          "sha256": "8a20dc8ed9f47d817c58b70351602664aee9ba951fc63aa6ce0b678bd08b6b4e"
+        },
+        "3mf": {
+          "path": "models/brightangel.3mf",
+          "bytes": 1954482,
+          "sha256": "4453ca06592d9762d6ca42ad4d001c9c5c5b86257acc801386018db8dd72cc65"
+        }
+      }
+    },
+    {
+      "sheet": "yosemite",
+      "title": "Yosemite Before the Dam",
+      "dimensions_mm": [
+        180.0,
+        172.357349,
+        13.821156
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.7,
+      "horizontal_scale_denominator": 572562.476,
+      "geographic_extent_km": [
+        103.06124574628875,
+        98.68535043495552
+      ],
+      "source_elevation_range_m": [
+        258.35685759417447,
+        3961.500086254078
+      ],
+      "sampled_elevation_range_m": [
+        268.46677055679106,
+        3913.0479418507366
+      ],
+      "elevation_datum_m": 268.46677055679106,
+      "mesh_grid": [
+        361,
+        346
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49958651818876915
+      ],
+      "source_height": "yosemite/assets/height.webp",
+      "source_height_sha256": "3836f11ce00b578ba89a0a5ecc9477271dcbb9622035273bd6f730af9128f832",
+      "source_meta": "yosemite/assets/meta.json",
+      "source_meta_sha256": "8d09fe94264b5f8e455d7d6a93a223cc393a4ce7893e6d4f2bfc49a49527c24b",
+      "about": "yosemite/src/body.html",
+      "description": "180.000 x 172.357 x 13.821 mm; 3 mm minimum base; 1.7x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: yosemite/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 126317,
+        "triangles": 252630,
+        "volume_mm3": 271783.83909
+      },
+      "files": {
+        "stl": {
+          "path": "models/yosemite.stl",
+          "bytes": 12631584,
+          "sha256": "f6201ddbbe0cd065a3a161b8bdbf6da3283e2472eec9c2a053ea0f187699e5d4"
+        },
+        "3mf": {
+          "path": "models/yosemite.3mf",
+          "bytes": 2822108,
+          "sha256": "4f2e0e36a4934c9e02752204fa77389465815be6dea9bfd1defce87ee6d521a7"
+        }
+      }
+    },
+    {
+      "sheet": "silverton",
+      "title": "The Silverton Folio",
+      "dimensions_mm": [
+        155.53827,
+        180.0,
+        16.937743
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.9,
+      "horizontal_scale_denominator": 239383.916,
+      "geographic_extent_km": [
+        37.23336024670942,
+        43.08910496121465
+      ],
+      "source_elevation_range_m": [
+        2500.111328125,
+        4278.848332093254
+      ],
+      "sampled_elevation_range_m": [
+        2500.113410805131,
+        4256.151042473387
+      ],
+      "elevation_datum_m": 2500.113410805131,
+      "mesh_grid": [
+        313,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.4985200963689603,
+        0.5
+      ],
+      "source_height": "silverton/assets/height.webp",
+      "source_height_sha256": "708969cfbe37495bdf8633c8f9b461ef3f06c15e5e46031bea36e3483b48c699",
+      "source_meta": "silverton/assets/meta.json",
+      "source_meta_sha256": "ec7799840577dc62fa466fed96aaa2284afe762eb76df6b162189ea7c6751420",
+      "about": "silverton/src/body.html",
+      "description": "155.538 x 180.000 x 16.938 mm; 3 mm minimum base; 1.9x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: silverton/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 114338,
+        "triangles": 228672,
+        "volume_mm3": 309313.16959
+      },
+      "files": {
+        "stl": {
+          "path": "models/silverton.stl",
+          "bytes": 11433684,
+          "sha256": "456b664a8cde32bb77bf08c70c48696015c9ebe168c6268a6d2971878ccb43cc"
+        },
+        "3mf": {
+          "path": "models/silverton.3mf",
+          "bytes": 2624778,
+          "sha256": "e1656f12296ef76699cbf840b0dcb81b4297b6ea4ed1436d3b7eaecde1525178"
+        }
+      }
+    },
+    {
+      "sheet": "estes",
+      "title": "The Park Special",
+      "dimensions_mm": [
+        146.574487,
+        180.0,
+        13.299963
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 393820.157,
+      "geographic_extent_km": [
+        57.72398761504377,
+        70.88762826046238
+      ],
+      "source_elevation_range_m": [
+        2037.5132724263583,
+        4336.93436158568
+      ],
+      "sampled_elevation_range_m": [
+        2047.1599559176743,
+        4300.678302832914
+      ],
+      "elevation_datum_m": 2047.1599559176743,
+      "mesh_grid": [
+        295,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.4985526780119577,
+        0.5
+      ],
+      "source_height": "estes/assets/height.webp",
+      "source_height_sha256": "0a7ca42b43603e9173102610cb4bd896091374b36d980980ef6dfce79b58b8b8",
+      "source_meta": "estes/assets/meta.json",
+      "source_meta_sha256": "4eb8525a657a2d4323f5c27d665d5483da88dbba96e9182493e42ad999571ac3",
+      "about": "estes/src/body.html",
+      "description": "146.574 x 180.000 x 13.300 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: estes/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 107804,
+        "triangles": 215604,
+        "volume_mm3": 187822.78363
+      },
+      "files": {
+        "stl": {
+          "path": "models/estes.stl",
+          "bytes": 10780284,
+          "sha256": "0f824e218bc060392a177b3578db1a4fa48a280e463e974742f246cac366071b"
+        },
+        "3mf": {
+          "path": "models/estes.3mf",
+          "bytes": 2441592,
+          "sha256": "618d3cb61150758ea27168ae0b5be465af5724fd658af14d1f1bd247c2b76c6d"
+        }
+      }
+    },
+    {
+      "sheet": "kilauea",
+      "title": "Kīlauea and Mauna Loa",
+      "dimensions_mm": [
+        171.152255,
+        180.0,
+        21.926827
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.6,
+      "horizontal_scale_denominator": 351347.732,
+      "geographic_extent_km": [
+        60.13395670393899,
+        63.24259168207454
+      ],
+      "source_elevation_range_m": [
+        0.0,
+        4163.028769483554
+      ],
+      "sampled_elevation_range_m": [
+        0.0,
+        4156.186187904846
+      ],
+      "elevation_datum_m": 0.0,
+      "mesh_grid": [
+        344,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.4989861674843467,
+        0.5
+      ],
+      "source_height": "kilauea/assets/height.webp",
+      "source_height_sha256": "126ec7fe80353fe948f0efe11bad4fba8f4e18146346409d1fd0c8c0996f93c4",
+      "source_meta": "kilauea/assets/meta.json",
+      "source_meta_sha256": "5a7b777b5e4978030aa62397b4ef538500991cc60376e771646fb62d051ab875",
+      "about": "kilauea/src/body.html",
+      "description": "171.152 x 180.000 x 21.927 mm; 3 mm minimum base; 1.6x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: kilauea/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 125591,
+        "triangles": 251178,
+        "volume_mm3": 259901.87642
+      },
+      "files": {
+        "stl": {
+          "path": "models/kilauea.stl",
+          "bytes": 12558984,
+          "sha256": "667c27404cbc1acca82a77c753d70617a9bd8cfd433f6065fb3a7f191b6095cb"
+        },
+        "3mf": {
+          "path": "models/kilauea.3mf",
+          "bytes": 2714414,
+          "sha256": "ef37daf8fa5f97db95634246a59d80ed6bc6919dc0514019f676f8106f6c64ae"
+        }
+      }
+    },
+    {
+      "sheet": "coeurdalene",
+      "title": "The Coeur d’Alene",
+      "dimensions_mm": [
+        180.0,
+        146.834331,
+        11.096172
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.7,
+      "horizontal_scale_denominator": 293453.102,
+      "geographic_extent_km": [
+        52.82155831303167,
+        43.08898989983463
+      ],
+      "source_elevation_range_m": [
+        658.1945395370689,
+        2074.3396604209593
+      ],
+      "sampled_elevation_range_m": [
+        658.5024394391619,
+        2056.059411975323
+      ],
+      "elevation_datum_m": 658.5024394391619,
+      "mesh_grid": [
+        361,
+        295
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.4994365003025679
+      ],
+      "source_height": "coeurdalene/assets/height.webp",
+      "source_height_sha256": "cac111ac6d015b7206ee616bd598f8eff2ee6ee7c7b92c77bc6f9b649973fd86",
+      "source_meta": "coeurdalene/assets/meta.json",
+      "source_meta_sha256": "08850a8e44c715b7d9b8c93aa17b27889f9e9c54e0a7d571d1be7c67bcc4622d",
+      "about": "coeurdalene/src/body.html",
+      "description": "180.000 x 146.834 x 11.096 mm; 3 mm minimum base; 1.7x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: coeurdalene/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 107804,
+        "triangles": 215604,
+        "volume_mm3": 171550.64093
+      },
+      "files": {
+        "stl": {
+          "path": "models/coeurdalene.stl",
+          "bytes": 10780284,
+          "sha256": "5a61704fd3e29314b2a24af51c2680bde16d08e891a0e070da80605b3b6915c9"
+        },
+        "3mf": {
+          "path": "models/coeurdalene.3mf",
+          "bytes": 2408765,
+          "sha256": "43d3565c832a1f96d6d93c793eefa4d3a0142dd0b3243b8960a4babcd50a4a16"
+        }
+      }
+    },
+    {
+      "sheet": "mountdesert",
+      "title": "Pemetic: the Island Before Acadia",
+      "dimensions_mm": [
+        180.0,
+        134.639482,
+        8.218551
+      ],
+      "base_mm": 3,
+      "exaggeration": 3.0,
+      "horizontal_scale_denominator": 263249.679,
+      "geographic_extent_km": [
+        47.38494221028078,
+        35.4438004712487
+      ],
+      "source_elevation_range_m": [
+        0.0,
+        462.9983489207732
+      ],
+      "sampled_elevation_range_m": [
+        0.0,
+        457.9273330200199
+      ],
+      "elevation_datum_m": 0.0,
+      "mesh_grid": [
+        361,
+        271
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49866474901048086
+      ],
+      "source_height": "mountdesert/assets/height.webp",
+      "source_height_sha256": "2982e3eb36bfa44afda8045323c4198d7726f4f22d20103313a5f51d52647b6c",
+      "source_meta": "mountdesert/assets/meta.json",
+      "source_meta_sha256": "eb4a85220197d7bd7bc1c624864764a54c74303cf938c12ac7cd903ba6c3b899",
+      "about": "mountdesert/src/body.html",
+      "description": "180.000 x 134.639 x 8.219 mm; 3 mm minimum base; 3x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: mountdesert/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 99092,
+        "triangles": 198180,
+        "volume_mm3": 78498.82615
+      },
+      "files": {
+        "stl": {
+          "path": "models/mountdesert.stl",
+          "bytes": 9909084,
+          "sha256": "71ab09e38df6017141bbf06f5366385aee4d8aa3df11d73342bc8f6c5531722b"
+        },
+        "3mf": {
+          "path": "models/mountdesert.3mf",
+          "bytes": 2001915,
+          "sha256": "28ed95fa445ac62e134983ce893f551023fc3c3dfedc784bca0242aef50fe75c"
+        }
+      }
+    },
+    {
+      "sheet": "mazama",
+      "title": "Mazama: Crater Lake in Professional Paper 3",
+      "dimensions_mm": [
+        140.322654,
+        180.0,
+        17.474697
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 200122.856,
+      "geographic_extent_km": [
+        28.08177025556163,
+        36.0221140043433
+      ],
+      "source_elevation_range_m": [
+        1086.6449916890836,
+        2712.349532287374
+      ],
+      "sampled_elevation_range_m": [
+        1089.0230770947296,
+        2698.310734265311
+      ],
+      "elevation_datum_m": 1089.0230770947296,
+      "mesh_grid": [
+        282,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.499368876059436,
+        0.5
+      ],
+      "source_height": "mazama/assets/height.webp",
+      "source_height_sha256": "e40d332f03c920b7fa4c9724cb139dfbc700eee5f11720d2329c72622d108a5b",
+      "source_meta": "mazama/assets/meta.json",
+      "source_meta_sha256": "b701db0f2eae608c0c92cd89653c0d546f6cdc3326338353f0d36778f04faacf",
+      "about": "mazama/src/body.html",
+      "description": "140.323 x 180.000 x 17.475 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: mazama/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 103085,
+        "triangles": 206166,
+        "volume_mm3": 232388.5006
+      },
+      "files": {
+        "stl": {
+          "path": "models/mazama.stl",
+          "bytes": 10308384,
+          "sha256": "f0a769dbda8f0df464bd4c6a9547e02cee9a4a12f0fd74ee88c137b681223d2a"
+        },
+        "3mf": {
+          "path": "models/mazama.3mf",
+          "bytes": 2297830,
+          "sha256": "a32267de467beaf473fbfc4ef8ceb462d3006af36f923a95ca3c9a6b574da5ef"
+        }
+      }
+    },
+    {
+      "sheet": "blackhills",
+      "title": "He Sapa in Folio",
+      "dimensions_mm": [
+        180.0,
+        133.451009,
+        7.872852
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.9,
+      "horizontal_scale_denominator": 531182.472,
+      "geographic_extent_km": [
+        95.61284499776573,
+        70.886836884285
+      ],
+      "source_elevation_range_m": [
+        815.8930660187252,
+        2187.9468418666293
+      ],
+      "sampled_elevation_range_m": [
+        816.6789065538537,
+        2178.980872387461
+      ],
+      "elevation_datum_m": 816.6789065538537,
+      "mesh_grid": [
+        361,
+        268
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.49981651314225733
+      ],
+      "source_height": "blackhills/assets/height.webp",
+      "source_height_sha256": "f3be76f5a5ca4cb09da02de5ba0e6a8bc0f8f4e7e283f646e7f2516b069ef509",
+      "source_meta": "blackhills/assets/meta.json",
+      "source_meta_sha256": "e38104d3265efca3c39249d86d3f72f6776b7ae079cb60fc3b2f7d69098681ed",
+      "about": "blackhills/src/body.html",
+      "description": "180.000 x 133.451 x 7.873 mm; 3 mm minimum base; 1.9x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: blackhills/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 98003,
+        "triangles": 196002,
+        "volume_mm3": 118231.19143
+      },
+      "files": {
+        "stl": {
+          "path": "models/blackhills.stl",
+          "bytes": 9800184,
+          "sha256": "efdd4b9dc2fc8f30616a3df0dd864f91ae2050d9676bfc732b82bf82f42e63e7"
+        },
+        "3mf": {
+          "path": "models/blackhills.3mf",
+          "bytes": 2150371,
+          "sha256": "7fc00e6a1fc20300b0b373ddbc8e2bb36bca94ab749542bef41f360862c438cc"
+        }
+      }
+    },
+    {
+      "sheet": "smoky",
+      "title": "The Smokies in Folio",
+      "dimensions_mm": [
+        153.398996,
+        180.0,
+        11.054
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.8,
+      "horizontal_scale_denominator": 393820.381,
+      "geographic_extent_km": [
+        60.4116511944588,
+        70.88766855137506
+      ],
+      "source_elevation_range_m": [
+        204.74126557849704,
+        2020.815461434724
+      ],
+      "sampled_elevation_range_m": [
+        237.92241623790417,
+        2000.049778983828
+      ],
+      "elevation_datum_m": 237.92241623790417,
+      "mesh_grid": [
+        308,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49967099814144667,
+        0.5
+      ],
+      "source_height": "smoky/assets/height.webp",
+      "source_height_sha256": "aa9792b336534cbe2e37a72dd03bd016fac174efe3238947f89b60ca8903f02c",
+      "source_meta": "smoky/assets/meta.json",
+      "source_meta_sha256": "424f4c0d0811e2d41d20a54501ceac07ab7f9e0bf0c9bc6ab56dc235923a4455",
+      "about": "smoky/src/body.html",
+      "description": "153.399 x 180.000 x 11.054 mm; 3 mm minimum base; 1.8x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: smoky/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 112523,
+        "triangles": 225042,
+        "volume_mm3": 118766.83255
+      },
+      "files": {
+        "stl": {
+          "path": "models/smoky.stl",
+          "bytes": 11252184,
+          "sha256": "f1ea42c127fe25e3cb2d0176f16456cb6b36060dbac353deca6f8a051dda1927"
+        },
+        "3mf": {
+          "path": "models/smoky.3mf",
+          "bytes": 2511625,
+          "sha256": "24c28ee514f8f9f486db1cb341041fd166ad024330196d10d04ff60567ab8fc2"
+        }
+      }
+    },
+    {
+      "sheet": "chisos",
+      "title": "The Big Bend, 1903",
+      "dimensions_mm": [
+        180.0,
+        93.435808,
+        7.390168
+      ],
+      "base_mm": 3,
+      "exaggeration": 1.9,
+      "horizontal_scale_denominator": 758671.234,
+      "geographic_extent_km": [
+        136.56082208649707,
+        70.88705946910429
+      ],
+      "source_elevation_range_m": [
+        497.4373246301225,
+        2342.750388143351
+      ],
+      "sampled_elevation_range_m": [
+        502.90896971070543,
+        2255.9060287271172
+      ],
+      "elevation_datum_m": 502.90896971070543,
+      "mesh_grid": [
+        361,
+        188
+      ],
+      "mesh_spacing_mm": [
+        0.5,
+        0.4996567253790998
+      ],
+      "source_height": "chisos/assets/height.webp",
+      "source_height_sha256": "fe1856a7d0e84784ec9b156bd0b06d144893da08776cb01bc50cef7464bfecfb",
+      "source_meta": "chisos/assets/meta.json",
+      "source_meta_sha256": "4b470c883a274edbea600caf51f33dd4ada46235f9553cfa74765d9f573f337f",
+      "about": "chisos/src/body.html",
+      "description": "180.000 x 93.436 x 7.390 mm; 3 mm minimum base; 1.9x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: chisos/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 68963,
+        "triangles": 137922,
+        "volume_mm3": 71592.98974
+      },
+      "files": {
+        "stl": {
+          "path": "models/chisos.stl",
+          "bytes": 6896184,
+          "sha256": "23909f620aa0099c9d0b0fffabdc78f8a86a49a967ce8f27ffa566a76b6c86b2"
+        },
+        "3mf": {
+          "path": "models/chisos.3mf",
+          "bytes": 1507023,
+          "sha256": "86eeb2b21cbb00dbc37e49906d71bbb1a2ca7bac7896b1a1cede0d4059e6e40b"
+        }
+      }
+    },
+    {
+      "sheet": "luray",
+      "title": "The Hollows of Stony Man",
+      "dimensions_mm": [
+        154.597203,
+        180.0,
+        12.113098
+      ],
+      "base_mm": 3,
+      "exaggeration": 2.0,
+      "horizontal_scale_denominator": 239383.912,
+      "geographic_extent_km": [
+        37.00808317516002,
+        43.08910411918329
+      ],
+      "source_elevation_range_m": [
+        129.28939819335938,
+        1227.2883633456388
+      ],
+      "sampled_elevation_range_m": [
+        129.62441832322278,
+        1220.388924918844
+      ],
+      "elevation_datum_m": 129.62441832322278,
+      "mesh_grid": [
+        311,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49870065445894807,
+        0.5
+      ],
+      "source_height": "luray/assets/height.webp",
+      "source_height_sha256": "5e6a34a8f29029262aabcddf8c3b2cb4073f2ec14f9c77ebf2570f771863b62b",
+      "source_meta": "luray/assets/meta.json",
+      "source_meta_sha256": "28bdc8327ef760df47f2a25cc342acd9217d062b885231e7cf20c77d1f5dad17",
+      "about": "luray/src/body.html",
+      "description": "154.597 x 180.000 x 12.113 mm; 3 mm minimum base; 2x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: luray/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 113612,
+        "triangles": 227220,
+        "volume_mm3": 154436.45054
+      },
+      "files": {
+        "stl": {
+          "path": "models/luray.stl",
+          "bytes": 11361084,
+          "sha256": "ee96e2f9b5ae476c4eb31b696ef4a171ad21dbaac1b05859cae7ad65e575411c"
+        },
+        "3mf": {
+          "path": "models/luray.3mf",
+          "bytes": 2570190,
+          "sha256": "20dbae08fb402113682dd420b9dfa9f150a05d815754b92c7fecba1903e2bb71"
+        }
+      }
+    },
+    {
+      "sheet": "tacoma",
+      "title": "Tacoma: Ice and Iron",
+      "dimensions_mm": [
+        134.655002,
+        180.0,
+        12.136097
+      ],
+      "base_mm": 3,
+      "exaggeration": 2.2,
+      "horizontal_scale_denominator": 393819.799,
+      "geographic_extent_km": [
+        53.02980564772237,
+        70.88756382272351
+      ],
+      "source_elevation_range_m": [
+        0.0,
+        1653.4313551682692
+      ],
+      "sampled_elevation_range_m": [
+        0.0,
+        1635.443525884521
+      ],
+      "elevation_datum_m": 0.0,
+      "mesh_grid": [
+        271,
+        361
+      ],
+      "mesh_spacing_mm": [
+        0.49872222797160837,
+        0.5
+      ],
+      "source_height": "tacoma/assets/height.webp",
+      "source_height_sha256": "4204a8065297d18ddc5ebf9a368f6175e13d0b69af2f676e2384315dc2a5a743",
+      "source_meta": "tacoma/assets/meta.json",
+      "source_meta_sha256": "e36b06985dd531d66cd5d0273644b1ce64e0efde3b5d67af66851087f48d01a7",
+      "about": "tacoma/src/body.html",
+      "description": "134.655 x 180.000 x 12.136 mm; 3 mm minimum base; 2.2x vertical exaggeration. Modern terrain from committed height.webp; full rectangular viewer grid. Historical map ink and labels are not embossed. +Y is grid north, +Z is up. Source and homeland history: tacoma/src/body.html About panel.",
+      "checks": {
+        "watertight": true,
+        "consistent_winding": true,
+        "euler_number": 2,
+        "degenerate_faces": 0,
+        "vertices": 99092,
+        "triangles": 198180,
+        "volume_mm3": 97664.33215
+      },
+      "files": {
+        "stl": {
+          "path": "models/tacoma.stl",
+          "bytes": 9909084,
+          "sha256": "49be337e80577a050461b19deecc42ffa9ba3dcbfba660dbff35faa171e0810b"
+        },
+        "3mf": {
+          "path": "models/tacoma.3mf",
+          "bytes": 2174692,
+          "sha256": "7dbc33d90011caa8067131e5d0e61810378ad3bfedb84b08d5da49e39bf50f7f"
+        }
+      }
+    }
+  ]
+}

@@ -1,0 +1,361 @@
+{
+  "trimesh_version": "5.1.0",
+  "lib3mf_version": [
+    2,
+    5,
+    0
+  ],
+  "models": [
+    {
+      "sheet": "gold",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 579.466629,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        109.73331451416016,
+        5.923227310180664
+      ]
+    },
+    {
+      "sheet": "missouri",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 635.066437,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        137.53321838378906,
+        7.6468000411987305
+      ]
+    },
+    {
+      "sheet": "paradise",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 625.343811,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        132.67190551757812,
+        180.0,
+        8.749457359313965
+      ]
+    },
+    {
+      "sheet": "yellowstone",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 629.249451,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        134.62472534179688,
+        180.0,
+        7.809609889984131
+      ]
+    },
+    {
+      "sheet": "glacier",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 676.614685,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        158.30734252929688,
+        7.865447044372559
+      ]
+    },
+    {
+      "sheet": "bitterroot",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 512.443848,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        76.221923828125,
+        180.0,
+        8.190399169921875
+      ]
+    },
+    {
+      "sheet": "front",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 615.286758,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        127.64337921142578,
+        180.0,
+        7.342177867889404
+      ]
+    },
+    {
+      "sheet": "rails",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 579.466629,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        109.73331451416016,
+        5.923227310180664
+      ]
+    },
+    {
+      "sheet": "flathead",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 512.010284,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        76.00514221191406,
+        180.0,
+        7.432486534118652
+      ]
+    },
+    {
+      "sheet": "libby",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 625.662415,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        132.83120727539062,
+        180.0,
+        11.23573112487793
+      ]
+    },
+    {
+      "sheet": "montana",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 579.466629,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        109.73331451416016,
+        5.930173397064209
+      ]
+    },
+    {
+      "sheet": "nome",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 681.764771,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        160.88238525390625,
+        180.0,
+        9.185565948486328
+      ]
+    },
+    {
+      "sheet": "brightangel",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 598.983932,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        119.4919662475586,
+        13.454578399658203
+      ]
+    },
+    {
+      "sheet": "yosemite",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 704.714691,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        172.3573455810547,
+        13.82115650177002
+      ]
+    },
+    {
+      "sheet": "silverton",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 671.076538,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        155.53826904296875,
+        180.0,
+        16.937742233276367
+      ]
+    },
+    {
+      "sheet": "estes",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 653.148987,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        146.57449340820312,
+        180.0,
+        13.299962997436523
+      ]
+    },
+    {
+      "sheet": "kilauea",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 702.304504,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        171.15225219726562,
+        180.0,
+        21.926828384399414
+      ]
+    },
+    {
+      "sheet": "coeurdalene",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 653.668671,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        146.83433532714844,
+        11.096172332763672
+      ]
+    },
+    {
+      "sheet": "mountdesert",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 629.278961,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        134.6394805908203,
+        8.218551635742188
+      ]
+    },
+    {
+      "sheet": "mazama",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 640.645294,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        140.32264709472656,
+        180.0,
+        17.47469711303711
+      ]
+    },
+    {
+      "sheet": "blackhills",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 626.902008,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        133.4510040283203,
+        7.872852325439453
+      ]
+    },
+    {
+      "sheet": "smoky",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 666.798004,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        153.3990020751953,
+        180.0,
+        11.053999900817871
+      ]
+    },
+    {
+      "sheet": "chisos",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 546.871613,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        180.0,
+        93.43580627441406,
+        7.390168190002441
+      ]
+    },
+    {
+      "sheet": "luray",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 669.194397,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        154.59719848632812,
+        180.0,
+        12.11309814453125
+      ]
+    },
+    {
+      "sheet": "tacoma",
+      "stl_single_body": true,
+      "stl_positive_volume": true,
+      "stl_watertight": true,
+      "base_slice_perimeter_mm": 629.309998,
+      "mf_strict_reader_warnings": 0,
+      "mf_manifold_and_oriented": true,
+      "dimensions_mm": [
+        134.65499877929688,
+        180.0,
+        12.136096954345703
+      ]
+    }
+  ],
+  "physical_print_tested": false
+}

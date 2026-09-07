@@ -2,6 +2,11 @@
 
 Old sheets, put back on the earth.
 
+**3D printing:** [25 printable terrain models](printing/CATALOG.md), each
+fitting within 180 × 180 mm, with STL and 3MF files and a solid 3 mm base.
+See [printing instructions and the uv-managed exporter](printing/README.md).
+The web gallery and each map's controls include individual model downloads.
+
 ![Montana in Relief — Allan Cartography's 1991 shaded-relief sheet of Montana, georeferenced and draped over the elevation model it was drawn to describe](docs/montana-in-relief.webp)
 
 <sub>*Montana in Relief* — the 1991 sheet on its own terrain, looking north at ×5 vertical exaggeration, with the sun in the northwest where the engraver put it.</sub>
