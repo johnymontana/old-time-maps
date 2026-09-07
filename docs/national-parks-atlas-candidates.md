@@ -1,5 +1,13 @@
 # Candidate maps: the sixty-three national parks
 
+**Status, September 2026:** All ten sheets in the first ring are now built:
+`estes`, `blackhills`, `brightangel`, `smoky`, `mazama`, `mountdesert`,
+`chisos`, `kilauea`, `luray` and `yosemite`. They also have printable terrain
+models. See the [README](../README.md) for the implemented layers and fit
+results and the [print catalog](../printing/CATALOG.md) for downloads.
+The memo below preserves the August scouting results and original build
+recommendations; verification flags describe checks made at that time.
+
 Research memo, August 2026 — the all-parks survey. Scope requested: every
 US National Park, scouted in eight regional batches for old-time
 cartography that can carry a sheet in this gallery. Two parks are already
@@ -436,7 +444,7 @@ ring; nothing remains to tabulate.
 
 ---
 
-## Recommendation
+## Original recommendation (August 2026)
 
 Build the ring from the top. **`estes/` is nearly a one-day sheet** — the
 only literal park special in HTMC, registration-free — and it anchors the

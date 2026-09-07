@@ -1,5 +1,12 @@
 # Expand Montana — the Flathead & Glacier sheets
 
+**Status, September 2026:** This is the original expansion plan. The
+gallery now includes Flathead, Glacier and the other Montana sheets, plus
+the national-park atlas and printable terrain models. See the
+[README](../README.md) for the current inventory and commands, and
+[AGENTS.md](../AGENTS.md) for the implemented shared-library and viewer
+workflow. Proposals and decisions below retain their original context.
+
 *Working plan for the `expand-montana` branch. Researched August 2026 against the
 David Rumsey Collection, Library of Congress, USGS (TopoView / NGMDB / Pubs
 Warehouse), Montana Memory Project, MBMG, BLM GLO records, NPS History eLibrary

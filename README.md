@@ -6,6 +6,8 @@ Old sheets, put back on the earth.
 fitting within 180 × 180 mm, with STL and 3MF files and a solid 3 mm base.
 See [printing instructions and the uv-managed exporter](printing/README.md).
 The web gallery and each map's controls include individual model downloads.
+These contain modern terrain relief; historical map ink and labels stay in
+the viewers. The Flat Wing's 21 illustrations have no terrain models.
 
 ![Montana in Relief — Allan Cartography's 1991 shaded-relief sheet of Montana, georeferenced and draped over the elevation model it was drawn to describe](docs/montana-in-relief.webp)
 
@@ -56,15 +58,15 @@ for the sixty-three-park survey behind it):
 | [`kilauea/`](kilauea/) | *Kīlauea and Mauna Loa* — the observatory decade (Hawaiʻi Volcanoes, HI) | 1921–1930 | four 15′ quads passthrough; the 1930 Kaʻū geology correlated onto them — 3.5 px |
 | [`blackhills/`](blackhills/) | *He Sapa in Folio* — Darton & Paige's Central Black Hills (Wind Cave, SD) | 1925 | the folio plate correlated against both 1901 quads it was printed on — 1.5 px |
 
-Thirteen of the sheets carry a **second historical layer** on the crossfade
-slider: Glacier passes through Ross's 1959 geologic map, the Flathead through
-Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
+Twenty-four of the sheets carry a **second historical layer** on the crossfade
+slider. For example, Glacier passes through Ross's 1959 geologic map, the
+Flathead through Jaqueth & Walters' 1908 county map, the Gold Regions through de Lacy's own
 pen-on-linen manuscript, Yellowstone through the 1911 engraved editions of
 its four quadrangles, the Livingston sheet through its 1891 topographic
 edition, and the Bitterroot and Front sheets through Leiberg's and Ayres'
 1898–99 forest-reserve surveys; the rail sheet crossfades 1912 against
-1884, and the Missouri sheet carries the 1890 Cascade County plat — each
-registered by the same correlation machinery (`lib/reg.py`).
+1884, and the Missouri sheet carries the 1890 Cascade County plat.
+Each sheet's About panel explains its registration method and residuals.
 
 ```bash
 git clone https://github.com/johnymontana/old-time-maps.git
@@ -386,6 +388,7 @@ Jawbone Railroad's own 1899 promotion.
 | **Cross-section**, then two clicks on the terrain | a profile between them; hover along the profile to run a marker down the line in 3-D |
 | drag the sun dial — or focus it and use the arrow keys | move the light |
 | click the sheet index, bottom right | fly to that corner of the sheet |
+| **3D print this map** in the controls | show dimensions, base thickness, exaggeration, and 3MF/STL downloads |
 | <kbd>S</kbd> <kbd>C</kbd> <kbd>R</kbd> <kbd>P</kbd> | shadows · contours · reset view · plan view |
 | <kbd>Esc</kbd> | end a flight, clear a cross-section, close the about panel |
 
@@ -396,18 +399,19 @@ Jawbone Railroad's own 1899 promotion.
 ```
 LICENSE                        MIT — the code only, not the scans
 assemble_all.py                builds every sheet + the gallery into dist/
-docs/                          screenshots used by this README, and the
-                               research plan behind the expansion
+AGENTS.md                      contributor instructions and quality gates
+CLAUDE.md                      entry point to the same instructions
+docs/                          screenshots and dated research plans
 lib/                           shared pipeline modules (projections, datums,
                                Terrarium DEM, georeferencing fits, encoders)
+  print_downloads.py           model catalog checks, download UI and copying
 work/dem/                      Terrarium tile cache shared by all sheets
                                (gitignored)
 art/                           the Flat Wing — a static typeset page
                                (pipeline downsizes the scans, assemble
                                writes dist/)
-<sheet>/                       montana, missouri, paradise, yellowstone,
-                               glacier, bitterroot, front, rails, flathead,
-                               gold, libby:
+<sheet>/                       the 25 terrain directories listed above;
+                               assemble_all.py holds the gallery inventory:
   <sheet>.html                 one-file build — just open it
   assets/                      drape.webp, height.webp, meta.json, card.webp
                                — plus alt.webp where a sheet carries a second
@@ -417,42 +421,92 @@ art/                           the Flat Wing — a static typeset page
                                assemble.py
   pipeline/                    build.py, places.py
   requirements.txt
+printing/                      25 terrain models, in STL and 3MF
+  build.py                     export solids from committed height assets
+  verify.py                    independent geometry and format checks
+  package.py                   refresh source notes and the download bundle
+  pyproject.toml, uv.lock       printing dependencies managed with uv
+  models/, previews/           committed model files and rendered previews
+  manifest.json                dimensions, settings, hashes and mesh checks
+  validation.json              independent validation results
+  README.md, CATALOG.md         printing instructions and individual downloads
+  SOURCES.md                   source and history text from viewer About panels
 vercel.json                    build assemble_all.py, serve dist/
 ```
 
 The newer sheets share one viewer chassis (`app1.js`/`app2.js` are
 copies with all scale-dependent constants derived from the plate size, and
 overlays, mines and UI defaults data-driven from `meta.json`); `montana/`
-keeps its original code untouched. Height is decoded on the CPU into a
-half-float RG texture (elevation in R, signed distance to the sheet or state
+keeps a diverged chassis, so shared changes must be ported to it by hand.
+Height is decoded on the CPU into a half-float RG texture (elevation in R,
+signed distance to the sheet or state
 line in G) so the GPU can filter it.
 
 `assets/` are committed even though they are generated: rebuilding them pulls
 hundreds of MB and wants the scientific-Python stack, and the whole point of
 the one-file builds is that they work for someone who wants neither.
+The printable models and their manifests are also committed. Generated
+`dist/`, downloaded `work/` and `vendor/` caches, Python environments, and
+the convenience `printing/old-time-maps-180mm.zip` archive are gitignored.
 
 ## Rebuilding
 
+To assemble and preview the whole gallery from the committed assets, run
+these commands from the repository root with Python 3.10 or later:
+
 ```bash
-pip install -r <sheet>/requirements.txt    # numpy, scipy, pillow, pyshp, pypdfium2
-cd <sheet>
-python3 pipeline/build.py     # fetches scans, DEM tiles, fits, re-encodes
-python3 src/assemble.py       # writes the one-file build and dist/
+python3 assemble_all.py
 python3 -m http.server -d dist 8000
 ```
 
-With twenty-six cards the stdlib server serialises image requests and the
-gallery fills in slowly; any threaded static server (or `vercel dev`)
-loads it at once. The sheets themselves are unaffected — each is one
-self-contained file.
+Open [localhost:8000](http://localhost:8000/). Assembly uses only the Python
+standard library; Node and the scientific-Python dependencies are not
+required. It fetches three.js r155 into each terrain sheet's `vendor/` on
+first run, then reuses that cache. The build includes 26 gallery cards and
+50 model downloads at `dist/<sheet>/models/<sheet>.{3mf,stl}`.
 
-Each `build.py` runs named stages (`fetch`, `georef`, `resample`, `encode` —
+For one sheet, run `python3 <sheet>/src/assemble.py` from the repository
+root. It writes `<sheet>/dist/` and refreshes the committed one-file HTML.
+The one-file viewer embeds its map assets, but its model downloads link to
+the sibling `printing/models/` directory; keep that directory alongside
+the sheet directories when using downloads from disk.
+
+To regenerate a sheet's scans, georeference and terrain, install its
+`requirements.txt` into a Python environment first. For example, using
+uv from the repository root for the Yellowstone pipeline:
+
+```bash
+uv venv .venv
+uv pip install --python .venv/bin/python -r yellowstone/requirements.txt
+.venv/bin/python yellowstone/pipeline/build.py
+```
+
+Other sheets have their own requirements files. These source pipelines
+remain separate from the locked `printing/` project.
+
+Each terrain `pipeline/build.py` runs named stages (`fetch`, `georef`, `resample`, `encode` —
 montana's differ slightly) that cache into `work/`; name a stage to start
 there. DEM tiles cache once for all sheets in `work/dem/` at the repo root.
 Every pipeline prints its fit residuals and writes QA overlays into `work/`
 so you can see the georeference laid over the scan.
 
-`assemble.py` fetches three.js r155 into `vendor/` on first run.
+If terrain assets or viewer exaggeration defaults change, regenerate and
+validate the printable collection before assembling the website again:
+
+```bash
+uv sync --project printing --locked
+uv run --project printing --locked printing/build.py
+uv run --project printing --locked python -m unittest discover -s printing -v
+uv run --project printing --locked --group qa printing/verify.py
+uv run --project printing --locked printing/package.py
+python3 assemble_all.py
+```
+
+See [printing/README.md](printing/README.md) for custom sizes, output
+ownership, preview maintenance, and packaging. The website checks catalog
+coverage and model byte sizes; independent verification checks hashes and
+mesh validity. Assembly consumes the committed models without regenerating
+them or installing printing dependencies.
 
 The newer sheets share one viewer chassis: `flathead/src/app{1,2}.js` is
 the source of truth — edit there and copy to the other sheets (`montana/`
@@ -462,20 +516,36 @@ quality gates — lives in [AGENTS.md](AGENTS.md).
 
 ## Deploying
 
-`vercel.json` builds the whole gallery. `assemble_all.py` is pure standard
-library — Vercel runs it, gets `dist/`, and serves the landing page at the
-root with each sheet at `/montana/`, `/missouri/`, `/paradise/`,
-`/yellowstone/`, `/glacier/`, `/bitterroot/`, `/front/`, `/rails/`,
-`/flathead/`, `/gold/`, `/libby/`, the state sheets at `/tacoma/`,
-`/coeurdalene/`, `/silverton/`, `/nome/`, and the Flat Wing at `/art/`:
+`vercel.json` runs `python3 assemble_all.py` and serves `dist/`. The gallery
+is at `/`, each of the 25 terrain viewers is at `/<sheet>/`, the Flat Wing
+is at `/art/`, and model downloads are at
+`/<sheet>/models/<sheet>.3mf` and `/<sheet>/models/<sheet>.stl`.
+There are no runtime functions or required environment variables.
+
+With the Vercel CLI installed, the deployment commands are:
 
 ```bash
-vercel        # preview
-vercel --prod
+vercel        # preview deployment
+vercel --prod # production deployment
 ```
 
+The current configuration serves images and models directly from the
+deployment. Image assets and cards have seven-day browser caching plus
+one day of stale-while-revalidate; models have no explicit cache override.
+The 50 models add about 298 MB to the build and transfer only when clicked.
+3MF is about 78% smaller than STL across this collection.
+
+Vercel CDN hits still count toward data transfer; check the project's
+Usage dashboard before changing storage. Longer browser caching with
+versioned asset URLs and direct downloads from Vercel Blob or Cloudflare
+R2 are possible follow-ups, not part of the current configuration.
+See [Vercel's CDN usage documentation](https://vercel.com/docs/manage-cdn-usage)
+for the current allowances and rates.
+
 Any other static host works the same way: run `python3 assemble_all.py` and
-upload `dist/`.
+upload the complete `dist/`, including each sheet's `models/` directory.
+Deployments and pushes require the maintainer's explicit request, as
+described in [AGENTS.md](AGENTS.md).
 
 ## Rights
 

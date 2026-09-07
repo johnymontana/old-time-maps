@@ -53,11 +53,16 @@ Every terrain card in the gallery has 3MF and STL download links. Each
 map viewer also has a **3D print this map** disclosure in its controls,
 with dimensions, base thickness, vertical exaggeration and file sizes.
 
-`python3 assemble_all.py` includes both model files in each served map's
-`models/` directory. Assembling a single sheet also includes its downloads.
+`python3 assemble_all.py` includes both model files at
+`dist/<sheet>/models/<sheet>.3mf` and `dist/<sheet>/models/<sheet>.stl`.
+Assembling a single sheet puts its downloads in `<sheet>/dist/models/`.
 The build reads the print manifest and fails if a model is missing or has
-the wrong byte size. It uses only the standard library; generating new
-terrain models remains a separate uv command.
+the wrong byte size; whole-gallery assembly also requires exactly one
+record per terrain sheet. The shared implementation is
+[`lib/print_downloads.py`](../lib/print_downloads.py), with one
+`<!-- PRINT_DOWNLOADS -->` marker in each viewer's source body. Assembly
+uses only the standard library; generating new terrain models remains a
+separate uv command. Downloads are fetched only after a click.
 
 The one-file HTML builds link to `../printing/models/` inside the repository.
 Keep that sibling directory when using those download links from disk.
@@ -110,9 +115,41 @@ consistent. For example, a 150 mm Yellowstone with true-scale relief:
 uv run --project printing --locked printing/build.py --sheet yellowstone --size-mm 150 --exaggeration 1 --output work/print-yellowstone
 ```
 
+Verify that custom export with:
+
+```sh
+uv run --project printing --locked --group qa printing/verify.py --directory work/print-yellowstone
+```
+
 `--base-mm` changes the minimum solid thickness. `--pitch-mm` changes the
 maximum distance between terrain vertices. `--sheet` can be repeated;
 each run writes a catalog and manifest for just that selection.
+Using `--sheet` without a separate `--output` would replace the default
+manifest with a partial catalog and prevent the gallery from building.
+
+## Maintaining generated files
+
+| Output | Owner / refresh step |
+|---|---|
+| `models/*.stl`, `models/*.3mf`, `manifest.json`, `CATALOG.md` | `build.py`; run without custom parameters to regenerate the complete default collection |
+| `validation.json` | `verify.py`; run after exporting to validate the current model files and hashes |
+| `previews/<sheet>.png` | Render from the current exported solids; no preview-rendering command is included in these scripts |
+| `SOURCES.md` | `package.py`; extracts each viewer's current About text, preserving source links and history |
+| `preview.jpg` | `package.py`; combines existing preview PNGs when all 25 are present |
+| `old-time-maps-180mm.zip` | `package.py`; bundles default models and documentation, checks model hashes, and is excluded from Git |
+
+After changing height assets or viewer exaggeration defaults, regenerate
+the full default collection, run the tests and verifier, refresh affected
+previews, run the packager, and assemble the gallery. If only About text
+or printing documentation changes, rerun packaging to refresh source notes
+and the local convenience bundle. Neither exporter nor packager rerenders
+the individual preview PNGs.
+
+When adding a terrain sheet, update `assemble_all.SHEETS` and regenerate
+the complete catalog before website assembly. The packager currently has
+fixed 25-model/50-file checks and a 5 × 5 preview layout; update those along
+with the documentation counts and previews. `package.py` bundles only the
+default collection in `printing/`, not custom output directories.
 
 ## Manage dependencies
 
