@@ -10,7 +10,11 @@ Historical map scans, georeferenced **without hand-picked control points**
 and draped over open elevation data in a one-file WebGL viewer. Each sheet
 is a self-contained directory: a Python pipeline that reproduces the assets
 from public sources, and a viewer build that opens from disk. A pure-stdlib
-`assemble_all.py` builds the whole gallery into `dist/`.
+`assemble_all.py` builds the whole gallery into `dist/`: 25 terrain sheets
+and the Flat Wing's 21 illustrations. Every terrain sheet also has a
+committed STL and 3MF model, sized to fit within 180 × 180 mm, downloadable
+from its gallery card and viewer controls. `assemble_all.SHEETS` is the
+inventory; `printing/manifest.json` must cover all terrain sheets exactly.
 
 ## Ground rules
 
@@ -35,8 +39,12 @@ from public sources, and a viewer build that opens from disk. A pure-stdlib
    plain provenance, never omitted, never decorated.
 5. **Committed generated assets.** `assets/` (drape/height/alt webp +
    meta.json + card.webp) and the one-file `<sheet>.html` are committed;
-   `work/`, `dist/`, `vendor/` are gitignored. Rebuilding pulls hundreds
-   of MB — the committed assets are the point.
+   `printing/models/`, previews, catalogs and validation reports are also
+   committed. `work/`, `dist/`, `vendor/`, Python environments and printing
+   ZIP bundles are gitignored. Rebuilding pulls hundreds of MB — the
+   committed assets are the point.
+   Commit `web/analytics.min.js` and its license notices with analytics
+   source/package changes so Python-only assembly continues to work.
 6. **Don't push, don't publish.** Commit locally with clear messages;
    pushing and PRs happen only when the maintainer asks.
 
@@ -44,6 +52,9 @@ from public sources, and a viewer build that opens from disk. A pure-stdlib
 
 ```
 assemble_all.py     builds every sheet + the grouped landing page into dist/
+package.json        pinned Vercel SDKs and esbuild; npm build/test commands
+scripts/            build-analytics.mjs bundles web/analytics.js
+web/                analytics source, committed browser bundle and licenses
 lib/                shared pipeline modules:
   proj.py             Lambert conic (unit sphere!), polyconic, Molodensky
                       NAD27<->WGS84, inverse TM, poly_basis
@@ -54,9 +65,13 @@ lib/                shared pipeline modules:
   reg.py              correlation registration: register(), fit_trimmed(),
                       feature_mask (black+blue — see mask note below)
   encode.py           Grid, encode_height/drape, snap_places, write_meta
+  print_downloads.py  stdlib catalog validation, download UI and asset copying
+  analytics.py        production-only analytics injection for served HTML
 <sheet>/            montana, gold, missouri, paradise, yellowstone, glacier,
                     bitterroot, front, rails, flathead, libby, tacoma,
-                    coeurdalene, silverton, nome — each:
+                    coeurdalene, silverton, nome, mazama, luray, smoky,
+                    yosemite, brightangel, chisos, mountdesert, estes,
+                    kilauea, blackhills — each:
   pipeline/build.py   stages: fetch, georef, resample, encode (chained:
                       running an early stage runs everything after it)
   pipeline/places.py  PEAKS/CITIES/FEATURES/TOURS (+ data-layer lists)
@@ -64,22 +79,93 @@ lib/                shared pipeline modules:
   assets/             committed build products
   work/               gitignored caches + QA renders
 art/                the Flat Wing: flat pieces, stdlib-typeset page
-docs/               README heroes, research plans, candidates memos
+printing/           build.py, verify.py, package.py; pyproject.toml + uv.lock;
+                    models/, previews/, manifest.json, validation.json,
+                    README.md, CATALOG.md, SOURCES.md and preview.jpg
+docs/               README heroes, analytics setup, dated research memos
 ```
 
 ## Environment & commands
 
-- Python ≥ 3.10 with `numpy scipy pillow pyshp pypdfium2` (per-sheet
-  `requirements.txt`). No node needed; `assemble.py` fetches three.js r155
-  into `vendor/` on first run.
-- Build one sheet: `cd <sheet> && python3 pipeline/build.py` (or name a
-  stage to start there — stages cache into `work/` and **chain onward**).
-- Assemble one sheet: `python3 src/assemble.py` (from the sheet dir).
+- Python ≥ 3.10. Website assembly is pure stdlib and uses committed map,
+  printing and analytics assets. Python-only assembly needs no Node or
+  printing environment; `assemble.py`
+  fetches three.js r155 into each sheet's `vendor/` on first run.
+- Analytics package/source changes: `npm ci --include=dev --ignore-scripts`, then
+  `npm run build` to refresh the browser bundle and assemble the gallery.
+  Vercel uses these same commands. `npm test` runs analytics integration
+  checks; npm dependencies are separate from the printing uv project.
+- Source-map pipelines use scientific Python; install the selected sheet's
+  `requirements.txt` into an environment before running it. Requirements
+  vary by sheet. See README's rebuilding example using `uv venv` and
+  `uv pip install` for these requirements-based pipelines.
+- Build one sheet after preparing the root `.venv` as in README:
+  `.venv/bin/python <sheet>/pipeline/build.py` (from the repo root).
+  Name a stage to start there — stages cache into `work/` and **chain onward**.
+- Assemble one sheet: `python3 <sheet>/src/assemble.py` (from the repo root);
+  writes `<sheet>/dist/` and the committed one-file HTML.
 - Whole gallery: `python3 assemble_all.py`, serve with
   `python3 -m http.server -d dist 8000`.
+- 3D printing (from the repo root): `uv sync --project printing --locked`,
+  then `uv run --project printing --locked printing/build.py`.
+  uv manages `printing/.venv` from `printing/pyproject.toml` and `uv.lock`;
+  use `uv add --project printing <package>` or
+  `uv remove --project printing <package>` for dependency changes.
+  Independent mesh QA: `uv run --project printing --locked --group qa printing/verify.py`.
+  See [printing/README.md](printing/README.md) for tests, custom sizes and
+  packaging commands.
+- Model download UI and copying live in `lib/print_downloads.py`. Every
+  terrain sheet's `body.html` has one `<!-- PRINT_DOWNLOADS -->` marker;
+  its assembler fills it and copies models into `<sheet>/dist/models/`.
+  Whole-gallery assembly copies those to `dist/<sheet>/models/`; one-file
+  HTML downloads link to `../printing/models/` in the repository.
+  Keep the web build stdlib-only; it reads committed printing assets.
 - Concurrent builds of different sheets are safe: they touch disjoint
   directories and the shared DEM cache tolerates parallel writers of
   different tiles.
+
+## Analytics maintenance
+
+- `web/analytics.js` uses the installed `@vercel/analytics` and
+  `@vercel/speed-insights` packages. Bundle with `npm run build:analytics`;
+  never edit the minified output by hand. Commit the npm lockfile, generated
+  bundle and license notices with changes. See [docs/analytics.md](docs/analytics.md).
+- Every served HTML builder calls `lib.analytics.analytics_script()` once.
+  It emits the SDK bundle only for `VERCEL_ENV=production` and forwards the
+  public analytics sections of `VERCEL_OBSERVABILITY_CLIENT_CONFIG`.
+  Preserve this production gate and omit analytics from one-file artifacts.
+- Check production initialization for the gallery, all terrain pages and
+  Flat Wing; verify preview/local builds and file-based viewers send no
+  analytics requests. Test both default SDK routes and Vercel-provided
+  routes without sending synthetic traffic to the real dashboard.
+- Web Analytics dashboard enablement and a deployment are needed before
+  live collection can be verified. Installation alone does not prove data
+  is arriving. Plan upgrades and deployment remain maintainer decisions.
+
+## Printable terrain maintenance
+
+- Models contain the modern elevation grid, with a flat 3 mm minimum base,
+  0.5 mm maximum mesh spacing and each viewer's default relief exaggeration.
+  Keep horizontal proportions, a maximum 180 mm side and millimeter units.
+  Historical map ink, labels and the outline display mask are not geometry;
+  the Flat Wing has no terrain models. Physical printing has not been tested.
+- `printing/build.py` reads committed `height.webp` and `meta.json`, and
+  rewrites the selected models plus the output directory's entire manifest
+  and catalog. For custom sizes or a subset, always use `--output work/...`.
+  To refresh the default collection, run it without `--sheet` or custom
+  parameters so the website keeps a complete catalog.
+- After terrain assets or default exaggerations change, run the exporter,
+  tests and independent verifier, then refresh previews and packaging before
+  assembling the gallery. `build.py` does not render previews; `package.py`
+  only combines existing preview PNGs into the contact sheet. Follow the
+  output ownership table in [printing/README.md](printing/README.md).
+- Tests: `uv run --project printing --locked python -m unittest discover -s printing -v`.
+  Independent QA: `uv run --project printing --locked --group qa printing/verify.py`.
+  Package/source notes: `uv run --project printing --locked printing/package.py`.
+- Site assembly checks catalog coverage, expected paths and file sizes.
+  `verify.py` checks file hashes, watertightness, orientation, volume, base
+  geometry and strict 3MF parsing. Do not describe the site build's size
+  checks as full geometry or hash validation.
 
 ## The viewer chassis
 
@@ -126,6 +212,14 @@ docs/               README heroes, research plans, candidates memos
    with a `g=` state group, `vercel.json` route alternation,
    `.gitattributes` linguist-generated line for the one-file build, README
    table row + section, `docs/` hero webp from a browser capture.
+6. Printing integration: retain exactly one `<!-- PRINT_DOWNLOADS -->`
+   marker and the shared helper calls in the new assembler. Add the sheet
+   to `SHEETS`, export the complete default print collection and run its
+   tests and verifier **before** assembling the new sheet or gallery.
+   Update `printing/package.py`'s fixed 25-map/50-file assertions and contact
+   sheet layout for the new count, add a preview, and refresh source notes,
+   documentation counts and generated outputs. The website intentionally
+   fails if a terrain sheet has no model record.
 
 ## Registration playbook
 
@@ -212,6 +306,24 @@ flown (60 fps: p95 frame time < 20 ms via a rAF probe); plan view is
 north-up; About panel renders with real numbers. Gallery page shows every
 card under its state header; the Flat Wing counts its figures. One-file
 builds stay ≲ 12 MB.
+
+For printing or download changes, also run the printing tests and applicable
+mesh verification. Check both formats from every terrain viewer, gallery
+links, filenames, file sizes and hashes, mobile layout, and one-file HTML
+links with the sibling `printing/models/` directory present. Confirm models
+are fetched only after a click and the Flat Wing has no model links.
+
+## Documentation maintenance
+
+Keep [README.md](README.md) current for setup, inventory and hosting;
+[printing/README.md](printing/README.md) owns printing commands and output
+details. `CLAUDE.md` points here so agent instructions have one source of
+truth. [docs/analytics.md](docs/analytics.md) covers the JavaScript SDKs and
+production collection. Update generated catalogs and provenance via their owning scripts.
+The research memos in `docs/` retain their dated findings: add a current
+status note when a candidate is built, rather than presenting an old plan
+as the current implementation. Current hosting is static Vercel delivery;
+external object storage and versioned immutable caching are follow-up ideas.
 
 ## Git conventions
 

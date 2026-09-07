@@ -1,5 +1,12 @@
 # Candidate maps: the Yellowstone country north and east of the park
 
+**Status, September 2026:** `paradise/` and the suggested Yellowstone
+Flat Wing additions are built, as recorded in [Built](#built-august-2026).
+The Livingston Sheet also has STL and 3MF terrain downloads in the
+[print catalog](../printing/CATALOG.md). The research and original
+recommendation below retain their August context; see the
+[README](../README.md) for the current gallery.
+
 Research memo, August 2026 — follow-up to the Yellowstone in Folio sheet.
 Scope requested: **Tom Miner Basin, Paradise Valley, and the Big Timber /
 McLeod country** (the Boulder River and the Crazies), plus anything else
@@ -130,7 +137,7 @@ Hayden geology and the 1883 Livingston bird's-eye. Still on the shelf:
 `bigtimber/`, `absaroka/` (GF-52), GF-24 Three Forks, the 1955 15′ pair,
 the Sanborn runs, and the unverified NPRR / forest-reserve leads.
 
-## Recommendation
+## Original recommendation (August 2026)
 
 Build **`paradise/` from GF-1** — it answers Tom Miner, Paradise Valley,
 and McLeod in a single folio-over-its-own-base sheet with the proven

@@ -295,6 +295,25 @@ body.touring .rail,body.touring #corner,body.touring #hud{opacity:.14;pointer-ev
 .lbl.mine .pick{margin-right:4px;opacity:.8}
 #ovchips{margin-top:7px}
 #ovchips:empty{display:none}
+
+
+/* Printable terrain downloads */
+.print-downloads{margin-top:10px;border-top:1px solid var(--line);padding-top:6px}
+.print-downloads summary{padding:6px 0;cursor:pointer;color:var(--accent);font-size:12px}
+.print-downloads summary:hover{color:var(--paper)}
+.print-size,.print-note{font-size:11px;line-height:1.55;color:var(--muted);margin:6px 0 9px}
+.print-note{margin-bottom:0}
+.print-files{display:flex;flex-wrap:wrap;gap:7px}
+.print-file{display:inline-flex;align-items:center;justify-content:center;gap:7px;
+  border:1px solid var(--line);border-radius:3px;padding:8px 10px;
+  font-size:11px;line-height:1.4;color:var(--accent);text-decoration:none}
+.print-file span{color:var(--muted);font-size:10px}
+.print-file:hover{border-color:var(--accent);background:rgba(111,179,205,.08)}
+.print-file:focus-visible,.print-downloads summary:focus-visible{
+  outline:2px solid var(--accent);outline-offset:3px}
+.card-downloads{border-top:1px solid var(--line2);padding:12px 18px 15px}
+.print-label{display:block;margin-bottom:7px;font-size:9px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--muted)}
 </style>
 <div id="stage"><canvas id="gl"></canvas></div>
 <div id="labels" aria-hidden="true"></div>
@@ -367,6 +386,7 @@ body.touring .rail,body.touring #corner,body.touring #hud{opacity:.14;pointer-ev
       <button class="btn" id="btnReset">Reset view</button>
       <button class="btn" id="btnAbout">About</button>
     </div>
+    <details class="print-downloads"><summary>3D print this map</summary><p class="print-size">160.9 × 180.0 × 9.2 mm<br>3 mm base · 2× relief</p><div class="print-files"><a class="print-file" href="../printing/models/nome.3mf" download="nome.3mf" aria-label="Download Nome, the Golden Beach as 3MF (2.6 MB)">3MF <span>2.6 MB</span></a><a class="print-file" href="../printing/models/nome.stl" download="nome.stl" aria-label="Download Nome, the Golden Beach as STL (11.8 MB)">STL <span>11.8 MB</span></a></div><p class="print-note">Print flat-side down. Terrain relief only; map colors and labels are not included.</p></details>
     <p class="hint">Drag to orbit · scroll to zoom · <b>shift</b>-drag to pan.</p>
   </div>
 </section>

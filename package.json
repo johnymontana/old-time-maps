@@ -1,0 +1,16 @@
+{
+  "name": "old-time-maps",
+  "private": true,
+  "scripts": {
+    "build:analytics": "node scripts/build-analytics.mjs",
+    "build": "npm run build:analytics && python3 assemble_all.py",
+    "test": "python3 -m unittest discover -s tests -v"
+  },
+  "dependencies": {
+    "@vercel/analytics": "2.0.1",
+    "@vercel/speed-insights": "2.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "0.28.2"
+  }
+}
